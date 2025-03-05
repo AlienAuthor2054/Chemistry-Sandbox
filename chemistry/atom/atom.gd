@@ -260,17 +260,48 @@ class BondChange:
 	var prev_order: int
 	var new_order: int
 	var energy_change: float
+	var parent: BondChanges
 	
-	@warning_ignore("shadowed_variable")
-	func _init(atom1: Atom, atom2: Atom, new_order: int, parent: BondChanges = BondChanges.EMPTY) -> void:
+	static func modify_bond_order(atom1: Atom, atom2: Atom, order_mod: int, parent: BondChanges = BondChanges.EMPTY) -> BondChange:
+		var new := BondChange.new(atom1, atom2, parent)
+		var prev_order = parent.get_bond_order(atom1, atom2)
+		var new_order = prev_order + order_mod
+		new.prev_order = prev_order
+		new.new_order = new_order
+		new.energy_change = atom1.get_bond_energy(atom2, prev_order) - atom1.get_bond_energy(atom2, new_order)
+		return new
+	
+	static func set_bond_order(atom1: Atom, atom2: Atom, new_order: int, parent: BondChanges = BondChanges.EMPTY) -> BondChange:
+		var new := BondChange.new(atom1, atom2, parent)
+		var prev_order = parent.get_bond_order(atom1, atom2)
+		new.prev_order = prev_order
+		new.new_order = new_order
+		new.energy_change = atom1.get_bond_energy(atom2, prev_order) - atom1.get_bond_energy(atom2, new_order)
+		return new
+	
+	func _init(atom1: Atom, atom2: Atom, parent: BondChanges = BondChanges.EMPTY) -> void:
 		self.atom1 = atom1
 		self.atom2 = atom2
-		self.prev_order = parent.get_bond_order(atom1, atom2)
-		self.new_order = new_order
-		self.energy_change = atom1.get_bond_energy(atom2, prev_order) - atom1.get_bond_energy(atom2, new_order)
-	
+		self.parent = parent
+
 	func _to_string() -> String:
 		return "%s - [%s -> %s] - %s | %s" % [atom1.to_string(), prev_order, new_order, atom2.to_string(), roundi(energy_change)]
+	
+	func duplicate() -> BondChange:
+		var new = BondChange.new(atom1, atom2, parent)
+		new.prev_order = prev_order
+		new.new_order = new_order
+		new.energy_change = energy_change
+		return new
+	
+	func swap() -> BondChange:
+		var old_atom1 := atom1
+		atom1 = atom2
+		atom2 = old_atom1
+		return self
+	
+	func dupe_and_swap() -> BondChange:
+		return duplicate().swap()
 	
 	func execute():
 		atom1.set_bond_order(atom2, new_order)
@@ -308,7 +339,7 @@ class BondChanges:
 	
 	func add(atom1: Atom, atom2: Atom, new_order: int) -> BondChanges:
 		assert(new_order >= 0, "Invalid bond change: Parameter new_order is less than 0")
-		return _add(BondChange.new(atom1, atom2, new_order), atom1, atom2, new_order)
+		return _add(BondChange.set_bond_order(atom1, atom2, new_order), atom1, atom2, new_order)
 	
 	func add_combo(combo: BondChanges) -> BondChanges:
 		for change in combo.changes:
