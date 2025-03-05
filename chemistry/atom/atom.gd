@@ -262,23 +262,29 @@ class BondChange:
 	var energy_change: float
 	var parent: BondChanges
 	
+	@warning_ignore("shadowed_variable")
 	static func modify_bond_order(atom1: Atom, atom2: Atom, order_mod: int, parent: BondChanges = BondChanges.EMPTY) -> BondChange:
 		var new := BondChange.new(atom1, atom2, parent)
+		@warning_ignore("shadowed_variable")
 		var prev_order = parent.get_bond_order(atom1, atom2)
+		@warning_ignore("shadowed_variable")
 		var new_order = prev_order + order_mod
 		new.prev_order = prev_order
 		new.new_order = new_order
 		new.energy_change = atom1.get_bond_energy(atom2, prev_order) - atom1.get_bond_energy(atom2, new_order)
 		return new
 	
+	@warning_ignore("shadowed_variable")
 	static func set_bond_order(atom1: Atom, atom2: Atom, new_order: int, parent: BondChanges = BondChanges.EMPTY) -> BondChange:
 		var new := BondChange.new(atom1, atom2, parent)
+		@warning_ignore("shadowed_variable")
 		var prev_order = parent.get_bond_order(atom1, atom2)
 		new.prev_order = prev_order
 		new.new_order = new_order
 		new.energy_change = atom1.get_bond_energy(atom2, prev_order) - atom1.get_bond_energy(atom2, new_order)
 		return new
 	
+	@warning_ignore("shadowed_variable")
 	func _init(atom1: Atom, atom2: Atom, parent: BondChanges = BondChanges.EMPTY) -> void:
 		self.atom1 = atom1
 		self.atom2 = atom2
