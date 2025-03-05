@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3 uid="uid://d1awp4hbumust"]
+
+[ext_resource type="Script" uid="uid://h0h3t1ru2fc5" path="res://chemistry/atom/bond/atom_bond.gd" id="1_v2chx"]
+[ext_resource type="PackedScene" uid="uid://cqiykungxfadm" path="res://chemistry/atom/bond/atom_bond_line.tscn" id="2_fhyk4"]
+
+[node name="AtomBond" type="Node2D"]
+process_priority = 1
+script = ExtResource("1_v2chx")
+ATOM_BOND_LINE_SCENE = ExtResource("2_fhyk4")

@@ -1,0 +1,122 @@
+Atomic Orbitals
+	Filling problem: Find lowest energy orbital (or create new)
+		Base elements start with hardcoded electronic configuration
+
+Things to consider:
+	Case studies
+		C quadruple bond C is not possible
+		H+ + H -> H2(+) is possible 
+			2 center 1 electron bond, half bond order
+		H2 (2e) has less than half the bonding energy of H2(+) (1e)
+			Electrons in the same orbital repel each other
+		Li2 is less stable than H2
+			2s orbitals are farther away from their nuclei
+	Orbital hybridisation can be a useful model
+	Multiple possibilities in making a bonding MO set
+	Depth >0 evalutation
+	Intramolecular reactions
+	Resonance / Electron delocalization
+
+Bonding
+	When 2 atoms come in close proximity, bonding between them is attempted
+	Bond properties
+		Bidirectional, one bond object per pair of bonded atoms
+		Stores a BondOrbitalSet object which refs to atoms' orbital sets
+	Atom properties
+		Atoms store an unbonded orbital set which refs to its orbital sets
+
+Levels of energy
+	Principal number
+	Azimuthal number
+	Electron pairing energy
+
+Split functions
+	Get energy change of bonding
+	Hybridizaidator
+		Move electrons to another orbital
+			Orbital duplicator
+
+Steps in (attempt to) bonding - evaluateField function:
+	A. Valence Bond Theory
+		1. Determine field atom count and possible hybridizations
+		2. Brute force each possible bonding combination
+			1. Create BO set out of atoms' valence electrons
+				1. Get total electron count of the valence shells
+				2. Allocate electrons to BOs based on constituent AOs following Aufbau's principle and Hund's rule
+					Set a energy difference value (bonding/antibonding energy) for each BO, adding to BO set energy
+						Based on orbital energies and electronegativity difference
+			2. If BO set energy < 0, a bond is possible
+	B. Lewis Theory - Central atom model
+		Information
+			Only models molecules with a central atom bonded to peripheral atoms
+		1. Determine atoms in field
+		2. Get valence of this atom and candidate atoms
+		3. Exclude higher priority atoms
+		4. Brute force each possible bonding combination
+		5. Calculate total bond energy of all bonding combinations
+			Based on bond order, electronegativity difference, and atom size
+				Possible alt: use predefined bond energies from real life
+		6. Call evaluateField function of affected (bonded/unbonded) atoms
+	C. Lewis Theory - Molecular model
+		Information
+			All unbonded atoms are also considered molecules
+			Does not take resonance into account
+			Bonds an atom of a samller molecule (bonded) to atom(s) of a bigger one (bonder)
+			Primary bonds: bonded atom - bonder atom(s) bonds
+			Secondary bonds: non-primary bonds
+			Relative: Uses energy difference of initial and final configurations
+		1. On atom of molecule in range of atom(s) of another, for each atom...
+		2. Check combinations of ("no change" is a valid combination)...
+			Primary bonds
+			One secondary bond from either atom
+	D. Lewis Theory - Cascading bonds model
+		Information
+			Assumes homolytic bond cleavage
+			Cannot model intramolecular reactions (rings)
+			Cascade: Form -> Cleave -> Form -> Cleave...
+			"No change" is a valid combination/combo ending except for step 1.1
+			Will need to filter out interaction events to prevent duplication
+			Could extend steps 1.1-1.2 to consider "form and cleave" hybrid combos that give the same bond order as the previous implementation
+				More accurate? but more expensive
+		Example
+			Hydrogen atom bonding to oxygen of methandiol - 6 final combos; up to 5 atoms in the cascading chain
+		Steps
+			1. On atom of molecule in range of atom(s) of another, for each atom in range:
+				For each primary bond combo incl. bond orders...
+					If bonds exceed valence and there are no available bonds to cleave, nullify this combo
+					Next step done twice with perspectives switched?, very important!?
+				1. If bonds exceed valence, cleave bond(s) above valence; for each affected atom(s)...
+				2. Form bonds(s), amounting up to bonds previously cleaved, with bonded atoms; for each affected atom(s)...
+				3. Go back to step 1.1
+			2. Sum up energy changes of bond changes of each combo; choose lowest energy exothermic combo as result
+				For each combo, the highest energy in the path is the activation energy
+			3. Impart bonding energy as kinetic energy to resultant(s)
+		Revised Steps
+			1. On atom of molecule in range of atom(s) of another, for each atom in range:
+				For each primary bond combo incl. bond orders, do an operation (see Technical section)
+			2. Sum up energy changes of bond changes of each combo; choose lowest energy exothermic combo as result
+				For each combo, the highest energy in the path is the activation energy
+			3. Impart bonding energy as kinetic energy to resultant(s)
+		Technical
+			"Operation" - 0 or more bonds broken followed by bond(s) formed between 2 atoms
+				For bonder / bonded pair (do twice, switch bonder/bonded atoms)...
+					Get bonds to break to accomadate the bond formed
+					Stop if bonds to break > bonds excluding existing bonder-bonded bonds
+					Break bond(s)
+				Form bond(s)
+
+Bond Orbital Set
+	Bonded PAIRS of atoms store ref to this
+	Accessible (change?) of total energies of:
+		This
+		Atoms...
+			before ANY bonding (unbound state)
+			before THIS bonding
+			after all bonding
+	Implementations (#1 or #2 best so far)
+		1. Stores electron refs from atoms; atoms unchanged
+			Most perfomant (least objects created/removed)
+			Variant: Atoms also store an unbonded orbital set (UOS) along with the existing orbital set
+		2. Takes electrons from atoms; atoms lose electrons
+			Most intuitive but very expensive
+		3. Duplicates electrons from atoms; atoms unchanged

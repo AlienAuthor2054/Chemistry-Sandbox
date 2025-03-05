@@ -1,0 +1,52 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="Chemistry Sandbox"
+run/main_scene="res://simulation/main.tscn"
+config/features=PackedStringArray("4.4", "GL Compatibility")
+config/icon="res://icon.svg"
+
+[autoload]
+
+Global="*res://global.gd"
+
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=720
+window/stretch/mode="canvas_items"
+
+[editor]
+
+version_control/plugin_name="GitPlugin"
+version_control/autoload_on_startup=true
+
+[layer_names]
+
+2d_physics/layer_1="walls"
+2d_physics/layer_2="atoms"
+2d_physics/layer_3="atom_areas"
+
+[physics]
+
+common/physics_jitter_fix=0.0
+2d/default_gravity=0.0
+2d/default_linear_damp=0.0
+2d/default_angular_damp=0.0
+common/physics_interpolation=true
+
+[rendering]
+
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
+environment/defaults/default_clear_color=Color(0.0962047, 0.0962048, 0.0962047, 1)
+anti_aliasing/defaults/default_clear_color=Color(0.3, 0.3, 0.3, 1)

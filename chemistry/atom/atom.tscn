@@ -1,0 +1,74 @@
+[gd_scene load_steps=6 format=3 uid="uid://b8mej4rmqjbp3"]
+
+[ext_resource type="PhysicsMaterial" uid="uid://dfgb2hjec0pw2" path="res://simulation/ideal_physics_material.tres" id="1_822kf"]
+[ext_resource type="Script" uid="uid://dobc6vdmqvrag" path="res://chemistry/atom/atom.gd" id="1_by0es"]
+[ext_resource type="PackedScene" uid="uid://d1awp4hbumust" path="res://chemistry/atom/bond/atom_bond.tscn" id="3_usj60"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_rvugk"]
+radius = 50.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_jtbwq"]
+radius = 310.0
+
+[node name="Atom" type="RigidBody2D"]
+collision_layer = 2
+input_pickable = true
+physics_material_override = ExtResource("1_822kf")
+can_sleep = false
+lock_rotation = true
+max_contacts_reported = 64
+script = ExtResource("1_by0es")
+atom_bond_scene = ExtResource("3_usj60")
+
+[node name="AtomCollisionShape" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_rvugk")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+z_index = 2
+z_as_relative = false
+
+[node name="VisibleOnScreenNotifier" type="VisibleOnScreenNotifier2D" parent="."]
+rect = Rect2(-50, -50, 100, 100)
+
+[node name="AtomField" type="Area2D" parent="."]
+collision_layer = 4
+collision_mask = 2
+monitorable = false
+
+[node name="AreaCollisionShape" type="CollisionShape2D" parent="AtomField"]
+shape = SubResource("CircleShape2D_jtbwq")
+
+[node name="SymbolLabel" type="Label" parent="."]
+visible = false
+z_index = 2
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -11.5
+offset_right = 20.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 60
+text = "X"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="IdLabel" type="Label" parent="."]
+visible = false
+top_level = true
+z_index = 2
+offset_left = 80.0
+offset_bottom = -40.0
+grow_vertical = 0
+theme_override_font_sizes/font_size = 50
+text = "X"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[connection signal="atom_removing" from="." to="." method="_on_atom_removing"]
+[connection signal="input_event" from="." to="." method="_on_input_event"]
+[connection signal="screen_exited" from="VisibleOnScreenNotifier" to="." method="_on_visible_on_screen_notifier_screen_exited"]

@@ -1,0 +1,115 @@
+[gd_scene load_steps=10 format=3 uid="uid://demuuu25tlthq"]
+
+[ext_resource type="Script" uid="uid://cc1m1nl8kagxo" path="res://simulation/camera.gd" id="1_0ogwh"]
+[ext_resource type="PackedScene" uid="uid://b8mej4rmqjbp3" path="res://chemistry/atom/atom.tscn" id="1_2jqwi"]
+[ext_resource type="Script" uid="uid://dk6v4qyap0gnt" path="res://simulation/main.gd" id="1_3ujg2"]
+[ext_resource type="PhysicsMaterial" uid="uid://dfgb2hjec0pw2" path="res://simulation/ideal_physics_material.tres" id="4_d7v1x"]
+[ext_resource type="Script" uid="uid://0q037qqryrcs" path="res://simulation/border.gd" id="5_a8fb5"]
+[ext_resource type="Script" uid="uid://ctpit6jb8k3go" path="res://simulation/kinetic_stats_label.gd" id="5_gpkej"]
+[ext_resource type="Script" uid="uid://c24ohhdpvjt2b" path="res://ui/ui.gd" id="5_li4ao"]
+
+[sub_resource type="Gradient" id="Gradient_nnmox"]
+colors = PackedColorArray(0.301961, 0.301961, 0.301961, 1, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_vlwa4"]
+gradient = SubResource("Gradient_nnmox")
+width = 1000
+height = 1000
+fill_to = Vector2(0, 0)
+
+[node name="Main" type="Node2D"]
+script = ExtResource("1_3ujg2")
+atom_scene = ExtResource("1_2jqwi")
+
+[node name="Camera" type="Camera2D" parent="."]
+anchor_mode = 0
+process_callback = 0
+script = ExtResource("1_0ogwh")
+atom_scene = ExtResource("1_2jqwi")
+
+[node name="Border" type="StaticBody2D" parent="."]
+collision_mask = 2
+physics_material_override = ExtResource("4_d7v1x")
+script = ExtResource("5_a8fb5")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Border"]
+build_mode = 1
+polygon = PackedVector2Array(-500, -500, -500, 500, 500, 500, 500, -500)
+
+[node name="Sprite2D" type="Sprite2D" parent="Border"]
+texture = SubResource("GradientTexture2D_vlwa4")
+offset = Vector2(500, 500)
+
+[node name="UI" type="CanvasLayer" parent="."]
+offset = Vector2(-10, 0)
+transform = Transform2D(1, 0, 0, 1, -10, 0)
+script = ExtResource("5_li4ao")
+
+[node name="KineticStatsLabel" type="Label" parent="UI"]
+process_priority = 1
+process_physics_priority = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -369.0
+offset_bottom = 277.0
+grow_horizontal = 0
+theme_override_font_sizes/font_size = 75
+text = "0 K
+0 J_k
+0 J_u
+0 J
+"
+horizontal_alignment = 2
+script = ExtResource("5_gpkej")
+metadata/_edit_use_anchors_ = true
+
+[node name="SelectedAtomLabel" type="Label" parent="UI"]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+grow_vertical = 0
+theme_override_font_sizes/font_size = 75
+text = "H"
+metadata/_edit_use_anchors_ = true
+
+[node name="Timer" type="Timer" parent="UI/SelectedAtomLabel"]
+wait_time = 0.05
+one_shot = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI"]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -40.0
+offset_top = -40.0
+grow_horizontal = 0
+grow_vertical = 0
+alignment = 2
+
+[node name="ClearButton" type="Button" parent="UI/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+theme_override_font_sizes/font_size = 50
+text = "Clear"
+
+[node name="TemperatureUpButton" type="Button" parent="UI/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+theme_override_font_sizes/font_size = 50
+text = "Temp Up"
+
+[node name="TemperatureDownButton" type="Button" parent="UI/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+theme_override_font_sizes/font_size = 50
+text = "Temp Down
+"
+
+[connection signal="external_change_applied" from="." to="UI/KineticStatsLabel" method="_on_main_external_change_applied"]
+[connection signal="pressed" from="UI/VBoxContainer/ClearButton" to="UI" method="_on_clear_button_pressed"]
+[connection signal="pressed" from="UI/VBoxContainer/TemperatureUpButton" to="UI" method="_on_temperature_button_pressed" binds= [2.0]]
+[connection signal="pressed" from="UI/VBoxContainer/TemperatureDownButton" to="UI" method="_on_temperature_button_pressed" binds= [0.5]]
