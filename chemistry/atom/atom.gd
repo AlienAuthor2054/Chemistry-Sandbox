@@ -259,6 +259,8 @@ class BondChange:
 	var atom2: Atom
 	var prev_order: int
 	var new_order: int
+	var formed_order: int:
+		get: return new_order - prev_order
 	var energy_change: float
 	var parent: BondChanges
 	
@@ -345,11 +347,20 @@ class BondChanges:
 	
 	func add(atom1: Atom, atom2: Atom, new_order: int) -> BondChanges:
 		assert(new_order >= 0, "Invalid bond change: Parameter new_order is less than 0")
-		return _add(BondChange.set_bond_order(atom1, atom2, new_order), atom1, atom2, new_order)
+		return add_change(BondChange.set_bond_order(atom1, atom2, new_order), atom1, atom2, new_order)
+	
+	func add_change(bond_change: BondChange, atom1: Atom = bond_change.atom1, atom2: Atom = bond_change.atom2, new_order: int = bond_change.new_order) -> BondChanges:
+		bond_change.parent = self
+		changes.append(bond_change)
+		energy_change += bond_change.energy_change
+		activation_energy = maxf(energy_change, activation_energy)
+		_change_atom_bonds(atom1, atom2, new_order)
+		_change_atom_bonds(atom2, atom1, new_order)
+		return self
 	
 	func add_combo(combo: BondChanges) -> BondChanges:
 		for change in combo.changes:
-			_add(change)
+			add_change(change)
 		return self
 	
 	func dupe_and_add_combo(combo: BondChanges) -> BondChanges:
@@ -424,14 +435,6 @@ class BondChanges:
 		print("\tEnergy change: %s" % [roundi(energy_change)])
 		for change in changes:
 			print("\t\t" + change.to_string())
-		
-	func _add(bond_change: BondChange, atom1: Atom = bond_change.atom1, atom2: Atom = bond_change.atom2, new_order: int = bond_change.new_order) -> BondChanges:
-		changes.append(bond_change)
-		energy_change += bond_change.energy_change
-		activation_energy = maxf(energy_change, activation_energy)
-		_change_atom_bonds(atom1, atom2, new_order)
-		_change_atom_bonds(atom2, atom1, new_order)
-		return self
 	
 	func _get_bond_combos(bonds_array: Array[Atom], min_bonds: int, max_bonds: int) -> Array:
 		var bond_count := bonds_array.size()
@@ -454,7 +457,8 @@ class CascadingBondsModel:
 	func from_bonding_pair(atom1: Atom, atom2: Atom) -> void:
 		if atom1.removing or atom2.removing: return
 		for bond_order in range(1, atom1.get_isolated_max_bond_order(atom2) - atom1.get_bond_order(atom2) + 1):
-			CascadingBondsModelOperation.new(combos, BondChanges.new(), atom1, atom2, bond_order, true)
+			var bond_change := BondChange.modify_bond_order(atom1, atom2, bond_order, BondChanges.new())
+			CascadingBondsModelOperation.new(combos, bond_change, true)
 		_evaluate()
 	
 	func from_unbonded_atom(broken: Atom) -> void:
@@ -482,7 +486,6 @@ class CascadingBondsModel:
 		var combo_input: Array[BondChanges]
 		var formed_order: int
 		var depth: int
-		# {BondChanges: [Atom]}
 		var break_bonds_results: Array[BreakBondsResult] = []
 		
 		@warning_ignore("shadowed_variable")
@@ -494,33 +497,38 @@ class CascadingBondsModel:
 					var combo := base_combo.duplicate()
 					for bonding: Atom in bond_combo:
 						if bonding.removing: continue
-						CascadingBondsModelOperation.new(combo_input, combo, bonding, broken, bond_combo[bonding])
+						var bond_change := BondChange.modify_bond_order(broken, bonding, bond_combo[bonding], combo)
+						CascadingBondsModelOperation.new(combo_input, bond_change)
 		
 		@warning_ignore("shadowed_variable")
-		func _init(combo_input: Array[BondChanges], base_combo: BondChanges, bonder: Atom, bonded: Atom, formed_order: int, 
-				bidirectional: bool = false) -> void:
+		func _init(combo_input: Array[BondChanges], bond_change: BondChange, bidirectional: bool = false) -> void:
+			var base_combo := bond_change.parent
+			var formed_order := bond_change.formed_order
 			assert(formed_order >= 1, "Parameter formed_order is less than 1")
 			self.combo_input = combo_input
 			self.formed_order = formed_order
 			base_combo.depth += 1
 			depth = base_combo.depth
 			if depth > 5: return
-			var combos1 := break_bonds(base_combo, bonder, bonded)
+			var combos1 := break_bonds(bond_change)
 			if combos1.is_empty(): return
 			var combos: Array[BondChanges]
 			if bidirectional:
-				var combos2 := break_bonds(base_combo, bonded, bonder)
+				var combos2 := break_bonds(bond_change.dupe_and_swap())
 				if combos2.is_empty(): return
 				combos = BondChanges.combine_combos(combos1, combos2)
 			else:
 				combos = combos1
 			for combo in combos:
 				#print("%s existing order + %s formed" % [combo.get_bond_order(bonder, bonded), formed_order])
-				combo_input.append(combo.add(bonder, bonded, combo.get_bond_order(bonder, bonded) + formed_order))
+				combo_input.append(combo.add_change(bond_change))
 			for result in break_bonds_results:
 				result.execute()
 		
-		func break_bonds(base_combo: BondChanges, bonder: Atom, bonded: Atom) -> Array[BondChanges]:
+		func break_bonds(bond_change: BondChange) -> Array[BondChanges]:
+			var base_combo := bond_change.parent
+			var bonder := bond_change.atom1
+			var bonded := bond_change.atom2
 			var combos: Array[BondChanges] = []
 			var bonds_to_break := maxi(0, formed_order - base_combo.get_atom_bonds_left(bonder))
 			#print("%s <[%s]- %s: %s bonds (%s left) / %s -> %s bonds to break" % [
