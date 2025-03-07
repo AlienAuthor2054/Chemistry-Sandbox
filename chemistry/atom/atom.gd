@@ -295,8 +295,8 @@ class BondChange:
 	func _to_string() -> String:
 		return "%s - [%s -> %s] - %s | %s" % [atom1.to_string(), prev_order, new_order, atom2.to_string(), roundi(energy_change)]
 	
-	func duplicate() -> BondChange:
-		var new = BondChange.new(atom1, atom2, parent)
+	func duplicate(new_parent: BondChanges = parent) -> BondChange:
+		var new = BondChange.new(atom1, atom2, new_parent)
 		new.prev_order = prev_order
 		new.new_order = new_order
 		new.energy_change = energy_change
@@ -342,12 +342,12 @@ class BondChanges:
 		var combined_combos: Array[BondChanges] = []
 		for combo1 in combos1:
 			for combo2 in combos2:
-				combined_combos.append(combo1.duplicate().add_combo(combo2))
+				combined_combos.append(combo1.duplicate().add_combo(combo2.duplicate()))
 		return combined_combos
 	
 	func add(atom1: Atom, atom2: Atom, new_order: int) -> BondChanges:
 		assert(new_order >= 0, "Invalid bond change: Parameter new_order is less than 0")
-		return add_change(BondChange.set_bond_order(atom1, atom2, new_order), atom1, atom2, new_order)
+		return add_change(BondChange.set_bond_order(atom1, atom2, new_order, self), atom1, atom2, new_order)
 	
 	func add_change(bond_change: BondChange, atom1: Atom = bond_change.atom1, atom2: Atom = bond_change.atom2, new_order: int = bond_change.new_order) -> BondChanges:
 		bond_change.parent = self
@@ -360,7 +360,7 @@ class BondChanges:
 	
 	func add_combo(combo: BondChanges) -> BondChanges:
 		for change in combo.changes:
-			add_change(change)
+			add_change(change.duplicate())
 		return self
 	
 	func dupe_and_add_combo(combo: BondChanges) -> BondChanges:
@@ -369,7 +369,7 @@ class BondChanges:
 	# Don't forget to use the duplicate() method of arrays and dictionaries! May need to pass true as param if deep
 	func duplicate() -> BondChanges:
 		var new := BondChanges.new()
-		new.changes = changes.duplicate() as Array[BondChange]
+		new.changes = changes.map(func(change: BondChange): return change.duplicate(new)) as Array[BondChange]
 		new.energy_change = energy_change
 		new.activation_energy = activation_energy
 		new.affected_atoms = affected_atoms.duplicate(true)
@@ -473,7 +473,7 @@ class CascadingBondsModel:
 	
 	func _evaluate() -> void:
 		BondChanges.sort_combos(combos)
-		debug()
+		#debug()
 		combos[0].execute()
 	
 	func _add_combo(combo: BondChanges, dupe: bool = false) -> void:
@@ -503,12 +503,14 @@ class CascadingBondsModel:
 		@warning_ignore("shadowed_variable")
 		func _init(combo_input: Array[BondChanges], bond_change: BondChange, bidirectional: bool = false) -> void:
 			var base_combo := bond_change.parent
+			@warning_ignore("shadowed_variable")
 			var formed_order := bond_change.formed_order
 			assert(formed_order >= 1, "Parameter formed_order is less than 1")
 			self.combo_input = combo_input
 			self.formed_order = formed_order
 			base_combo.depth += 1
 			depth = base_combo.depth
+			prints(depth, bond_change)
 			if depth > 5: return
 			var combos1 := break_bonds(bond_change)
 			if combos1.is_empty(): return
@@ -520,8 +522,8 @@ class CascadingBondsModel:
 			else:
 				combos = combos1
 			for combo in combos:
-				#print("%s existing order + %s formed" % [combo.get_bond_order(bonder, bonded), formed_order])
-				combo_input.append(combo.add_change(bond_change))
+				combo.debug()
+				combo_input.append(combo.add_change(bond_change.duplicate()))
 			for result in break_bonds_results:
 				result.execute()
 		
@@ -540,7 +542,8 @@ class CascadingBondsModel:
 				#print("\tBond combo impossible")
 				return []
 			if bonds_to_break == 0:
-				return [base_combo]
+				print("\tno breaks")
+				return [base_combo.duplicate()]
 			for break_combo: Dictionary in base_combo.get_bond_break_combos(bonder, bonds_to_break, bonds_to_break, bonded):
 				#print("\tBreak combo:")
 				# TODO: In cases of more than one broken atom, combos only continue on one broken atom each
