@@ -39,6 +39,7 @@ var field_radius: float = 175
 var interatomic_forces := true
 var atoms_in_field: Array[Atom] = []
 var atoms_in_molecule_checked: Array[Atom] = []
+var atoms_outside_molecule_checked: Array[Atom] = []
 var this_atom_db: Dictionary
 var molecule: Molecule:
 	set(new_mol):
@@ -573,8 +574,12 @@ func evaluate_field() -> void:
 		if id > other.id: continue
 		#if id > other.id or molecule.id == other.molecule.id: continue
 		if molecule.id == other.molecule.id:
-			if atoms_in_molecule_checked.has(other): continue
+			if other in atoms_in_molecule_checked: continue
 			atoms_in_molecule_checked.append(other)
+		else:
+			if other in atoms_outside_molecule_checked: continue
+			atoms_outside_molecule_checked.append(other)
+			other.dirty.connect(_on_other_molecule_dirty.bind(other), CONNECT_ONE_SHOT)
 		CascadingBondsModel.new().from_bonding_pair(self, other)
 
 func atom_list_to_ids(_accum, _atom_list: Array[Atom]) -> Array[int]:
@@ -587,11 +592,11 @@ func atoms_in_field_changed(new_atoms_in_field: Array[Atom]) -> bool:
 
 func remove() -> void:
 	removing = true
-	unbond_all()
+	molecule.dirty.disconnect(_on_molecule_dirty)
 	atom_removing.emit(self)
+	unbond_all()
 	atom_id_register.erase(id)
 	remove_from_group("atoms")
-	#await get_tree().create_timer(0.5).timeout
 	queue_free()
 
 func _physics_process(_delta: float) -> void:
@@ -599,7 +604,7 @@ func _physics_process(_delta: float) -> void:
 	var new_atoms_in_field: Array[Atom] = []
 	# TODO: Consider using signals
 	for other: Atom in $AtomField.get_overlapping_bodies():
-		if other == self: continue
+		if other == self or other.removing: continue
 		var difference := other.position - position
 		var direction := difference.normalized()
 		var distance := difference.length()
@@ -615,6 +620,8 @@ func _physics_process(_delta: float) -> void:
 			if not is_instance_valid(prev_atom) or prev_atom in new_atoms_in_field: continue
 			prev_atom.atom_removing.disconnect(_on_atom_removing)
 			prev_atom.dirty.disconnect(_on_field_dirty)
+			if prev_atom.dirty.is_connected(_on_other_molecule_dirty):
+				prev_atom.dirty.disconnect(_on_other_molecule_dirty)
 		for new_atom in new_atoms_in_field:
 			if new_atom in atoms_in_field: continue
 			new_atom.atom_removing.connect(_on_atom_removing, CONNECT_ONE_SHOT)
@@ -650,6 +657,17 @@ func _on_field_dirty() -> void:
 
 func _on_atom_removing(atom: Atom) -> void:
 	atoms_in_field.erase(atom)
+	atoms_in_molecule_checked.erase(atom)
+	if atom in atoms_outside_molecule_checked:
+		atom.dirty.disconnect(_on_other_molecule_dirty)
+		atoms_outside_molecule_checked.erase(atom)
+
+func _on_other_molecule_dirty(other: Atom) -> void:
+	atoms_outside_molecule_checked.erase(other)
 
 func _on_molecule_dirty() -> void:
 	atoms_in_molecule_checked.clear()
+	for other in atoms_outside_molecule_checked:
+		if not other.dirty.is_connected(_on_other_molecule_dirty): continue
+		other.dirty.disconnect(_on_other_molecule_dirty)
+	atoms_outside_molecule_checked.clear()

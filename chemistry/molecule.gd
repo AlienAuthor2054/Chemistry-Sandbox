@@ -11,7 +11,6 @@ func _init(init_atoms: Array[Atom]) -> void:
 	id = next_id
 	next_id += 1
 	atoms.assign(init_atoms)
-	dirty.connect(_on_dirty)
 	dirty.emit()
 
 class MoleculeGetter:
@@ -62,6 +61,3 @@ func merge(merger_atom: Atom, merged_atom: Atom) -> void:
 	for atom in merged_atoms:
 		atom.molecule = self
 	merged_mol.atoms.clear()
-
-func _on_dirty():
-	pass
