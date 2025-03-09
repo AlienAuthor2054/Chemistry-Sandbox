@@ -1,11 +1,11 @@
 class_name Atom extends RigidBody2D
 
-@export var atom_bond_scene: PackedScene
-
+const ATOM_SCENE: PackedScene = preload("res://chemistry/atom/atom.tscn")
+const ATOM_BOND_SCENE: PackedScene = preload("res://chemistry/atom/bond/atom_bond.tscn")
 const BASE_ATOM_TEXTURE: GradientTexture2D = preload("res://chemistry/atom/atom_texture.tres")
 
 static var next_id := 1
-static var atom_id_register: Dictionary[int, Atom]= {}
+static var atom_id_register: Dictionary[int, Atom] = {}
 static var atom_db: Dictionary = YAMLParser.parse("res://chemistry/atom/atom_db.yaml")
 static var atom_textures: Dictionary = {}
 static var atom_visual_radius_multi = 1
@@ -59,6 +59,11 @@ var removing := false
 @onready var electronegativity: float = this_atom_db.electronegativity
 @onready var radius: float = this_atom_db.radius
 
+static func create(parent: Node, atomic_number: int, pos: Vector2, vel: Vector2) -> void:
+	var atom: Atom = ATOM_SCENE.instantiate()
+	atom.initialize(atomic_number, pos, vel)
+	parent.add_child(atom)
+
 static func get_id_priority(atom1: Atom, atom2: Atom):
 	return atom1 if atom1.id < atom2.id else atom2
 
@@ -71,7 +76,7 @@ static func create_textures():
 		texture.gradient.set_color(0, color)
 		atom_textures[protons] = texture
 
-func initialize(atomic_number, clicked_point, velocity):
+func initialize(atomic_number: int, pos: Vector2, vel: Vector2):
 	id = next_id
 	next_id += 1
 	protons = atomic_number
@@ -94,8 +99,8 @@ func initialize(atomic_number, clicked_point, velocity):
 		bond_strength = 0
 		repulsion_force = 0
 		field_radius = 300
-	position = clicked_point
-	apply_central_impulse(velocity)
+	position = pos
+	apply_central_impulse(vel)
 	add_to_group("atoms")
 	atom_id_register[id] = self
 	molecule = Molecule.new([self])
@@ -170,7 +175,7 @@ func bond_atom(other: Atom, bond_order: int = 1, broadcast_dirty_event: bool = t
 	var bond: AtomBond
 	if not bonds.has(other):
 		#print("bond #%s | %s -> %s" % [bonds.size() + 1, id, other.id])
-		bond = atom_bond_scene.instantiate()
+		bond = ATOM_BOND_SCENE.instantiate()
 		bond.initialize(self, other, bond_order)
 		self.add_child(bond)
 		bonds[other] = bond

@@ -1,6 +1,5 @@
 extends Node2D
 
-@export var atom_scene: PackedScene
 var clicked_point := Vector2.ZERO
 var atoms_possible := Atom.atom_db.keys()
 var atoms_possible_count := atoms_possible.size()
@@ -31,9 +30,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		if event.pressed:
 			clicked_point = get_global_mouse_position()
 		else:
-			var atom: Atom = atom_scene.instantiate()
-			atom.initialize(atoms_possible[atom_selection_index], clicked_point, (get_global_mouse_position() - clicked_point) * 1.5)
-			$/root/Main.add_child(atom)
+			Atom.create(self, atoms_possible[atom_selection_index], clicked_point, (get_global_mouse_position() - clicked_point) * 1.5)
 	elif event is InputEventMouseButton:
 		if not db.is_stopped(): return
 		db.start()

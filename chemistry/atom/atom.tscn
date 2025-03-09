@@ -1,8 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://b8mej4rmqjbp3"]
+[gd_scene load_steps=5 format=3 uid="uid://b8mej4rmqjbp3"]
 
 [ext_resource type="PhysicsMaterial" uid="uid://dfgb2hjec0pw2" path="res://simulation/ideal_physics_material.tres" id="1_822kf"]
 [ext_resource type="Script" uid="uid://dobc6vdmqvrag" path="res://chemistry/atom/atom.gd" id="1_by0es"]
-[ext_resource type="PackedScene" uid="uid://d1awp4hbumust" path="res://chemistry/atom/bond/atom_bond.tscn" id="3_usj60"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_rvugk"]
 radius = 50.0
@@ -18,7 +17,6 @@ can_sleep = false
 lock_rotation = true
 max_contacts_reported = 64
 script = ExtResource("1_by0es")
-atom_bond_scene = ExtResource("3_usj60")
 
 [node name="AtomCollisionShape" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_rvugk")
