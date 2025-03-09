@@ -6,10 +6,6 @@ func _ready():
 	return
 	scale = Vector2(zoom_value, zoom_value)
 
-func _on_clear_button_pressed() -> void:
-	get_tree().call_group("atoms", "remove")
-
-
 func _on_temperature_button_pressed(velocity_factor: float) -> void:
 	get_tree().call_group("atoms", "multiply_velocity", sqrt(velocity_factor))
 	$"..".external_change_applied.emit()

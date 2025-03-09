@@ -5,6 +5,7 @@ var atoms_possible := Atom.atom_db.keys()
 var atoms_possible_count := atoms_possible.size()
 var atom_selection_index := 0
 
+@warning_ignore("unused_signal")
 signal external_change_applied
 
 func change(new: Computed):
@@ -18,11 +19,6 @@ func iron_test():
 
 func _ready():
 	Atom.create_textures()
-	spawn_atoms(30)
-
-func spawn_atoms(count: int):
-	for _index in count:
-		pass
 
 @onready var db := $UI/SelectedAtomLabel/Timer
 func _unhandled_input(event: InputEvent) -> void:
@@ -42,3 +38,9 @@ func _unhandled_input(event: InputEvent) -> void:
 		if atom_selection_index >= atoms_possible_count: atom_selection_index = 0
 		if atom_selection_index < 0: atom_selection_index = atoms_possible_count - 1
 		$UI/SelectedAtomLabel.text = Atom.atom_db[atoms_possible[atom_selection_index]].symbol
+	elif event.is_action_pressed("benchmark"):
+		clear_simulation()
+		SimulationBenchmark.new($".")
+
+func clear_simulation() -> void:
+	get_tree().call_group("atoms", "remove")
