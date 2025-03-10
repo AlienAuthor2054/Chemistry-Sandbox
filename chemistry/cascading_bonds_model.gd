@@ -2,8 +2,10 @@ class_name CascadingBondsModel extends RefCounted
 
 var combos: Array[BondChanges] = []
 var depth := 0
+var _emit_dirty: bool
 
-func _init() -> void:
+func _init(emit_dirty: bool = true) -> void:
+	_emit_dirty = emit_dirty
 	_add_combo(BondChanges.EMPTY)
 
 func from_bonding_pair(atom1: Atom, atom2: Atom) -> void:
@@ -26,7 +28,7 @@ func debug():
 func _evaluate() -> void:
 	BondChanges.sort_combos(combos)
 	#debug()
-	combos[0].execute()
+	combos[0].execute(_emit_dirty)
 
 func _add_combo(combo: BondChanges, dupe: bool = false) -> void:
 	if dupe:

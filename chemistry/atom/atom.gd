@@ -18,7 +18,7 @@ signal electronLost
 signal dirty
 signal atom_removing(atom: Atom)
 
-enum {SELF, OTHER, BOTH, ID_PRIORITY}
+enum {NONE, SELF, OTHER, BOTH, ID_PRIORITY}
 
 var id: int
 var protons: int
@@ -133,9 +133,9 @@ func get_potential_energy() -> float:
 func multiply_velocity(factor):
 	apply_central_impulse(mass * linear_velocity * (factor - 1))
 
-func execute_bond_changed_event_queue(emit_dirty: int = ID_PRIORITY) -> void:
+func execute_bond_changed_event_queue(emit_atom_dirty: int = ID_PRIORITY, emit_mol_dirty: bool = true) -> void:
 	for bond_changed_event: BondChangedEvent in bond_changed_event_queue.duplicate():
-		bond_changed_event.execute(emit_dirty)
+		bond_changed_event.execute(emit_atom_dirty, emit_mol_dirty)
 		bond_changed_event_queue.erase(bond_changed_event)
 
 @warning_ignore("shadowed_variable")
@@ -231,7 +231,7 @@ func get_max_bond_order(other: Atom) -> int:
 func get_isolated_max_bond_order(other: Atom) -> int:
 	return mini(3, mini(max_bonds, other.max_bonds))
 
-func evaluate_field() -> void:
+func evaluate_field(emit_dirty: bool = true) -> void:
 	for other in atoms_in_field:
 		# TODO: Allow intramolecular bonding (rings)
 		if id > other.id: continue
@@ -242,7 +242,7 @@ func evaluate_field() -> void:
 		else:
 			if atoms_outside_molecule_checked.has(other): continue
 			atoms_outside_molecule_checked.add(other.dirty)
-		CascadingBondsModel.new().from_bonding_pair(self, other)
+		CascadingBondsModel.new(emit_dirty).from_bonding_pair(self, other)
 
 func atom_list_to_ids(_accum, _atom_list: Array[Atom]) -> Array[int]:
 	return [1]
@@ -313,7 +313,7 @@ func _on_visible_on_screen_notifier_screen_exited() -> void:
 	remove()
 
 func _on_field_dirty() -> void:
-	evaluate_field()
+	evaluate_field(false)
 
 func _on_atom_removing(atom: Atom) -> void:
 	if atom.dirty.is_connected(_on_field_dirty):

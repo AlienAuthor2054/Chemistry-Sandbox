@@ -78,13 +78,14 @@ func set_heads(new_heads: Array[Atom]) -> void:
 func clear_heads() -> void:
 	heads.clear()
 	
-func execute():
+func execute(emit_dirty: bool = true):
+	var emit_atom_dirty := Atom.BOTH if emit_dirty else Atom.NONE
 	Atom.LOCK.lock(self)
 	for change in changes:
 		change.execute()
 	Atom.LOCK.unlock(self)
 	for atom: Atom in affected_atoms:
-		atom.execute_bond_changed_event_queue(Atom.BOTH)
+		atom.execute_bond_changed_event_queue(emit_atom_dirty, emit_dirty)
 
 func get_atom_bonds(atom: Atom) -> Dictionary[Atom, int]:
 	return affected_atoms[atom] if affected_atoms.has(atom) else atom.bonds_order
