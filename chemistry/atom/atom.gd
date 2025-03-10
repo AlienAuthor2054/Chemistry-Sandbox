@@ -281,15 +281,13 @@ func _physics_process(_delta: float) -> void:
 	if atoms_in_field_changed(new_atoms_in_field):
 		for prev_atom in atoms_in_field:
 			if not is_instance_valid(prev_atom) or prev_atom in new_atoms_in_field: continue
-			prev_atom.atom_removing.disconnect(_on_atom_removing)
-			prev_atom.dirty.disconnect(_on_field_dirty)
-			if prev_atom.dirty.is_connected(_on_other_molecule_dirty):
-				prev_atom.dirty.disconnect(_on_other_molecule_dirty)
+			if prev_atom.dirty.is_connected(_on_field_dirty):
+				prev_atom.dirty.disconnect(_on_field_dirty)
 		for new_atom in new_atoms_in_field:
 			if new_atom in atoms_in_field: continue
-			new_atom.atom_removing.connect(_on_atom_removing, CONNECT_ONE_SHOT)
-			if not new_atom.dirty.is_connected(_on_field_dirty):
-				new_atom.dirty.connect(_on_field_dirty)
+			if not new_atom.atom_removing.is_connected(_on_atom_removing):
+				new_atom.atom_removing.connect(_on_atom_removing, CONNECT_ONE_SHOT)
+			new_atom.dirty.connect(_on_field_dirty)
 		atoms_in_field = new_atoms_in_field
 		evaluate_field()
 	for other: Atom in bonds.keys():
@@ -319,6 +317,8 @@ func _on_field_dirty() -> void:
 	evaluate_field()
 
 func _on_atom_removing(atom: Atom) -> void:
+	if atom.dirty.is_connected(_on_field_dirty):
+		atom.dirty.disconnect(_on_field_dirty)
 	atoms_in_field.erase(atom)
 	atoms_in_molecule_checked.erase(atom)
 	if atom in atoms_outside_molecule_checked:
