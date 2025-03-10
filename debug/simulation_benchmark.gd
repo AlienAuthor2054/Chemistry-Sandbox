@@ -10,6 +10,7 @@ const ATOMS: Dictionary[int, int] = { # 50 atoms
 }
 
 static var ATOMS_TO_SPAWN := Util.count_dict_to_array(ATOMS)
+static var benchmark_db := false
 
 var end_node: Node
 var end_time: int
@@ -19,6 +20,11 @@ var frames: Array[float] = []
 var frames_stats := ArrayStats.new(frames)
 
 func _init(parent: Node) -> void:
+	if benchmark_db:
+		push_warning("Attempted to start a simulation benchmark while one is already running")
+		queue_free()
+		return
+	benchmark_db = true
 	var RNG := RandomNumberGenerator.new()
 	var RNG_util := RNGUtil.new(RNG)
 	RNG.seed = 0
@@ -42,6 +48,7 @@ func _on_frame_end() -> void:
 		end()
 		end_node.queue_free()
 		queue_free()
+		benchmark_db = false
 	
 func end():
 	print("Simulation benchmark finished; physics process timings: (%s frames profiled in %s seconds)" % [frames.size(), PROFILE_TIME])
