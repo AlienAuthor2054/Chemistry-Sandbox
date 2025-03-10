@@ -39,11 +39,11 @@ var field_radius: float = 175
 var interatomic_forces := true
 var atoms_in_field: Array[Atom] = []
 var atoms_in_molecule_checked: Array[Atom] = []
-var atoms_outside_molecule_checked: Array[Atom] = []
+var atoms_outside_molecule_checked := AtomSignalSet.new(_on_other_molecule_dirty, true)
 var this_atom_db: Dictionary
 var molecule: Molecule:
 	set(new_mol):
-		if molecule != null:
+		if is_instance_valid(molecule) and not removing:
 			molecule.dirty.disconnect(_on_molecule_dirty)
 		new_mol.dirty.connect(_on_molecule_dirty)
 		molecule = new_mol
@@ -240,9 +240,8 @@ func evaluate_field() -> void:
 			if other in atoms_in_molecule_checked: continue
 			atoms_in_molecule_checked.append(other)
 		else:
-			if other in atoms_outside_molecule_checked: continue
-			atoms_outside_molecule_checked.append(other)
-			other.dirty.connect(_on_other_molecule_dirty.bind(other), CONNECT_ONE_SHOT)
+			if atoms_outside_molecule_checked.has(other): continue
+			atoms_outside_molecule_checked.add(other.dirty)
 		CascadingBondsModel.new().from_bonding_pair(self, other)
 
 func atom_list_to_ids(_accum, _atom_list: Array[Atom]) -> Array[int]:
@@ -321,8 +320,7 @@ func _on_atom_removing(atom: Atom) -> void:
 		atom.dirty.disconnect(_on_field_dirty)
 	atoms_in_field.erase(atom)
 	atoms_in_molecule_checked.erase(atom)
-	if atom in atoms_outside_molecule_checked:
-		atom.dirty.disconnect(_on_other_molecule_dirty)
+	if atoms_outside_molecule_checked.has(atom):
 		atoms_outside_molecule_checked.erase(atom)
 
 func _on_other_molecule_dirty(other: Atom) -> void:
@@ -330,7 +328,4 @@ func _on_other_molecule_dirty(other: Atom) -> void:
 
 func _on_molecule_dirty() -> void:
 	atoms_in_molecule_checked.clear()
-	for other in atoms_outside_molecule_checked:
-		if not other.dirty.is_connected(_on_other_molecule_dirty): continue
-		other.dirty.disconnect(_on_other_molecule_dirty)
 	atoms_outside_molecule_checked.clear()
