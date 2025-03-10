@@ -1,5 +1,7 @@
 class_name CascadingBondsModel extends RefCounted
 
+const MAX_DEPTH := 3
+
 var combos: Array[BondChanges] = []
 var depth := 0
 var _emit_dirty: bool
@@ -60,7 +62,8 @@ class CascadingBondsModelOperation:
 		assert(formed_order >= 1, "Parameter formed_order is less than 1")
 		base_combo.depth += 1
 		depth = base_combo.depth
-		if depth > 5: return
+		assert(depth <= MAX_DEPTH, "Combo depth exceeds max depth allowed")
+		var go_deeper := depth < MAX_DEPTH
 		var combos1 := break_bonds(bond_change)
 		if combos1.is_empty(): return
 		var combos: Array[BondChanges]
@@ -73,6 +76,7 @@ class CascadingBondsModelOperation:
 		for combo in combos:
 			#print("%s existing order + %s formed" % [combo.get_bond_order(bonder, bonded), formed_order])
 			combo_input.append(combo.add_change(bond_change))
+			if not go_deeper: continue
 			for head in combo.heads:
 				CascadingBondsModelOperation.from_broken_atoms(combo_input, combo, head)
 	
