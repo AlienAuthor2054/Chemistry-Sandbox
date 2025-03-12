@@ -8,16 +8,15 @@ var other: Atom
 var lines: Array[Polygon2D] = []
 var deleting := false
 
-@warning_ignore("shadowed_variable")
 func initialize(atom: Atom, other: Atom, order: int):
 	self.atom = atom
 	self.other = other
 	update_order(order)
+	update_transform()
+	reset_physics_interpolation()
 
-func _notification(what: int) -> void:
-	if what != NOTIFICATION_PREDELETE: return
-	deleting = true
-	process_mode = PROCESS_MODE_DISABLED
+func _physics_process(_delta: float) -> void:
+	update_transform()
 
 func update_order(new_order: int) -> void:
 	order = new_order
@@ -31,7 +30,7 @@ func update_order(new_order: int) -> void:
 		add_child(line)
 		lines.append(line)
 
-func _physics_process(_delta: float) -> void:
+func update_transform() -> void:
 	if deleting == true: return
 	var difference := other.position - atom.position
 	var distance := difference.length()
