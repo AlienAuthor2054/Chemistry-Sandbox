@@ -23,7 +23,7 @@ enum {NONE, SELF, OTHER, BOTH, ID_PRIORITY}
 var id: int
 var protons: int
 var symbol: String
-var bonds: Dictionary[Atom, AtomBond] = {}
+var bonds: Dictionary[Atom, Bond] = {}
 var bonds_order: Dictionary[Atom, int]:
 	get:
 		var result: Dictionary[Atom, int] = {}
@@ -49,7 +49,7 @@ var molecule: Molecule:
 		molecule = new_mol
 var bond_order: int:
 	get:
-		return bonds.values().reduce(func(total: int, bond: AtomBond): return total + bond.order, 0)
+		return bonds.values().reduce(func(total: int, bond: Bond): return total + bond.order, 0)
 var valence_left: int:
 	get: return orbital_set.valence_max
 var bonds_left: int:
@@ -144,7 +144,7 @@ func bond_atom(other: Atom, bond_order: int = 1, broadcast_dirty_event: bool = t
 	if id > other.id:
 		other.bond_atom(self, bond_order, broadcast_dirty_event)
 		return
-	var bond: AtomBond
+	var bond: Bond
 	if not bonds.has(other):
 		#print("bond #%s | %s -> %s" % [bonds.size() + 1, id, other.id])
 		bond = ATOM_BOND_SCENE.instantiate()
@@ -169,7 +169,7 @@ func unbond_atom(other: Atom, chemical: bool = true, broadcast_dirty_event: bool
 	if id > other.id:
 		other.unbond_atom(self, chemical, broadcast_dirty_event)
 		return
-	(bonds[other] as AtomBond).free()
+	(bonds[other] as Bond).free()
 	bonds.erase(other)
 	other.bonds.erase(self)
 	molecule.split(self, other)

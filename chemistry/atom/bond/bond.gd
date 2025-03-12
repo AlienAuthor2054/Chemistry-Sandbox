@@ -1,4 +1,4 @@
-class_name AtomBond extends Node2D
+class_name Bond extends Node2D
 
 const ATOM_BOND_LINE_SCENE = preload("uid://cqiykungxfadm")
 
