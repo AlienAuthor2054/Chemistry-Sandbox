@@ -3,14 +3,14 @@ class_name Bond extends Node2D
 const ATOM_BOND_LINE_SCENE = preload("uid://cqiykungxfadm")
 
 var order := 1
-var atom: Atom
-var other: Atom
+var _atom: Atom
+var _other: Atom
 var lines: Array[Polygon2D] = []
 var deleting := false
 
 func initialize(atom: Atom, other: Atom, order: int):
-	self.atom = atom
-	self.other = other
+	_atom = atom
+	_other = other
 	update_order(order)
 	update_transform()
 	reset_physics_interpolation()
@@ -32,7 +32,7 @@ func update_order(new_order: int) -> void:
 
 func update_transform() -> void:
 	if deleting == true: return
-	var difference := other.position - atom.position
+	var difference := _other.position - _atom.position
 	var distance := difference.length()
 	var direction := difference.normalized()
 	rotation = atan2(direction.y, direction.x)
