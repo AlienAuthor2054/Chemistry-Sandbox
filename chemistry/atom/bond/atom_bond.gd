@@ -1,6 +1,6 @@
 class_name AtomBond extends Node2D
 
-@export var ATOM_BOND_LINE_SCENE: PackedScene
+const ATOM_BOND_LINE_SCENE = preload("uid://cqiykungxfadm")
 
 var order := 1
 var atom: Atom

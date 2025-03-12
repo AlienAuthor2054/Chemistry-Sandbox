@@ -1,8 +1,8 @@
 class_name Atom extends RigidBody2D
 
-const ATOM_SCENE: PackedScene = preload("res://chemistry/atom/atom.tscn")
-const ATOM_BOND_SCENE: PackedScene = preload("res://chemistry/atom/bond/atom_bond.tscn")
-const BASE_ATOM_TEXTURE: GradientTexture2D = preload("res://chemistry/atom/atom_texture.tres")
+const ATOM_SCENE = preload("uid://b8mej4rmqjbp3")
+const ATOM_BOND_SCENE = preload("uid://d1awp4hbumust")
+const BASE_ATOM_TEXTURE: GradientTexture2D = preload("uid://c3yioj1c7fjka")
 
 static var next_id := 1
 static var atom_id_register: Dictionary[int, Atom] = {}

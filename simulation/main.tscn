@@ -1,7 +1,6 @@
-[gd_scene load_steps=10 format=3 uid="uid://demuuu25tlthq"]
+[gd_scene load_steps=9 format=3 uid="uid://demuuu25tlthq"]
 
 [ext_resource type="Script" uid="uid://cc1m1nl8kagxo" path="res://simulation/camera.gd" id="1_0ogwh"]
-[ext_resource type="PackedScene" uid="uid://b8mej4rmqjbp3" path="res://chemistry/atom/atom.tscn" id="1_2jqwi"]
 [ext_resource type="Script" uid="uid://dk6v4qyap0gnt" path="res://simulation/main.gd" id="1_3ujg2"]
 [ext_resource type="PhysicsMaterial" uid="uid://dfgb2hjec0pw2" path="res://simulation/ideal_physics_material.tres" id="4_d7v1x"]
 [ext_resource type="Script" uid="uid://0q037qqryrcs" path="res://simulation/border.gd" id="5_a8fb5"]
@@ -24,7 +23,6 @@ script = ExtResource("1_3ujg2")
 anchor_mode = 0
 process_callback = 0
 script = ExtResource("1_0ogwh")
-atom_scene = ExtResource("1_2jqwi")
 
 [node name="Border" type="StaticBody2D" parent="."]
 collision_mask = 2
