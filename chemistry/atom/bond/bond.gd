@@ -42,7 +42,9 @@ func update_order(new_order: int) -> void:
 	var y_offset := (order - 1) / 2.0
 	for index in range(order):
 		var line: Polygon2D = ATOM_BOND_LINE_SCENE.instantiate()
-		line.position = Vector2(0, 30 * (index - y_offset))
+		var line_width_scale = energy / order / 64
+		line.position = Vector2(0, (16 + (line_width_scale * 16)) * (index - y_offset))
+		line.scale = Vector2(1, line_width_scale)
 		add_child(line)
 		lines.append(line)
 
