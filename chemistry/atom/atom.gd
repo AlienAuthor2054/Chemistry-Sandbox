@@ -204,15 +204,7 @@ func unbond_all() -> void:
 
 @warning_ignore("shadowed_variable")
 func get_bond_energy(other: Atom, bond_order: int) -> float:
-	if bond_order == 0: return 0.0
-	var bond_energy: float = [100, 180, 250][bond_order - 1]
-	var en_diff := absf(electronegativity - other.electronegativity)
-	var en_sum := electronegativity + other.electronegativity
-	bond_energy *= 1 + en_diff
-	bond_energy /= (radius + other.radius) / 200.0
-	bond_energy -= 1.0 * (en_sum ** 2.0)
-	assert(bond_energy > 0, "Bond energy should be more than zero")
-	return bond_energy
+	return Bond.get_energy(self, other, bond_order)
 
 func get_bond_order(other: Atom) -> int:
 	if not bonds.has(other): return 0
