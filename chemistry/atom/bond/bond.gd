@@ -13,12 +13,14 @@ var deleting := false
 static func get_energy(atom1: Atom, atom2: Atom, order: int) -> float:
 	if order == 0: return 0.0
 	@warning_ignore("shadowed_variable")
-	var energy: float = [100, 180, 250][order - 1]
-	var en_diff := absf(atom1.electronegativity - atom2.electronegativity)
-	var en_sum := atom1.electronegativity + atom2.electronegativity
-	energy *= 1 + en_diff
-	energy /= (atom1.radius + atom2.radius) / 200.0
-	energy -= 1.0 * (en_sum ** 2.0)
+	var energy: float = 100
+	# Electronegativity difference -> Ionic character (strengthens)
+	energy += 40 * (absf(atom1.electronegativity - atom2.electronegativity) ** 2)
+	# Bond order -> Bonded electrons (strengthens)
+	energy *= [1.0, 1.8, 2.4][order - 1]
+	# Unbonded electron repulsion (weakens)
+	# TODO: Consider external bonds. With that, external changes can affect bond energy, which CBM does not currently support.
+	energy -= 1.0 * (atom1.electrons - order) * (atom2.electrons - order)
 	assert(energy > 0, "Bond energy should be more than zero")
 	return energy
 

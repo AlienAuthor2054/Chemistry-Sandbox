@@ -50,6 +50,8 @@ var molecule: Molecule:
 var bond_order: int:
 	get:
 		return bonds.values().reduce(func(total: int, bond: Bond): return total + bond.order, 0)
+var electrons: int:
+	get: return orbital_set.electrons
 var valence_left: int:
 	get: return orbital_set.valence_max
 var bonds_left: int:
