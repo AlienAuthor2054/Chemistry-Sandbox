@@ -4,12 +4,13 @@ const ATOM_SCENE = preload("uid://b8mej4rmqjbp3")
 const ATOM_BOND_SCENE = preload("uid://d1awp4hbumust")
 const BASE_ATOM_TEXTURE: GradientTexture2D = preload("uid://c3yioj1c7fjka")
 
+static var LOCK := Lock.new()
 static var next_id := 1
 static var atom_id_register: Dictionary[int, Atom] = {}
 static var atom_db: Dictionary = YAMLParser.parse("res://chemistry/atom/atom_db.yaml")
 static var atom_textures: Dictionary = {}
 static var atom_visual_radius_multi = 1
-static var LOCK := Lock.new()
+static var atoms_frozen: bool = ProjectSettings.get_setting("simulation/freeze_atoms")
 
 @warning_ignore("unused_signal")
 signal electronAdded
@@ -256,6 +257,7 @@ func remove() -> void:
 	queue_free()
 
 func _physics_process(_delta: float) -> void:
+	freeze = atoms_frozen
 	var force_list = AdderDict.new()
 	var new_atoms_in_field: Array[Atom] = []
 	# TODO: Consider using signals

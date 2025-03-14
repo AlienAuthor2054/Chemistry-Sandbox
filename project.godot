@@ -55,3 +55,7 @@ renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
 environment/defaults/default_clear_color=Color(0.0962047, 0.0962048, 0.0962047, 1)
 anti_aliasing/defaults/default_clear_color=Color(0.3, 0.3, 0.3, 1)
+
+[simulation]
+
+freeze_atoms=false
