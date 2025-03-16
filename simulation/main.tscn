@@ -107,6 +107,6 @@ text = "Temp Down
 "
 
 [connection signal="external_change_applied" from="." to="UI/KineticStatsLabel" method="_on_main_external_change_applied"]
-[connection signal="pressed" from="UI/VBoxContainer/ClearButton" to="." method="clear_simulation"]
+[connection signal="pressed" from="UI/VBoxContainer/ClearButton" to="UI" method="_on_clear_button_pressed"]
 [connection signal="pressed" from="UI/VBoxContainer/TemperatureUpButton" to="UI" method="_on_temperature_button_pressed" binds= [2.0]]
 [connection signal="pressed" from="UI/VBoxContainer/TemperatureDownButton" to="UI" method="_on_temperature_button_pressed" binds= [0.5]]

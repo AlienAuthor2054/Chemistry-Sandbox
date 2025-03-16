@@ -15,7 +15,6 @@ input_pickable = true
 physics_material_override = ExtResource("1_822kf")
 can_sleep = false
 lock_rotation = true
-freeze_mode = 1
 max_contacts_reported = 64
 script = ExtResource("1_by0es")
 

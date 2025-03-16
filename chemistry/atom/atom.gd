@@ -10,7 +10,6 @@ static var atom_id_register: Dictionary[int, Atom] = {}
 static var atom_db: Dictionary = YAMLParser.parse("res://chemistry/atom/atom_db.yaml")
 static var atom_textures: Dictionary = {}
 static var atom_visual_radius_multi = 1
-static var atoms_frozen: bool = ProjectSettings.get_setting("simulation/freeze_atoms")
 
 @warning_ignore("unused_signal")
 signal electronAdded
@@ -37,7 +36,6 @@ var max_bond_length: float = bond_length * 1.75
 var bond_strength: float = 1000
 var repulsion_force: float = 200
 var field_radius: float = 175
-var interatomic_forces := true
 var atoms_in_field: Array[Atom] = []
 var atoms_in_molecule_checked: Array[Atom] = []
 var atoms_outside_molecule_checked := AtomSignalSet.new(_on_other_molecule_dirty, true)
@@ -97,12 +95,8 @@ func initialize(atomic_number: int, pos: Vector2, vel: Vector2):
 	#print(Combination.combos_range(range(1, 4+1)))
 	$Sprite2D.scale = Vector2.ONE * this_atom_db.radius * atom_visual_radius_multi / 100
 	$Sprite2D.texture = atom_textures[protons]
-	if not interatomic_forces:
-		bond_length = 300
-		max_bond_length = bond_length * 2.0
-		bond_strength = 0
-		repulsion_force = 0
-		field_radius = 300
+	on_simulation_running_changed(Simulation.running)
+	Simulation.running_changed.connect(on_simulation_running_changed)
 	position = pos
 	apply_central_impulse(vel)
 	add_to_group("atoms")
@@ -134,7 +128,10 @@ func get_potential_energy() -> float:
 	return potential_energy
 
 func multiply_velocity(factor):
-	apply_central_impulse(mass * linear_velocity * (factor - 1))
+	if Simulation.running:
+		apply_central_impulse(mass * linear_velocity * (factor - 1))
+	else:
+		linear_velocity *= factor
 
 func execute_bond_changed_event_queue(emit_atom_dirty: int = ID_PRIORITY, emit_mol_dirty: bool = true) -> void:
 	for bond_changed_event: BondChangedEvent in bond_changed_event_queue.duplicate():
@@ -256,8 +253,14 @@ func remove() -> void:
 	remove_from_group("atoms")
 	queue_free()
 
+func on_simulation_running_changed(new: bool) -> void:
+	set_physics_process(new)
+	var old_vel = linear_velocity
+	freeze = not new
+	linear_velocity = old_vel
+
 func _physics_process(_delta: float) -> void:
-	freeze = atoms_frozen
+	if not Simulation.running: return
 	var force_list = AdderDict.new()
 	var new_atoms_in_field: Array[Atom] = []
 	# TODO: Consider using signals

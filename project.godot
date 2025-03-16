@@ -19,7 +19,7 @@ config/icon="uid://dy0cxxn05e5kf"
 
 [autoload]
 
-Global="*res://global.gd"
+Simulation="*res://simulation/simulation.gd"
 
 [display]
 
@@ -32,6 +32,11 @@ window/stretch/mode="canvas_items"
 benchmark={
 "deadzone": 0.2,
 "events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":true,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":66,"key_label":0,"unicode":98,"location":0,"echo":false,"script":null)
+]
+}
+toggle_simulation_running={
+"deadzone": 0.2,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":96,"key_label":0,"unicode":96,"location":0,"echo":false,"script":null)
 ]
 }
 
@@ -55,7 +60,3 @@ renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
 environment/defaults/default_clear_color=Color(0.0962047, 0.0962048, 0.0962047, 1)
 anti_aliasing/defaults/default_clear_color=Color(0.3, 0.3, 0.3, 1)
-
-[simulation]
-
-freeze_atoms=false

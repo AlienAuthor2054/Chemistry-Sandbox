@@ -5,3 +5,6 @@ extends CanvasLayer
 func _on_temperature_button_pressed(velocity_factor: float) -> void:
 	get_tree().call_group("atoms", "multiply_velocity", sqrt(velocity_factor))
 	$"..".external_change_applied.emit()
+
+func _on_clear_button_pressed() -> void:
+	Simulation.clear()

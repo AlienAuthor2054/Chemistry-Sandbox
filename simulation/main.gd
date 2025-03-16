@@ -13,6 +13,7 @@ func _ready():
 
 @onready var db := $UI/SelectedAtomLabel/Timer
 func _unhandled_input(event: InputEvent) -> void:
+	Simulation.on_unhandled_input(event)
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.pressed:
 			clicked_point = get_global_mouse_position()
@@ -29,9 +30,3 @@ func _unhandled_input(event: InputEvent) -> void:
 		if atom_selection_index >= atoms_possible_count: atom_selection_index = 0
 		if atom_selection_index < 0: atom_selection_index = atoms_possible_count - 1
 		$UI/SelectedAtomLabel.text = Atom.atom_db[atoms_possible[atom_selection_index]].symbol
-	elif event.is_action_pressed("benchmark"):
-		clear_simulation()
-		SimulationBenchmark.new($".")
-
-func clear_simulation() -> void:
-	get_tree().call_group("atoms", "remove")

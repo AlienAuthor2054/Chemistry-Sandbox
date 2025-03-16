@@ -1,6 +1,6 @@
 extends StaticBody2D
 
-const world_size = Global.world_size
+const world_size = Simulation.world_size
 
 func _ready() -> void:
 	$CollisionPolygon2D.set_polygon(PackedVector2Array([
