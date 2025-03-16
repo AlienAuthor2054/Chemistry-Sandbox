@@ -1,21 +1,12 @@
 extends Node2D
 
+@warning_ignore("unused_signal")
+signal external_change_applied
+
 var clicked_point := Vector2.ZERO
 var atoms_possible := Atom.atom_db.keys()
 var atoms_possible_count := atoms_possible.size()
 var atom_selection_index := 0
-
-@warning_ignore("unused_signal")
-signal external_change_applied
-
-func change(new: Computed):
-	print("changed to %s" % [new.value])
-
-func iron_test():
-	var orbital_set = AtomicOrbitalSet.from_electron_configuration("1s2 2s2 2p6 3s2 3p6 3d6 4s2")
-	print("%s: %s" % [26, orbital_set.get_total_energy(26)])
-	orbital_set.get_orbital(1, 0, 0).remove_electrons()
-	print("%s (less a 1s electron): %s" % [26, orbital_set.get_total_energy(26)])
 
 func _ready():
 	Atom.create_textures()
