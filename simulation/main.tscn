@@ -8,7 +8,7 @@
 [ext_resource type="Script" uid="uid://c24ohhdpvjt2b" path="res://ui/ui.gd" id="5_li4ao"]
 
 [sub_resource type="Gradient" id="Gradient_nnmox"]
-colors = PackedColorArray(0.301961, 0.301961, 0.301961, 1, 1, 1, 1, 1)
+colors = PackedColorArray(0.45098, 0.45098, 0.45098, 1, 1, 1, 1, 1)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_vlwa4"]
 gradient = SubResource("Gradient_nnmox")
@@ -45,6 +45,7 @@ script = ExtResource("5_li4ao")
 [node name="KineticStatsLabel" type="Label" parent="UI"]
 process_priority = 1
 process_physics_priority = 1
+visible = false
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0

@@ -15,6 +15,7 @@ config/description="PROTOTYPE"
 config/version="0.2.0"
 run/main_scene="res://simulation/main.tscn"
 config/features=PackedStringArray("4.4", "GL Compatibility")
+boot_splash/bg_color=Color(0.45098, 0.45098, 0.45098, 1)
 config/icon="uid://dy0cxxn05e5kf"
 
 [autoload]
