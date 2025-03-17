@@ -1,6 +1,7 @@
 extends Camera2D
 
-@onready var zoom_value := get_viewport().get_visible_rect().size.y / Simulation.world_size
+var zoom_multi := 1.0
+@onready var zoom_value := get_viewport().get_visible_rect().size.y * zoom_multi / Simulation.world_size.x
 
 var selected_atom = null
 
