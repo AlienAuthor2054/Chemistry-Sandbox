@@ -30,7 +30,7 @@ var bonds_order: Dictionary[Atom, int]:
 		for atom: Atom in bonds:
 			result[atom] = bonds[atom].order
 		return result 
-var orbital_set: AtomicOrbitalSet
+var valence_shell: ValenceShell
 var bond_length: float = 175
 var max_bond_length: float = bond_length * 1.75
 var bond_strength: float = 1000
@@ -49,15 +49,15 @@ var molecule: Molecule:
 var bond_order: int:
 	get:
 		return bonds.values().reduce(func(total: int, bond: Bond): return total + bond.order, 0)
-var electrons: int:
-	get: return orbital_set.electrons
+var valence_count: int:
+	get: return valence_shell.count
 var valence_left: int:
-	get: return orbital_set.valence_max
+	get: return valence_shell.max
 var bonds_left: int:
 	get: return valence_left - bond_order
 var bond_changed_event_queue: Array[BondChangedEvent] = []
 var removing := false
-@onready var max_bonds: int = orbital_set.valence_left
+@onready var max_bonds: int = valence_shell.left
 @onready var electronegativity: float = this_atom_db.electronegativity
 @onready var radius: float = this_atom_db.radius
 
@@ -85,8 +85,7 @@ func initialize(atomic_number: int, pos: Vector2, vel: Vector2):
 	this_atom_db = atom_db[protons]
 	symbol = this_atom_db.symbol
 	mass = protons * 2 if protons > 1 else protons
-	orbital_set = AtomicOrbitalSet.from_electron_configuration(this_atom_db.electron_configuration)
-	orbital_set.parent = self
+	valence_shell = ValenceShell.new(protons)
 	$SymbolLabel.text = symbol
 	$SymbolLabel.add_theme_font_size_override("font_size", this_atom_db.radius * 0.6)
 	$IdLabel.text = str(id)

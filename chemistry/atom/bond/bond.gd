@@ -20,7 +20,7 @@ static func get_energy(atom1: Atom, atom2: Atom, order: int) -> float:
 	energy *= [1.0, 1.7, 2.3][order - 1]
 	# Unbonded electron repulsion (weakens)
 	# TODO: Consider external bonds. With that, external changes can affect bond energy, which CBM does not currently support.
-	energy -= 0.8 * (atom1.electrons - order) * (atom2.electrons - order)
+	energy -= 0.8 * (atom1.valence_count - order) * (atom2.valence_count - order)
 	assert(energy > 0, "Bond energy should be more than zero")
 	return energy
 
