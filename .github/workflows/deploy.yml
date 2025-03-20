@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - main
+      - web-deploy-test
 
 jobs:
   deploy:
@@ -18,7 +18,7 @@ jobs:
       contents: write
 
     container:
-      image: barichello/godot-ci:4.4.0
+      image: abarichello/godot-ci@4.4-stable
 
     steps:
       - name: Checkout
