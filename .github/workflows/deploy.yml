@@ -3,6 +3,11 @@
 name: "godot-ci export"
 on: [push, workflow_dispatch]
 
+permissions:
+    contents: write
+    deployments: write
+    pages: write
+    
 # NOTE: If your `project.godot` is at the repository root, set `PROJECT_PATH` below to ".".
 
 env:
