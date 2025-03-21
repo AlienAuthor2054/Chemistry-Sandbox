@@ -17,7 +17,7 @@
 class_name SimulationBenchmark extends Node
 
 const INSET := Vector2(200, 200)
-const SIMULATION_RECT := Rect2(INSET, Simulation.world_size - (INSET * 2))
+var SIMULATION_RECT := Rect2(INSET, Simulation.world_size - (INSET * 2))
 const PROFILE_TIME := 10
 const ATOMS: Dictionary[int, int] = { # 50 atoms
 	1: 15,

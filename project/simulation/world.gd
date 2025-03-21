@@ -16,11 +16,32 @@
 
 extends StaticBody2D
 
-const world_size = Simulation.world_size
+var world_size = Simulation.world_size
+var clicked_point := Vector2.ZERO
+var spawning_atom := false
 
 func _ready() -> void:
-	$CollisionPolygon2D.set_polygon(PackedVector2Array([
+	var polygon := PackedVector2Array([
 		Vector2(0, 0), Vector2(world_size.x, 0), 
 		world_size, Vector2(0, world_size.y)
-	]))
-	$Sprite2D.scale = world_size / 1000
+	])
+	$Area/CollisionShape.set_polygon(polygon)
+	$Border.set_polygon(polygon)
+	$Sprite.scale = world_size / 1000
+
+func _on_area_input_event(viewport: Node, event: InputEvent, shape_idx: int) -> void:
+	if not (event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT): return
+	if event.pressed:
+		clicked_point = get_global_mouse_position()
+		spawning_atom = true
+	else:
+		spawn_atom()
+
+func spawn_atom() -> void:
+	if not spawning_atom: return
+	Atom.create(
+			self,
+			Global.selected_element,
+			clicked_point, (get_global_mouse_position() - clicked_point) * 1.5,
+	)
+	spawning_atom = false

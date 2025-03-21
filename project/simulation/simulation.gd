@@ -18,7 +18,7 @@ extends Node
 
 signal running_changed(new: bool)
 
-const world_size = Vector2(2000, 2000)
+var world_size := Vector2(2000, 2000)
 
 var running: bool:
 	set(new):
