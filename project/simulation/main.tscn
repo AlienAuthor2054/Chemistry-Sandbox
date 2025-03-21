@@ -24,16 +24,24 @@ anchor_mode = 0
 process_callback = 0
 script = ExtResource("1_0ogwh")
 
-[node name="Border" type="StaticBody2D" parent="."]
+[node name="World" type="StaticBody2D" parent="."]
 collision_mask = 2
 physics_material_override = ExtResource("4_d7v1x")
 script = ExtResource("5_a8fb5")
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Border"]
+[node name="Area" type="Area2D" parent="World"]
+z_index = 1
+collision_layer = 8
+collision_mask = 8
+
+[node name="CollisionShape" type="CollisionPolygon2D" parent="World/Area"]
+polygon = PackedVector2Array(-500, -500, -500, 500, 500, 500, 500, -500)
+
+[node name="Border" type="CollisionPolygon2D" parent="World"]
 build_mode = 1
 polygon = PackedVector2Array(-500, -500, -500, 500, 500, 500, 500, -500)
 
-[node name="Sprite2D" type="Sprite2D" parent="Border"]
+[node name="Sprite" type="Sprite2D" parent="World"]
 texture = SubResource("GradientTexture2D_vlwa4")
 offset = Vector2(500, 500)
 
@@ -123,6 +131,7 @@ theme_override_font_sizes/font_size = 50
 text = "Pause"
 
 [connection signal="external_change_applied" from="." to="UI/KineticStatsLabel" method="_on_main_external_change_applied"]
+[connection signal="input_event" from="World/Area" to="World" method="_on_area_input_event"]
 [connection signal="pressed" from="UI/Tools/ClearButton" to="UI" method="_on_clear_button_pressed"]
 [connection signal="pressed" from="UI/Tools/TemperatureUpButton" to="UI" method="_on_temperature_button_pressed" binds= [2.0]]
 [connection signal="pressed" from="UI/Tools/TemperatureDownButton" to="UI" method="_on_temperature_button_pressed" binds= [0.5]]

@@ -20,6 +20,7 @@ config/icon="uid://dy0cxxn05e5kf"
 
 [autoload]
 
+Global="*res://global.gd"
 Simulation="*res://simulation/simulation.gd"
 
 [display]
@@ -47,6 +48,7 @@ toggle_simulation_running={
 2d_physics/layer_1="walls"
 2d_physics/layer_2="atoms"
 2d_physics/layer_3="atom_areas"
+2d_physics/layer_4="world"
 
 [physics]
 

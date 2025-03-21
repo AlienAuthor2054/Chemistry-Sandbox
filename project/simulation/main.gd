@@ -19,10 +19,12 @@ extends Node2D
 @warning_ignore("unused_signal")
 signal external_change_applied
 
-var clicked_point := Vector2.ZERO
-var atoms_possible := Atom.atom_db.keys()
-var atoms_possible_count := atoms_possible.size()
-var atom_selection_index := 0
+var elements_possible := Atom.atom_db.keys()
+var elements_possible_count := elements_possible.size()
+var element_selection_index := 0
+var selected_element: int:
+	get(): return Global.selected_element
+	set(new): Global.selected_element = new
 
 func _ready():
 	Atom.create_textures()
@@ -30,19 +32,17 @@ func _ready():
 @onready var db := $UI/SelectedAtomLabel/Timer
 func _unhandled_input(event: InputEvent) -> void:
 	Simulation.on_unhandled_input(event)
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
-		if event.pressed:
-			clicked_point = get_global_mouse_position()
-		else:
-			Atom.create(self, atoms_possible[atom_selection_index], clicked_point, (get_global_mouse_position() - clicked_point) * 1.5)
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.is_released():
+		$World.spawn_atom()
 	elif event is InputEventMouseButton:
 		if not db.is_stopped(): return
 		db.start()
 		match event.button_index:
 			MOUSE_BUTTON_WHEEL_DOWN:
-				atom_selection_index += 1
+				element_selection_index += 1
 			MOUSE_BUTTON_WHEEL_UP:
-				atom_selection_index -= 1
-		if atom_selection_index >= atoms_possible_count: atom_selection_index = 0
-		if atom_selection_index < 0: atom_selection_index = atoms_possible_count - 1
-		$UI/SelectedAtomLabel.text = Atom.atom_db[atoms_possible[atom_selection_index]].symbol
+				element_selection_index -= 1
+		if element_selection_index >= elements_possible_count: element_selection_index = 0
+		if element_selection_index < 0: element_selection_index = elements_possible_count - 1
+		selected_element = elements_possible[element_selection_index]
+		$UI/SelectedAtomLabel.text = Atom.atom_db[selected_element].symbol
