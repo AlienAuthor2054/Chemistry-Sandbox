@@ -26,7 +26,7 @@ var running: bool:
 		running_changed.emit(new)
 
 func _init() -> void:
-	running = false
+	running = true
 
 func on_unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("toggle_simulation_running"):
