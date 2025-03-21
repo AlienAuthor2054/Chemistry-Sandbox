@@ -18,9 +18,18 @@ extends CanvasLayer
 
 @onready var zoom_value: float = 1000 / get_viewport().get_visible_rect().size.y
 
+func _ready() -> void:
+	Simulation.running_changed.connect(_on_simulation_running_changed)
+
 func _on_temperature_button_pressed(velocity_factor: float) -> void:
 	get_tree().call_group("atoms", "multiply_velocity", sqrt(velocity_factor))
 	$"..".external_change_applied.emit()
 
 func _on_clear_button_pressed() -> void:
 	Simulation.clear()
+
+func _on_pause_toggle_pressed() -> void:
+	Simulation.running = not Simulation.running
+
+func _on_simulation_running_changed(running: bool) -> void:
+	$SimulationStateTools/PauseToggle.text = "Pause" if running else "Resume"

@@ -76,7 +76,7 @@ metadata/_edit_use_anchors_ = true
 wait_time = 0.05
 one_shot = true
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UI"]
+[node name="Tools" type="VBoxContainer" parent="UI"]
 anchors_preset = 3
 anchor_left = 1.0
 anchor_top = 1.0
@@ -88,26 +88,42 @@ grow_horizontal = 0
 grow_vertical = 0
 alignment = 2
 
-[node name="ClearButton" type="Button" parent="UI/VBoxContainer"]
+[node name="ClearButton" type="Button" parent="UI/Tools"]
 layout_mode = 2
 size_flags_horizontal = 8
 theme_override_font_sizes/font_size = 50
 text = "Clear"
 
-[node name="TemperatureUpButton" type="Button" parent="UI/VBoxContainer"]
+[node name="TemperatureUpButton" type="Button" parent="UI/Tools"]
 layout_mode = 2
 size_flags_horizontal = 8
 theme_override_font_sizes/font_size = 50
 text = "Temp Up"
 
-[node name="TemperatureDownButton" type="Button" parent="UI/VBoxContainer"]
+[node name="TemperatureDownButton" type="Button" parent="UI/Tools"]
 layout_mode = 2
 size_flags_horizontal = 8
 theme_override_font_sizes/font_size = 50
 text = "Temp Down
 "
 
+[node name="SimulationStateTools" type="VBoxContainer" parent="UI"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -40.0
+offset_bottom = 40.0
+grow_horizontal = 0
+alignment = 2
+
+[node name="PauseToggle" type="Button" parent="UI/SimulationStateTools"]
+layout_mode = 2
+size_flags_horizontal = 8
+theme_override_font_sizes/font_size = 50
+text = "Pause"
+
 [connection signal="external_change_applied" from="." to="UI/KineticStatsLabel" method="_on_main_external_change_applied"]
-[connection signal="pressed" from="UI/VBoxContainer/ClearButton" to="UI" method="_on_clear_button_pressed"]
-[connection signal="pressed" from="UI/VBoxContainer/TemperatureUpButton" to="UI" method="_on_temperature_button_pressed" binds= [2.0]]
-[connection signal="pressed" from="UI/VBoxContainer/TemperatureDownButton" to="UI" method="_on_temperature_button_pressed" binds= [0.5]]
+[connection signal="pressed" from="UI/Tools/ClearButton" to="UI" method="_on_clear_button_pressed"]
+[connection signal="pressed" from="UI/Tools/TemperatureUpButton" to="UI" method="_on_temperature_button_pressed" binds= [2.0]]
+[connection signal="pressed" from="UI/Tools/TemperatureDownButton" to="UI" method="_on_temperature_button_pressed" binds= [0.5]]
+[connection signal="pressed" from="UI/SimulationStateTools/PauseToggle" to="UI" method="_on_pause_toggle_pressed"]
