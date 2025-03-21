@@ -1,0 +1,13 @@
+[gd_scene load_steps=2 format=3 uid="uid://c41ggtkksw0uk"]
+
+[ext_resource type="Script" uid="uid://bfbjhmoijmyx3" path="res://ui/element_hotbar_element.gd" id="1_1pbcf"]
+
+[node name="Element" type="Label"]
+custom_minimum_size = Vector2(75, 0)
+mouse_filter = 0
+theme_override_font_sizes/font_size = 75
+text = "H"
+script = ExtResource("1_1pbcf")
+metadata/_edit_use_anchors_ = true
+
+[connection signal="gui_input" from="." to="." method="_on_gui_input"]

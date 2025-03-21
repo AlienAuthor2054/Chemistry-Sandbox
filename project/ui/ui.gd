@@ -20,6 +20,7 @@ extends CanvasLayer
 
 func _ready() -> void:
 	Simulation.running_changed.connect(_on_simulation_running_changed)
+	Global.selected_element_changed.connect(_on_selected_element_changed)
 
 func _on_temperature_button_pressed(velocity_factor: float) -> void:
 	get_tree().call_group("atoms", "multiply_velocity", sqrt(velocity_factor))
@@ -33,3 +34,9 @@ func _on_pause_toggle_pressed() -> void:
 
 func _on_simulation_running_changed(running: bool) -> void:
 	$SimulationStateTools/PauseToggle.text = "Pause" if running else "Resume"
+
+func _on_selected_element_changed(element: int) -> void:
+	$SelectedElementButton.text = Atom.atom_db[element].symbol
+
+func _on_selected_element_button_pressed() -> void:
+	$ElementHotbar.visible = not $ElementHotbar.visible

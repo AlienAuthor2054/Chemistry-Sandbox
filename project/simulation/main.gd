@@ -24,14 +24,13 @@ var elements_possible_count := elements_possible.size()
 var element_selection_index := 0
 var selected_element: int:
 	get(): return Global.selected_element
-	set(new):
-		Global.selected_element = new
-		$UI/SelectedAtomLabel.text = Atom.atom_db[new].symbol
+	set(new): Global.selected_element = new
+		
 
 func _ready():
 	Atom.create_textures()
 
-@onready var db := $UI/SelectedAtomLabel/Timer
+@onready var db := $UI/SelectedElementButton/Timer
 func _unhandled_input(event: InputEvent) -> void:
 	Simulation.on_unhandled_input(event)
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.is_released():
