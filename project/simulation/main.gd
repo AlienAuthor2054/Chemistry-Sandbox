@@ -24,7 +24,9 @@ var elements_possible_count := elements_possible.size()
 var element_selection_index := 0
 var selected_element: int:
 	get(): return Global.selected_element
-	set(new): Global.selected_element = new
+	set(new):
+		Global.selected_element = new
+		$UI/SelectedAtomLabel.text = Atom.atom_db[new].symbol
 
 func _ready():
 	Atom.create_textures()
@@ -45,4 +47,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		if element_selection_index >= elements_possible_count: element_selection_index = 0
 		if element_selection_index < 0: element_selection_index = elements_possible_count - 1
 		selected_element = elements_possible[element_selection_index]
-		$UI/SelectedAtomLabel.text = Atom.atom_db[selected_element].symbol
+	else:
+		for index in range(4):
+			if not event.is_action_pressed("select_hotbar_element_" + str(index + 1)): continue
+			element_selection_index = index
+			selected_element = elements_possible[element_selection_index]
