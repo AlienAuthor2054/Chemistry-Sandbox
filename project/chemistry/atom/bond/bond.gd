@@ -30,13 +30,14 @@ static func get_energy(atom1: Atom, atom2: Atom, order: int) -> float:
 	if order == 0: return 0.0
 	@warning_ignore("shadowed_variable")
 	var energy: float = 100
+	var bond_length := (atom1.radius + atom2.radius) / 2.0
 	# Electronegativity difference -> Ionic character (strengthens)
-	energy += 70 * (absf(atom1.electronegativity - atom2.electronegativity) ** 2)
+	energy += 50 * (absf(atom1.electronegativity - atom2.electronegativity) ** 2)
 	# Bond order -> Bonded electrons (strengthens)
-	energy *= [1.0, 1.7, 2.3][order - 1]
+	energy *= [1.0, 1.9, 2.6][order - 1]
 	# Unbonded electron repulsion (weakens)
 	# TODO: Consider external bonds. With that, external changes can affect bond energy, which CBM does not currently support.
-	energy -= 0.8 * (atom1.valence_count - order) * (atom2.valence_count - order)
+	energy -= (atom1.valence_count - order) * (atom2.valence_count - order) * 40000 / (bond_length ** 2)
 	assert(energy > 0, "Bond energy should be more than zero")
 	return energy
 
