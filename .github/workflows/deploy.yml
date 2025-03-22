@@ -11,7 +11,12 @@ permissions:
     contents: write
     deployments: write
     pages: write
-    
+    id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
 # NOTE: If your `project.godot` is at the repository root, set `PROJECT_PATH` below to ".".
 
 env:
