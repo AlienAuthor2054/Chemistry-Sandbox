@@ -1,6 +1,6 @@
 # Chemistry Sandbox
 
-[Chemical reaction animation](img/reaction-anim.gif)
+<img width=20% src="img/reaction-anim.gif">
 
 Chemistry Sandbox is an in-development interactive video game simulating high school chemistry concepts at the molecular level.
 
@@ -16,7 +16,7 @@ Due to time and knowledge constraints, compromises have to be made.
 
 ## How to Play
 
-Better controls and mobile support are being worked on.
+For now, here is a basic controls tutorial:
 
 1. Use scroll wheel to select among four elements (hydrogen, carbon, nitrogen, and oxygen). The selected element's symbol appears on the bottom-left.
 2. Left click on the gray area (simulation area) to spawn an atom.
@@ -29,6 +29,13 @@ Better controls and mobile support are being worked on.
 	- Temp Down: Slows down atoms
 
 Atoms near each other will automatically form and break bonds following an adapted model of Lewis theory.
+
+Beyond this, expect interactive in-game tutorials in the future covering:
+- Basic controls
+- Atomic bonding
+- Bond strength and its determining factors
+
+and other chimistry concepts.
 
 ## Building
 
