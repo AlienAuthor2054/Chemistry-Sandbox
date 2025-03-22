@@ -25,10 +25,12 @@ var element_selection_index := 0
 var selected_element: int:
 	get(): return Global.selected_element
 	set(new): Global.selected_element = new
-		
 
 func _ready():
 	Atom.create_textures()
+	Global.selected_element_changed.connect(func(new: int):
+		element_selection_index = elements_possible.find(new)
+	)
 
 @onready var db := $UI/SelectedElementButton/Timer
 func _unhandled_input(event: InputEvent) -> void:
