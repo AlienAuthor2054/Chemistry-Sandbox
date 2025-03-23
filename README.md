@@ -16,9 +16,9 @@ Due to time and knowledge constraints, compromises have to be made.
 
 ## How to Play
 
-For now, here is a basic controls tutorial:
+For now, here is a basic controls tutorial for PC users (see further below for mobile users):
 
-1. Use scroll wheel to select among four elements (hydrogen, carbon, nitrogen, and oxygen). The selected element's symbol appears on the bottom-left.
+1. Use scroll wheel or number keys 1 to 4 to select among four elements (hydrogen, carbon, nitrogen, and oxygen). The selected element's symbol appears on the bottom-left.
 2. Left click on the gray area (simulation area) to spawn an atom.
 	- Drag while holding left click, then release to launch the spawned atom.
 3. Right click on an atom to remove it.
@@ -31,7 +31,7 @@ For now, here is a basic controls tutorial:
 Atoms near each other will automatically form and break bonds following an adapted model of Lewis theory.
 
 Beyond this, expect interactive in-game tutorials in the future covering:
-- Basic controls
+- Basic controls, including mobile controls
 - Atomic bonding
 - Bond strength and its determining factors
 
