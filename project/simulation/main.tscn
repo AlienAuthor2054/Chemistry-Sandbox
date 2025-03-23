@@ -95,6 +95,7 @@ offset_left = 120.0
 offset_top = -103.0
 offset_right = 176.0
 grow_vertical = 0
+theme_override_constants/separation = 15
 
 [node name="Element1" parent="UI/ElementHotbar" instance=ExtResource("7_5awmp")]
 layout_mode = 2
