@@ -1,8 +1,8 @@
 # Feature List
 
-Features and planned future features are listed below. This list also functions somewhat like a roadmap.
+Features and planned future features are listed below, in no particular order. This list also functions somewhat like a roadmap.
 
-For the most part, this list concerns what users would see, not what the codebase has. For example:
+For the most part, this list concerns what users would see, not what the codebase has. For example, as of v0.3.0:
 - There is no mention of reduction or oxidation in the codebase, yet redox reactions are possible.
 - Activation energy is counted in the codebase, yet that code has no effect so far.
 
@@ -35,6 +35,7 @@ However, any chemistry-related feature not listed here is likely too advanced fo
 	- [ ] Anti-atomstack
 	- [ ] Reaction energy converted to and from kinetic energy
 	- [ ] VSPER theory, applied to 2D
+		- Makes molecules more stiff
 - Tools
 	- [x] Place atoms, with and without initial motion
 	- [x] Remove atoms & clear the simulation
@@ -45,6 +46,8 @@ However, any chemistry-related feature not listed here is likely too advanced fo
 	- [ ] Force form and break bonds while paused
 	- [ ] Thermostat
 	- [ ] Dedicated molecule creator
+	- [ ] Advanced hotbar supporting elements and molecules
+  	- [ ] Periodic table for element selection to hotbar
 	- [ ] Chemical reaction analyzer
 	- [ ] Custom simulation area size
 - Tutorials
