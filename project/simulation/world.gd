@@ -16,18 +16,20 @@
 
 extends StaticBody2D
 
-var world_size = Simulation.world_size
 var clicked_point := Vector2.ZERO
 var spawning_atom := false
 
+@onready var world_rect: Rect2
+@onready var world_size := Simulation.world_size:
+	set(new):
+		world_rect = Rect2(-world_size / 2, world_size)
+		var polygon := PackedVector2Array(Util.rect_corners(world_rect))
+		$Area/CollisionShape.set_polygon(polygon)
+		$Border.set_polygon(polygon)
+		$Sprite.scale = world_size / 1000
+
 func _ready() -> void:
-	var polygon := PackedVector2Array([
-		Vector2(0, 0), Vector2(world_size.x, 0), 
-		world_size, Vector2(0, world_size.y)
-	])
-	$Area/CollisionShape.set_polygon(polygon)
-	$Border.set_polygon(polygon)
-	$Sprite.scale = world_size / 1000
+	world_size = world_size
 
 func _on_area_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 	if not (event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT): return

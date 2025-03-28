@@ -16,14 +16,22 @@ Due to time and knowledge constraints, compromises have to be made.
 
 ## How to Play
 
-For now, here is a basic controls tutorial for PC users (see further below for mobile users):
+Mobile support is currently low priority. The game still loads, but many features are (and will be) unavailable. Please play on PC for the best experience.
 
-1. Use scroll wheel or number keys 1 to 4 to select among four elements (hydrogen, carbon, nitrogen, and oxygen). The selected element's symbol appears on the bottom-left.
-2. Left click on the gray area (simulation area) to spawn an atom.
-	- Drag while holding left click, then release to launch the spawned atom.
-3. Right click on an atom to remove it.
-4. Press the \` key (left of 1 key) to pause and play the simulation.
-5. Other tools are on the bottom-right:
+For now, here is a basic controls tutorial for PC users:
+
+1. Use `Scroll Wheel` or number keys `1` to `4` to select among four elements (hydrogen, carbon, nitrogen, and oxygen). The selected element's symbol appears on the bottom-left.
+2. `Left Click` on the gray area (world) to spawn an atom.
+	- Drag while holding `Left Click`, then release to launch the spawned atom.
+3. `Right Click` on an atom to remove it.
+	- Alternatively, press `Delete` or `X`
+4. Press `Q` to pause and play the simulation.
+5. Camera tools
+	- Drag with `Ctrl Right Click` to move the camera.
+	- Press `Ctrl +` to zoom in and `Ctrl -` to zoom out.
+		- Alternatively, use `Ctrl Scroll Wheel`
+	- Press `Ctrl 0` to reset the camera.
+6. Other tools are on the bottom-right:
 	- Clear: Removes all atoms
 	- Temp Up: Speeds up atoms
 	- Temp Down: Slows down atoms
@@ -31,7 +39,7 @@ For now, here is a basic controls tutorial for PC users (see further below for m
 Atoms near each other will automatically form and break bonds following an adapted model of Lewis theory.
 
 Beyond this, expect interactive in-game tutorials in the future covering:
-- Basic controls, including mobile controls
+- Basic controls
 - Atomic bonding
 - Bond strength and its determining factors
 

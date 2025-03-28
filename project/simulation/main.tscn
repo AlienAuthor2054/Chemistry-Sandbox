@@ -21,8 +21,8 @@ fill_to = Vector2(0, 0)
 script = ExtResource("1_3ujg2")
 
 [node name="Camera" type="Camera2D" parent="."]
-anchor_mode = 0
 process_callback = 0
+position_smoothing_enabled = true
 script = ExtResource("1_0ogwh")
 
 [node name="World" type="StaticBody2D" parent="."]
@@ -45,7 +45,6 @@ polygon = PackedVector2Array(-500, -500, -500, 500, 500, 500, 500, -500)
 
 [node name="Sprite" type="Sprite2D" parent="World"]
 texture = SubResource("GradientTexture2D_vlwa4")
-offset = Vector2(500, 500)
 
 [node name="UI" type="CanvasLayer" parent="."]
 offset = Vector2(-10, 0)

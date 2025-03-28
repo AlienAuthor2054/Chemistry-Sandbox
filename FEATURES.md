@@ -2,7 +2,7 @@
 
 Features and planned future features are listed below, in no particular order. This list also functions somewhat like a roadmap.
 
-For the most part, this list concerns what users would see, not what the codebase has. For example, as of v0.3.0:
+For the most part, this list concerns what users would see, not what the codebase has. For example, as of v0.3.1:
 - There is no mention of reduction or oxidation in the codebase, yet redox reactions are possible.
 - Activation energy is counted in the codebase, yet that code has no effect so far.
 
@@ -41,6 +41,7 @@ However, any chemistry-related feature not listed here is likely too advanced fo
 	- [x] Remove atoms & clear the simulation
 	- [x] Temperature adjustment
 	- [x] Pause and play simulation
+	- [x] Camera movement and zooming
 	- [ ] Drag and launch existing atoms and molecules
 	- [ ] Cut, copy, and paste atoms and molecules
 	- [ ] Force form and break bonds while paused
@@ -49,7 +50,7 @@ However, any chemistry-related feature not listed here is likely too advanced fo
 	- [ ] Advanced hotbar supporting elements and molecules
   	- [ ] Periodic table for element selection to hotbar
 	- [ ] Chemical reaction analyzer
-	- [ ] Custom simulation area size
+	- [ ] Custom world size
 - Tutorials
 	- [ ] Basic controls
 	- [ ] Tools

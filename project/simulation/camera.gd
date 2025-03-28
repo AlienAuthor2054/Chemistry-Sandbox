@@ -16,10 +16,46 @@
 
 extends Camera2D
 
-var zoom_multi := 1.0
-@onready var zoom_value := get_viewport().get_visible_rect().size.y * zoom_multi / Simulation.world_size.x
+var zoom_factor := 1.25
+var mouse_move_factor := 1.0
+var zoom_multi: float = 1.0:
+	set(new):
+		zoom_multi = clampf(new, 0.5, 5)
+		zoom_target = get_viewport().get_visible_rect().size.y * zoom_multi / Simulation.world_size.x
+		if zoom_value > 0:
+			create_tween().set_ease(Tween.EASE_OUT).tween_property(self, "zoom_value", zoom_target, 0.2).from_current()
+		else:
+			zoom_value = zoom_target
+var zoom_value: float:
+	set(new):
+		zoom_value = new
+		zoom = Vector2(new, new)
+var zoom_target: float
 
 var selected_atom = null
 
 func _ready():
-	zoom = Vector2(zoom_value, zoom_value)
+	reset_camera()
+
+func reset_camera():
+	position = Vector2(0, 0)
+	zoom_multi = 1.0
+
+func move_from_mouse(event: InputEventMouseMotion) -> void:
+	var new_pos := position
+	new_pos += -mouse_move_factor * event.relative / zoom_value
+	position = Util.clamp_in_rect(new_pos, $"../World".world_rect)
+
+func change_zoom(zoom_in: bool):
+	zoom_multi *= zoom_factor if zoom_in else 1 / zoom_factor
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_echo(): return
+	if Input.is_action_pressed("move_camera") and event is InputEventMouseMotion:
+		move_from_mouse(event as InputEventMouseMotion)
+	elif Input.is_action_pressed("zoom_in"):
+		change_zoom(true)
+	elif Input.is_action_pressed("zoom_out"):
+		change_zoom(false)
+	elif Input.is_action_pressed("reset_camera"):
+		reset_camera()

@@ -39,3 +39,14 @@ static func sumf_dict_values(dict: Dictionary) -> float:
 	
 static func multi_mini(ints: Array[int]) -> int:
 	return ints.min()
+
+static func clamp_in_rect(vec: Vector2, rect: Rect2) -> Vector2:
+	return Vector2(clampf(vec.x, rect.position.x, rect.end.x), clampf(vec.y, rect.position.y, rect.end.y))
+
+static func rect_corners(rect: Rect2) -> Array[Vector2]:
+	return [
+		rect.position,
+		Vector2(rect.end.x, rect.position.y),
+		rect.end,
+		Vector2(rect.position.x, rect.end.y),
+	]

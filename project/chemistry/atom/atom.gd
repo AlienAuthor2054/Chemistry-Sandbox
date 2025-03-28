@@ -319,10 +319,9 @@ func _physics_process(_delta: float) -> void:
 		atom.apply_central_force(force_list.dict[atom])
 	#$SymbolLabel.text = str(molecule.id)
 
-func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT:
-		if event.pressed:
-			remove()
+func _on_input_event(_viewport: Node, _event: InputEvent, _shape_idx: int) -> void:
+	if Input.is_action_pressed("remove_atom"):
+		remove()
 
 func _on_field_dirty() -> void:
 	evaluate_field(false)
