@@ -261,7 +261,8 @@ func atoms_in_field_changed(new_atoms_in_field: Array[Atom]) -> bool:
 
 func remove() -> void:
 	removing = true
-	molecule.dirty.disconnect(_on_molecule_dirty)
+	if molecule.dirty.is_connected(_on_molecule_dirty):
+		molecule.dirty.disconnect(_on_molecule_dirty)
 	atom_removing.emit(self)
 	unbond_all()
 	atom_id_register.erase(id)
@@ -322,9 +323,6 @@ func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> voi
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT:
 		if event.pressed:
 			remove()
-
-func _on_visible_on_screen_notifier_screen_exited() -> void:
-	remove()
 
 func _on_field_dirty() -> void:
 	evaluate_field(false)

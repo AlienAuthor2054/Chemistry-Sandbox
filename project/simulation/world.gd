@@ -37,6 +37,10 @@ func _on_area_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -
 	else:
 		spawn_atom()
 
+func _on_atom_exited(atom: Atom) -> void:
+	if Simulation.running:
+		atom.remove()
+
 func spawn_atom() -> void:
 	if not spawning_atom: return
 	Atom.create(
