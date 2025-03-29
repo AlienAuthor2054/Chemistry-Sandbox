@@ -23,7 +23,7 @@ const BASE_ATOM_TEXTURE: GradientTexture2D = preload("uid://c3yioj1c7fjka")
 static var LOCK := Lock.new()
 static var next_id := 1
 static var atom_id_register: Dictionary[int, Atom] = {}
-static var atom_visual_radius_multi = 1
+static var atom_visual_radius_multi = 0.5
 
 @warning_ignore("unused_signal")
 signal electronAdded
@@ -97,7 +97,7 @@ func initialize(atomic_number: int, pos: Vector2, vel: Vector2):
 	#print("%s: %s" % [protons, orbital_set.get_total_energy()])
 	#print(Combination.combos(range(1, 3+1), 2))
 	#print(Combination.combos_range(range(1, 4+1)))
-	$Sprite2D.scale = Vector2.ONE * element_data.radius * atom_visual_radius_multi / 100
+	$Sprite2D.scale = Vector2.ONE * element_data.radius * atom_visual_radius_multi / 50
 	$Sprite2D.texture = element_data.texture
 	position = pos
 	apply_central_impulse(vel)
