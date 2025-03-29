@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="ElementData" load_steps=2 format=3 uid="uid://bxt8bdqs1pttw"]
+
+[ext_resource type="Script" uid="uid://hr0a1wob1y31" path="res://chemistry/atom/data/element_data.gd" id="1_sxh5a"]
+
+[resource]
+script = ExtResource("1_sxh5a")
+atomic_number = 7
+symbol = "N"
+name = "Nitrogen"
+mass = 14.0
+radius = 155.0
+electronegativity = 3.04
+color = Color(0, 0, 1, 1)

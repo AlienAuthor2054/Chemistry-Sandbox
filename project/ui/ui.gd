@@ -36,7 +36,7 @@ func _on_simulation_running_changed(running: bool) -> void:
 	$SimulationStateTools/PauseToggle.text = "Pause" if running else "Resume"
 
 func _on_selected_element_changed(element: int) -> void:
-	$SelectedElementButton.text = Atom.atom_db[element].symbol
+	$SelectedElementButton.text = ElementDB.get_data(element).symbol
 
 func _on_selected_element_button_pressed() -> void:
 	$ElementHotbar.visible = not $ElementHotbar.visible

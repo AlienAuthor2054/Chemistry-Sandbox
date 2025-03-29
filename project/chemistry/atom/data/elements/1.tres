@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="ElementData" load_steps=2 format=3 uid="uid://l63yg3fm428r"]
+
+[ext_resource type="Script" uid="uid://hr0a1wob1y31" path="res://chemistry/atom/data/element_data.gd" id="1_7fw8w"]
+
+[resource]
+script = ExtResource("1_7fw8w")
+atomic_number = 1
+symbol = "H"
+name = "Hydrogen"
+mass = 1.0
+radius = 110.0
+electronegativity = 2.2
+color = Color(0.972549, 0.972549, 1, 1)

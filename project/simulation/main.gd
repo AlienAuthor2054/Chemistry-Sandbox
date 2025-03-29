@@ -19,7 +19,7 @@ extends Node2D
 @warning_ignore("unused_signal")
 signal external_change_applied
 
-var elements_possible := Atom.atom_db.keys()
+var elements_possible := ElementDB.data.keys()
 var elements_possible_count := elements_possible.size()
 var element_selection_index := 0
 var selected_element: int:
@@ -27,7 +27,6 @@ var selected_element: int:
 	set(new): Global.selected_element = new
 
 func _ready():
-	Atom.create_textures()
 	Global.selected_element_changed.connect(func(new: int):
 		element_selection_index = elements_possible.find(new)
 	)

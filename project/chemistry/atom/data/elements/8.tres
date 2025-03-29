@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="ElementData" load_steps=2 format=3 uid="uid://db7x3r5el2gui"]
+
+[ext_resource type="Script" uid="uid://hr0a1wob1y31" path="res://chemistry/atom/data/element_data.gd" id="1_xn1ln"]
+
+[resource]
+script = ExtResource("1_xn1ln")
+atomic_number = 8
+symbol = "O"
+name = "Oxygen"
+mass = 16.0
+radius = 152.0
+electronegativity = 3.44
+color = Color(1, 0, 0, 1)

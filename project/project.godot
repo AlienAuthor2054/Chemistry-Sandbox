@@ -22,6 +22,7 @@ config/icon="uid://dy0cxxn05e5kf"
 
 Global="*res://global.gd"
 Simulation="*res://simulation/simulation.gd"
+ElementDB="*res://chemistry/atom/data/element_db.gd"
 
 [display]
 

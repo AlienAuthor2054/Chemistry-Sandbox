@@ -23,8 +23,6 @@ const BASE_ATOM_TEXTURE: GradientTexture2D = preload("uid://c3yioj1c7fjka")
 static var LOCK := Lock.new()
 static var next_id := 1
 static var atom_id_register: Dictionary[int, Atom] = {}
-static var atom_db: Dictionary = YAMLParser.parse("res://chemistry/atom/atom_db.yaml")
-static var atom_textures: Dictionary = {}
 static var atom_visual_radius_multi = 1
 
 @warning_ignore("unused_signal")
@@ -55,7 +53,7 @@ var field_radius: float = 175
 var atoms_in_field: Array[Atom] = []
 var atoms_in_molecule_checked: Array[Atom] = []
 var atoms_outside_molecule_checked := AtomSignalSet.new(_on_other_molecule_dirty, true)
-var this_atom_db: Dictionary
+var element_data: ElementData
 var molecule: Molecule:
 	set(new_mol):
 		if is_instance_valid(molecule) and not removing:
@@ -74,8 +72,8 @@ var bonds_left: int:
 var bond_changed_event_queue: Array[BondChangedEvent] = []
 var removing := false
 @onready var max_bonds: int = valence_shell.left
-@onready var electronegativity: float = this_atom_db.electronegativity
-@onready var radius: float = this_atom_db.radius
+@onready var electronegativity: float = element_data.electronegativity
+@onready var radius: float = element_data.radius
 
 static func create(parent: Node, atomic_number: int, pos: Vector2, vel: Vector2) -> void:
 	var atom: Atom = ATOM_SCENE.instantiate()
@@ -85,31 +83,22 @@ static func create(parent: Node, atomic_number: int, pos: Vector2, vel: Vector2)
 static func get_id_priority(atom1: Atom, atom2: Atom):
 	return atom1 if atom1.id < atom2.id else atom2
 
-static func create_textures():
-	@warning_ignore("shadowed_variable")
-	for protons in atom_db:
-		var data: Dictionary = atom_db[protons]
-		var color: Color = Color.from_string(data.color, Color.ORCHID)
-		var texture: GradientTexture2D = BASE_ATOM_TEXTURE.duplicate(true)
-		texture.gradient.set_color(0, color)
-		atom_textures[protons] = texture
-
 func initialize(atomic_number: int, pos: Vector2, vel: Vector2):
 	id = next_id
 	next_id += 1
 	protons = atomic_number
-	this_atom_db = atom_db[protons]
-	symbol = this_atom_db.symbol
+	element_data = ElementDB.get_data(protons)
+	symbol = element_data.symbol
 	mass = protons * 2 if protons > 1 else protons
 	valence_shell = ValenceShell.new(protons)
 	$SymbolLabel.text = symbol
-	$SymbolLabel.add_theme_font_size_override("font_size", this_atom_db.radius * 0.6)
+	$SymbolLabel.add_theme_font_size_override("font_size", element_data.radius * 0.6)
 	$IdLabel.text = str(id)
 	#print("%s: %s" % [protons, orbital_set.get_total_energy()])
 	#print(Combination.combos(range(1, 3+1), 2))
 	#print(Combination.combos_range(range(1, 4+1)))
-	$Sprite2D.scale = Vector2.ONE * this_atom_db.radius * atom_visual_radius_multi / 100
-	$Sprite2D.texture = atom_textures[protons]
+	$Sprite2D.scale = Vector2.ONE * element_data.radius * atom_visual_radius_multi / 100
+	$Sprite2D.texture = element_data.texture
 	position = pos
 	apply_central_impulse(vel)
 	add_to_group("atoms")
