@@ -1,10 +1,9 @@
-[gd_scene load_steps=10 format=3 uid="uid://demuuu25tlthq"]
+[gd_scene load_steps=9 format=3 uid="uid://demuuu25tlthq"]
 
 [ext_resource type="Script" uid="uid://cc1m1nl8kagxo" path="res://simulation/camera.gd" id="1_0ogwh"]
 [ext_resource type="Script" uid="uid://dk6v4qyap0gnt" path="res://simulation/main.gd" id="1_3ujg2"]
 [ext_resource type="PhysicsMaterial" uid="uid://dfgb2hjec0pw2" path="res://simulation/ideal_physics_material.tres" id="4_d7v1x"]
 [ext_resource type="Script" uid="uid://0q037qqryrcs" path="res://simulation/world.gd" id="5_a8fb5"]
-[ext_resource type="Script" uid="uid://ctpit6jb8k3go" path="res://simulation/kinetic_stats_label.gd" id="5_gpkej"]
 [ext_resource type="Script" uid="uid://c24ohhdpvjt2b" path="res://ui/ui.gd" id="5_li4ao"]
 [ext_resource type="PackedScene" uid="uid://c41ggtkksw0uk" path="res://ui/element_hotbar_element.tscn" id="7_5awmp"]
 
@@ -50,26 +49,6 @@ texture = SubResource("GradientTexture2D_vlwa4")
 offset = Vector2(-10, 0)
 transform = Transform2D(1, 0, 0, 1, -10, 0)
 script = ExtResource("5_li4ao")
-
-[node name="KineticStatsLabel" type="Label" parent="UI"]
-process_priority = 1
-process_physics_priority = 1
-visible = false
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -369.0
-offset_bottom = 277.0
-grow_horizontal = 0
-theme_override_font_sizes/font_size = 75
-text = "0 K
-0 J_k
-0 J_u
-0 J
-"
-horizontal_alignment = 2
-script = ExtResource("5_gpkej")
-metadata/_edit_use_anchors_ = true
 
 [node name="SelectedElementButton" type="Button" parent="UI"]
 anchors_preset = 2
@@ -160,7 +139,6 @@ size_flags_horizontal = 8
 theme_override_font_sizes/font_size = 50
 text = "Pause"
 
-[connection signal="external_change_applied" from="." to="UI/KineticStatsLabel" method="_on_main_external_change_applied"]
 [connection signal="body_exited" from="World/Area" to="World" method="_on_atom_exited"]
 [connection signal="input_event" from="World/Area" to="World" method="_on_area_input_event"]
 [connection signal="pressed" from="UI/SelectedElementButton" to="UI" method="_on_selected_element_button_pressed"]
