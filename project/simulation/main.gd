@@ -49,6 +49,6 @@ func _unhandled_input(event: InputEvent) -> void:
 		selected_element = elements_possible[element_selection_index]
 	else:
 		for index in range(4):
-			if not event.is_action_pressed("select_hotbar_element_" + str(index + 1)): continue
+			if not event.is_action_pressed("select_hotbar_element_" + str(index + 1), true): continue
 			element_selection_index = index
 			selected_element = elements_possible[element_selection_index]

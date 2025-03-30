@@ -51,11 +51,11 @@ func change_zoom(zoom_in: bool):
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_echo(): return
-	if Input.is_action_pressed("move_camera") and event is InputEventMouseMotion:
+	if Input.is_action_pressed("move_camera", true) and event is InputEventMouseMotion:
 		move_from_mouse(event as InputEventMouseMotion)
-	elif Input.is_action_pressed("zoom_in"):
+	elif Input.is_action_pressed("zoom_in", true):
 		change_zoom(true)
-	elif Input.is_action_pressed("zoom_out"):
+	elif Input.is_action_pressed("zoom_out", true):
 		change_zoom(false)
-	elif Input.is_action_pressed("reset_camera"):
+	elif Input.is_action_pressed("reset_camera", true):
 		reset_camera()

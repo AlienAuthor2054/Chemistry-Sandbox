@@ -309,7 +309,7 @@ func _physics_process(_delta: float) -> void:
 	#$SymbolLabel.text = str(molecule.id)
 
 func _on_input_event(_viewport: Node, _event: InputEvent, _shape_idx: int) -> void:
-	if Input.is_action_pressed("remove_atom"):
+	if Input.is_action_pressed("remove_atom", true):
 		remove()
 
 func _on_field_dirty() -> void:
