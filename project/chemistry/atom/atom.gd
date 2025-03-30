@@ -71,6 +71,9 @@ var bonds_left: int:
 	get: return valence_left - bond_order
 var bond_changed_event_queue: Array[BondChangedEvent] = []
 var removing := false
+var frozen := false
+var frozen_velocity := Vector2.ZERO
+
 @onready var max_bonds: int = valence_shell.left
 @onready var electronegativity: float = element_data.electronegativity
 @onready var radius: float = element_data.radius
@@ -100,11 +103,14 @@ func initialize(atomic_number: int, pos: Vector2, vel: Vector2):
 	$Sprite2D.scale = Vector2.ONE * element_data.radius * atom_visual_radius_multi / 50
 	$Sprite2D.texture = element_data.texture
 	position = pos
-	apply_central_impulse(vel)
 	add_to_group("atoms")
 	atom_id_register[id] = self
 	molecule = Molecule.new([self])
-	on_simulation_running_changed(Simulation.running, vel)
+	if Simulation.running:
+		apply_central_impulse(vel)
+	else:
+		frozen_velocity = vel
+	on_simulation_running_changed(Simulation.running)
 	Simulation.running_changed.connect(on_simulation_running_changed)
 
 func _to_string() -> String:
@@ -132,10 +138,10 @@ func get_potential_energy() -> float:
 	return potential_energy
 
 func multiply_velocity(factor):
-	if Simulation.running:
-		apply_central_impulse(mass * linear_velocity * (factor - 1))
+	if frozen:
+		frozen_velocity *= factor
 	else:
-		linear_velocity *= factor
+		apply_central_impulse(mass * linear_velocity * (factor - 1))
 
 func execute_bond_changed_event_queue(emit_atom_dirty: int = ID_PRIORITY, emit_mol_dirty: bool = true) -> void:
 	for bond_changed_event: BondChangedEvent in bond_changed_event_queue.duplicate():
@@ -258,14 +264,18 @@ func remove() -> void:
 	remove_from_group("atoms")
 	queue_free()
 
-func on_simulation_running_changed(running: bool, old_vel: Vector2 = linear_velocity) -> void:
+func on_simulation_running_changed(running: bool) -> void:
 	set_physics_process(running)
-	freeze = not running
-	if not running:
-		linear_velocity = old_vel
+	frozen = not running
+	if frozen:
+		frozen_velocity += linear_velocity
+		linear_velocity = Vector2.ZERO
+	else:
+		apply_central_impulse(frozen_velocity * mass)
+		frozen_velocity = Vector2.ZERO
 
 func _physics_process(_delta: float) -> void:
-	if not Simulation.running: return
+	if frozen: return
 	var force_list = AdderDict.new()
 	var new_atoms_in_field: Array[Atom] = []
 	# TODO: Consider using signals
