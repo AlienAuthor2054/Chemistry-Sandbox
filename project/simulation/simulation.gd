@@ -18,7 +18,11 @@ extends Node
 
 signal running_changed(new: bool)
 
-var world_size := Vector2(2000, 2000)
+var world_size := Vector2(2000, 2000):
+	set(new):
+		world_size = new
+		world_rect = Rect2(-new / 2, new)
+var world_rect: Rect2
 
 var running: bool:
 	set(new):
@@ -26,6 +30,7 @@ var running: bool:
 		running_changed.emit(new)
 
 func _init() -> void:
+	world_size = world_size
 	running = true
 
 func on_unhandled_input(event: InputEvent) -> void:
@@ -37,3 +42,6 @@ func on_unhandled_input(event: InputEvent) -> void:
 
 func clear() -> void:
 	get_tree().call_group("atoms", "remove")
+
+func is_point_in_world(position: Vector2) -> bool:
+	return world_rect.has_point(position)
