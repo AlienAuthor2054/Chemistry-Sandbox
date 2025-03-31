@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://b8mej4rmqjbp3"]
+[gd_scene load_steps=6 format=3 uid="uid://b8mej4rmqjbp3"]
 
 [ext_resource type="PhysicsMaterial" uid="uid://dfgb2hjec0pw2" path="res://simulation/ideal_physics_material.tres" id="1_822kf"]
 [ext_resource type="Script" uid="uid://dobc6vdmqvrag" path="res://chemistry/atom/atom.gd" id="1_by0es"]
+[ext_resource type="Texture2D" uid="uid://de5x8soeffuru" path="res://chemistry/atom/atom_selection.tres" id="3_43dac"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_rvugk"]
 radius = 50.0
@@ -24,6 +25,12 @@ shape = SubResource("CircleShape2D_rvugk")
 [node name="Sprite2D" type="Sprite2D" parent="."]
 z_index = 2
 z_as_relative = false
+
+[node name="Selection" type="Sprite2D" parent="."]
+visible = false
+z_index = 1
+z_as_relative = false
+texture = ExtResource("3_43dac")
 
 [node name="AtomField" type="Area2D" parent="."]
 collision_layer = 4

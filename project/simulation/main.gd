@@ -34,7 +34,7 @@ func _ready():
 @onready var db := $UI/SelectedElementButton/Timer
 func _unhandled_input(event: InputEvent) -> void:
 	Simulation.on_unhandled_input(event)
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.is_released():
+	if event.is_action_released("spawn_atom", true):
 		$World.spawn_atom()
 	elif event is InputEventMouseButton and event is not InputEventWithModifiers:
 		if not db.is_stopped(): return

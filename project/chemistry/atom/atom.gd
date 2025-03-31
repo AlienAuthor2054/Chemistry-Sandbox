@@ -23,7 +23,7 @@ const BASE_ATOM_TEXTURE: GradientTexture2D = preload("uid://c3yioj1c7fjka")
 static var LOCK := Lock.new()
 static var next_id := 1
 static var atom_id_register: Dictionary[int, Atom] = {}
-static var atom_visual_radius_multi = 0.5
+static var atom_visual_radius_multi := 0.5
 
 @warning_ignore("unused_signal")
 signal electronAdded
@@ -100,8 +100,10 @@ func initialize(atomic_number: int, pos: Vector2, vel: Vector2):
 	#print("%s: %s" % [protons, orbital_set.get_total_energy()])
 	#print(Combination.combos(range(1, 3+1), 2))
 	#print(Combination.combos_range(range(1, 4+1)))
-	$Sprite2D.scale = Vector2.ONE * element_data.radius * atom_visual_radius_multi / 50
+	var base_scale := element_data.radius * atom_visual_radius_multi / 50
+	$Sprite2D.scale = Vector2.ONE * base_scale
 	$Sprite2D.texture = element_data.texture
+	$Selection.scale = Vector2.ONE * (base_scale + 0.50)
 	position = pos
 	add_to_group("atoms")
 	atom_id_register[id] = self
@@ -253,6 +255,12 @@ func atoms_in_field_changed(new_atoms_in_field: Array[Atom]) -> bool:
 	if atoms_in_field.size() != new_atoms_in_field.size():
 		return true
 	return atoms_in_field.hash() != new_atoms_in_field.hash()
+
+func select() -> void:
+	$Selection.visible = true
+
+func deselect() -> void:
+	$Selection.visible = false
 
 func remove() -> void:
 	removing = true

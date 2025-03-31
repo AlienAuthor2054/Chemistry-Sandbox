@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://demuuu25tlthq"]
+[gd_scene load_steps=11 format=3 uid="uid://demuuu25tlthq"]
 
 [ext_resource type="Script" uid="uid://cc1m1nl8kagxo" path="res://simulation/camera.gd" id="1_0ogwh"]
 [ext_resource type="Script" uid="uid://dk6v4qyap0gnt" path="res://simulation/main.gd" id="1_3ujg2"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" uid="uid://0q037qqryrcs" path="res://simulation/world.gd" id="5_a8fb5"]
 [ext_resource type="Script" uid="uid://c24ohhdpvjt2b" path="res://ui/ui.gd" id="5_li4ao"]
 [ext_resource type="PackedScene" uid="uid://c41ggtkksw0uk" path="res://ui/element_hotbar_element.tscn" id="7_5awmp"]
+[ext_resource type="Script" uid="uid://i0nn4tlyt7rl" path="res://simulation/selection.gd" id="7_24ldq"]
 
 [sub_resource type="Gradient" id="Gradient_nnmox"]
 colors = PackedColorArray(0.45098, 0.45098, 0.45098, 1, 1, 1, 1, 1)
@@ -15,6 +16,9 @@ gradient = SubResource("Gradient_nnmox")
 width = 1000
 height = 1000
 fill_to = Vector2(0, 0)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8cr32"]
+size = Vector2(100, 100)
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_3ujg2")
@@ -139,6 +143,16 @@ size_flags_horizontal = 8
 theme_override_font_sizes/font_size = 50
 text = "Pause"
 
+[node name="Selection" type="Area2D" parent="."]
+collision_layer = 16
+collision_mask = 2
+input_pickable = false
+monitorable = false
+script = ExtResource("7_24ldq")
+
+[node name="CollisionShape" type="CollisionShape2D" parent="Selection"]
+shape = SubResource("RectangleShape2D_8cr32")
+
 [connection signal="body_exited" from="World/Area" to="World" method="_on_atom_exited"]
 [connection signal="input_event" from="World/Area" to="World" method="_on_area_input_event"]
 [connection signal="pressed" from="UI/SelectedElementButton" to="UI" method="_on_selected_element_button_pressed"]
@@ -146,3 +160,4 @@ text = "Pause"
 [connection signal="pressed" from="UI/Tools/TemperatureUpButton" to="UI" method="_on_temperature_button_pressed" binds= [2.0]]
 [connection signal="pressed" from="UI/Tools/TemperatureDownButton" to="UI" method="_on_temperature_button_pressed" binds= [0.5]]
 [connection signal="pressed" from="UI/SimulationStateTools/PauseToggle" to="UI" method="_on_pause_toggle_pressed"]
+[connection signal="body_entered" from="Selection" to="Selection" method="_on_body_entered"]

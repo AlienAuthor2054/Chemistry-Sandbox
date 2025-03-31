@@ -31,13 +31,10 @@ var spawning_atom := false
 func _ready() -> void:
 	world_size = world_size
 
-func _on_area_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
-	if not (event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT): return
-	if event.pressed:
-		clicked_point = get_global_mouse_position()
-		spawning_atom = true
-	else:
-		spawn_atom()
+func _on_area_input_event(_viewport: Node, event: InputEventWithModifiers, _shape_idx: int) -> void:
+	if not event.is_action_pressed("spawn_atom", true): return
+	clicked_point = get_global_mouse_position()
+	spawning_atom = true
 
 func _on_atom_exited(atom: Atom) -> void:
 	if Simulation.running:
