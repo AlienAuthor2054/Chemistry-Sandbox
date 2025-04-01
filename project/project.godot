@@ -20,7 +20,7 @@ config/icon="uid://dy0cxxn05e5kf"
 
 [autoload]
 
-Global="*res://global.gd"
+Global="*res://global/global.gd"
 ElementDB="*res://chemistry/atom/data/element_db.gd"
 Simulation="*res://simulation/simulation.gd"
 
