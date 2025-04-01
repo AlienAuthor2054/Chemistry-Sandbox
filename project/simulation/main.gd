@@ -27,6 +27,7 @@ var selected_element: int:
 	set(new): Global.selected_element = new
 
 func _ready():
+	Global.MAIN_NODE = self
 	Global.selected_element_changed.connect(func(new: int):
 		element_selection_index = elements_possible.find(new)
 	)
