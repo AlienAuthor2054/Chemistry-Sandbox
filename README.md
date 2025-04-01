@@ -36,6 +36,7 @@ For now, here is a controls tutorial for PC users:
 		- Drag with `Right Click` to select atoms in the selection box.
 		- Use `Shift` with above actions to deselect.
 	- Pressing the remove action (in #3) also removes selected atoms.
+	- Press `Ctrl C` to copy and `Ctrl V` to paste
 7. Other tools are on the bottom-right:
 	- Clear: Removes all atoms
 	- Temp Up: Speeds up atoms

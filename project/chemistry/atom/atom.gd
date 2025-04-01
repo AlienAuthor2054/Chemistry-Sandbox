@@ -78,10 +78,11 @@ var frozen_velocity := Vector2.ZERO
 @onready var electronegativity: float = element_data.electronegativity
 @onready var radius: float = element_data.radius
 
-static func create(parent: Node, atomic_number: int, pos: Vector2, vel: Vector2) -> void:
+static func create(parent: Node, atomic_number: int, pos: Vector2, vel: Vector2) -> Atom:
 	var atom: Atom = ATOM_SCENE.instantiate()
 	atom.initialize(atomic_number, pos, vel)
 	parent.add_child(atom)
+	return atom
 
 static func get_id_priority(atom1: Atom, atom2: Atom):
 	return atom1 if atom1.id < atom2.id else atom2

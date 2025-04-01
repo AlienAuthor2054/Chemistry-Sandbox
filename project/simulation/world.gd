@@ -22,7 +22,7 @@ var spawning_atom := false
 @onready var world_rect: Rect2
 @onready var world_size := Simulation.world_size:
 	set(new):
-		world_rect = Rect2(-world_size / 2, world_size)
+		world_rect = Simulation.world_rect
 		var polygon := PackedVector2Array(Util.rect_corners(world_rect))
 		$Area/CollisionShape.set_polygon(polygon)
 		$Border.set_polygon(polygon)

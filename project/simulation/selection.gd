@@ -13,6 +13,7 @@ var box_start := Vector2.ZERO
 var box_end := Vector2.ZERO
 var box_rect := Rect2(0, 0, 0, 0)
 var selected: Dictionary[Atom, bool] = {}
+var saved_copy: SavedAtomSet
 
 func _process(_delta: float) -> void:
 	if Input.is_action_pressed("select_atoms") and not Input.is_action_pressed("control"):
@@ -30,12 +31,16 @@ func _process(_delta: float) -> void:
 		if box_active:
 			visible = false
 		box_active = false
+	if Input.is_action_just_pressed("cut"):
+		cut()
+	if Input.is_action_just_pressed("copy"):
+		copy()
+	elif Input.is_action_just_pressed("paste"):
+		paste()
 
 func _physics_process(_delta: float) -> void:
-	if Input.is_action_just_pressed("remove_atom"):
-		for atom in selected.duplicate():
-			remove(atom)
-			atom.remove()
+	if Input.is_action_just_pressed("remove_atom", true):
+		remove_selected()
 	if not box_active: return
 	$CollisionShape.position = (box_start + box_end) / 2
 	($CollisionShape.shape as RectangleShape2D).size = box_rect.size
@@ -61,12 +66,34 @@ func add(atom: Atom) -> void:
 	selected[atom] = true
 	atom.select()
 
-func remove(atom: Atom) -> void:
+func remove(atom: Atom, remove_from_selected: bool = true) -> void:
 	if not selected.has(atom): return
 	atom.tree_exiting.disconnect(remove)
-	selected.erase(atom)
+	if remove_from_selected:
+		selected.erase(atom)
 	atom.deselect()
 	
 func clear() -> void:
 	for atom in selected:
-		remove(atom)
+		remove(atom, false)
+	selected.clear()
+
+func remove_selected() -> void:
+	for atom in selected:
+		atom.remove()
+	selected.clear()
+
+func cut() -> void:
+	if selected.is_empty(): return
+	copy()
+	remove_selected()
+
+func copy() -> void:
+	if selected.is_empty(): return
+	saved_copy = SavedAtomSet.new(selected.keys())
+
+func paste() -> void:
+	if saved_copy == null: return
+	clear()
+	for atom in saved_copy.spawn($"/root/Main", get_global_mouse_position()):
+		add(atom)

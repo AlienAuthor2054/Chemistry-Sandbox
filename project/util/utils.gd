@@ -50,3 +50,19 @@ static func rect_corners(rect: Rect2) -> Array[Vector2]:
 		rect.end,
 		Vector2(rect.position.x, rect.end.y),
 	]
+
+static func to_center_origin_rect(vec: Vector2) -> Rect2:
+	return Rect2(-vec / 2, vec)
+
+static func rect_with_center(rect: Rect2, vec: Vector2) -> Rect2:
+	rect.position += vec - rect.get_center()
+	return rect
+
+static func enclose_rect(to_enclose: Rect2, enclosure: Rect2) -> Rect2:
+	var offset := Vector2.ZERO
+	offset.x += min(0, enclosure.end.x - to_enclose.end.x)
+	offset.x += max(0, enclosure.position.x - to_enclose.position.x)
+	offset.y += min(0, enclosure.end.y - to_enclose.end.y)
+	offset.y += max(0, enclosure.position.y - to_enclose.position.y)
+	to_enclose.position += offset
+	return to_enclose

@@ -44,7 +44,7 @@ However, any chemistry-related feature not listed here is likely too advanced fo
 	- [x] Camera movement and zooming
 	- [ ] Multi-atom selection and manipulation
 		- [x] Remove
-		- [ ] Cut, copy, and paste
+		- [x] Cut, copy, and paste
 		- [ ] Drag and launch
 	- [ ] Force form and break bonds while paused
 	- [ ] Thermostat
