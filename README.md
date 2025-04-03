@@ -49,7 +49,7 @@ Beyond this, expect interactive in-game tutorials in the future covering:
 - Atomic bonding
 - Bond strength and its determining factors
 
-and other chimistry concepts.
+and other chemistry concepts.
 
 ## Building
 
