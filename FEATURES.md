@@ -6,7 +6,7 @@ For the most part, this list concerns what users would see, not what the codebas
 - There is no mention of reduction or oxidation in the codebase, yet redox reactions are possible.
 - Activation energy is counted in the codebase, yet that code has no effect so far.
 
-This list is non-exhaustive- more planned future features may be added as I think about them.
+This list is non-exhaustive and subject to change- planned future features may be added or removed as I think about them.
 
 However, any chemistry-related feature not listed here is likely too advanced for the scope of this project.
 
