@@ -53,3 +53,6 @@ func _unhandled_input(event: InputEvent) -> void:
 			if not event.is_action_pressed("select_hotbar_element_" + str(index + 1), true): continue
 			element_selection_index = index
 			selected_element = elements_possible[element_selection_index]
+	if event.is_action_pressed("ui_cancel"):
+		%TitleScreen.visible = true
+		%Tutorial.visible = false

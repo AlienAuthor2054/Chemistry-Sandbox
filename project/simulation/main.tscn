@@ -1,10 +1,11 @@
-[gd_scene load_steps=10 format=3 uid="uid://demuuu25tlthq"]
+[gd_scene load_steps=11 format=3 uid="uid://demuuu25tlthq"]
 
 [ext_resource type="Script" uid="uid://cc1m1nl8kagxo" path="res://simulation/camera.gd" id="1_0ogwh"]
 [ext_resource type="Script" uid="uid://dk6v4qyap0gnt" path="res://simulation/main.gd" id="1_3ujg2"]
 [ext_resource type="PhysicsMaterial" uid="uid://dfgb2hjec0pw2" path="res://simulation/ideal_physics_material.tres" id="4_d7v1x"]
 [ext_resource type="Script" uid="uid://0q037qqryrcs" path="res://simulation/world.gd" id="5_a8fb5"]
 [ext_resource type="PackedScene" uid="uid://bb1y4weslv1pe" path="res://ui/simulation_ui.tscn" id="5_ctfah"]
+[ext_resource type="PackedScene" uid="uid://38a41v2d17mg" path="res://ui/title_screen.tscn" id="6_5awmp"]
 [ext_resource type="Script" uid="uid://i0nn4tlyt7rl" path="res://simulation/selection.gd" id="7_24ldq"]
 
 [sub_resource type="Gradient" id="Gradient_nnmox"]
@@ -49,6 +50,9 @@ polygon = PackedVector2Array(-500, -500, -500, 500, 500, 500, 500, -500)
 texture = SubResource("GradientTexture2D_vlwa4")
 
 [node name="SimulationUI" parent="." instance=ExtResource("5_ctfah")]
+unique_name_in_owner = true
+
+[node name="TitleScreen" parent="." instance=ExtResource("6_5awmp")]
 unique_name_in_owner = true
 
 [node name="Selection" type="Area2D" parent="."]
