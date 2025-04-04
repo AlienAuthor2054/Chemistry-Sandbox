@@ -19,6 +19,7 @@ class_name Atom extends RigidBody2D
 const ATOM_SCENE = preload("uid://b8mej4rmqjbp3")
 const ATOM_BOND_SCENE = preload("uid://d1awp4hbumust")
 const BASE_ATOM_TEXTURE: GradientTexture2D = preload("uid://c3yioj1c7fjka")
+const SPEED_LIMIT := 3000.0
 
 static var LOCK := Lock.new()
 static var next_id := 1
@@ -145,6 +146,12 @@ func multiply_velocity(factor):
 		frozen_velocity *= factor
 	else:
 		apply_central_impulse(mass * linear_velocity * (factor - 1))
+
+func set_velocity(vel: Vector2):
+	if frozen:
+		frozen_velocity = vel
+	else:
+		apply_central_impulse(mass * (vel - linear_velocity))
 
 func execute_bond_changed_event_queue(emit_atom_dirty: int = ID_PRIORITY, emit_mol_dirty: bool = true) -> void:
 	for bond_changed_event: BondChangedEvent in bond_changed_event_queue.duplicate():
@@ -325,6 +332,8 @@ func _physics_process(_delta: float) -> void:
 			unbond_atom(other, false)
 	for atom: Atom in force_list.dict:
 		atom.apply_central_force(force_list.dict[atom])
+	if linear_velocity.length() > SPEED_LIMIT:
+		set_velocity(linear_velocity.limit_length(SPEED_LIMIT))
 	#$SymbolLabel.text = str(molecule.id)
 
 func _on_input_event(_viewport: Node, _event: InputEvent, _shape_idx: int) -> void:
