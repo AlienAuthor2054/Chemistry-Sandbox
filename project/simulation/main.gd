@@ -32,7 +32,7 @@ func _ready():
 		element_selection_index = elements_possible.find(new)
 	)
 
-@onready var db := $UI/SelectedElementButton/Timer
+@onready var db := %SimulationUI/SelectedElementButton/Timer
 func _unhandled_input(event: InputEvent) -> void:
 	Simulation.on_unhandled_input(event)
 	if event.is_action_released("spawn_atom", true):

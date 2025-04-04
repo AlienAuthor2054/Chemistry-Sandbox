@@ -1,0 +1,104 @@
+[gd_scene load_steps=3 format=3 uid="uid://bb1y4weslv1pe"]
+
+[ext_resource type="Script" uid="uid://c24ohhdpvjt2b" path="res://ui/ui.gd" id="1_whqmj"]
+[ext_resource type="PackedScene" uid="uid://c41ggtkksw0uk" path="res://ui/element_hotbar_element.tscn" id="2_q2170"]
+
+[node name="SimulationUI" type="CanvasLayer"]
+offset = Vector2(-10, 0)
+transform = Transform2D(1, 0, 0, 1, -10, 0)
+script = ExtResource("1_whqmj")
+
+[node name="SelectedElementButton" type="Button" parent="."]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = -111.0
+offset_right = 80.0
+grow_vertical = 0
+theme_override_font_sizes/font_size = 75
+text = "H"
+metadata/_edit_use_anchors_ = true
+
+[node name="Timer" type="Timer" parent="SelectedElementButton"]
+wait_time = 0.05
+one_shot = true
+
+[node name="ElementHotbar" type="HBoxContainer" parent="."]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 120.0
+offset_top = -103.0
+offset_right = 176.0
+grow_vertical = 0
+
+[node name="Element1" parent="ElementHotbar" instance=ExtResource("2_q2170")]
+layout_mode = 2
+
+[node name="Element2" parent="ElementHotbar" instance=ExtResource("2_q2170")]
+layout_mode = 2
+text = "C"
+element = 6
+
+[node name="Element3" parent="ElementHotbar" instance=ExtResource("2_q2170")]
+layout_mode = 2
+text = "N"
+element = 7
+
+[node name="Element4" parent="ElementHotbar" instance=ExtResource("2_q2170")]
+layout_mode = 2
+text = "O"
+element = 8
+
+[node name="Tools" type="VBoxContainer" parent="."]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -40.0
+offset_top = -40.0
+grow_horizontal = 0
+grow_vertical = 0
+alignment = 2
+
+[node name="ClearButton" type="Button" parent="Tools"]
+layout_mode = 2
+size_flags_horizontal = 8
+theme_override_font_sizes/font_size = 50
+text = "Clear"
+
+[node name="TemperatureUpButton" type="Button" parent="Tools"]
+layout_mode = 2
+size_flags_horizontal = 8
+theme_override_font_sizes/font_size = 50
+text = "Temp Up"
+
+[node name="TemperatureDownButton" type="Button" parent="Tools"]
+layout_mode = 2
+size_flags_horizontal = 8
+theme_override_font_sizes/font_size = 50
+text = "Temp Down
+"
+
+[node name="SimulationStateTools" type="VBoxContainer" parent="."]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -40.0
+offset_bottom = 40.0
+grow_horizontal = 0
+alignment = 2
+
+[node name="PauseToggle" type="Button" parent="SimulationStateTools"]
+layout_mode = 2
+size_flags_horizontal = 8
+theme_override_font_sizes/font_size = 50
+text = "Pause"
+
+[connection signal="pressed" from="SelectedElementButton" to="." method="_on_selected_element_button_pressed"]
+[connection signal="pressed" from="Tools/ClearButton" to="." method="_on_clear_button_pressed"]
+[connection signal="pressed" from="Tools/TemperatureUpButton" to="." method="_on_temperature_button_pressed" binds= [2.0]]
+[connection signal="pressed" from="Tools/TemperatureDownButton" to="." method="_on_temperature_button_pressed" binds= [0.5]]
+[connection signal="pressed" from="SimulationStateTools/PauseToggle" to="." method="_on_pause_toggle_pressed"]
