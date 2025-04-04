@@ -23,11 +23,10 @@ var new_order: int
 var formed_order: int:
 	get: return new_order - prev_order
 var energy_change: float
-var parent: BondChanges
 
 @warning_ignore("shadowed_variable")
 static func modify_bond_order(atom1: Atom, atom2: Atom, order_mod: int, parent: BondChanges = BondChanges.EMPTY) -> BondChange:
-	var new := BondChange.new(atom1, atom2, parent)
+	var new := BondChange.new(atom1, atom2)
 	@warning_ignore("shadowed_variable")
 	var prev_order = parent.get_bond_order(atom1, atom2)
 	@warning_ignore("shadowed_variable")
@@ -39,7 +38,7 @@ static func modify_bond_order(atom1: Atom, atom2: Atom, order_mod: int, parent: 
 
 @warning_ignore("shadowed_variable")
 static func set_bond_order(atom1: Atom, atom2: Atom, new_order: int, parent: BondChanges = BondChanges.EMPTY) -> BondChange:
-	var new := BondChange.new(atom1, atom2, parent)
+	var new := BondChange.new(atom1, atom2)
 	@warning_ignore("shadowed_variable")
 	var prev_order = parent.get_bond_order(atom1, atom2)
 	new.prev_order = prev_order
@@ -48,16 +47,15 @@ static func set_bond_order(atom1: Atom, atom2: Atom, new_order: int, parent: Bon
 	return new
 
 @warning_ignore("shadowed_variable")
-func _init(atom1: Atom, atom2: Atom, parent: BondChanges = BondChanges.EMPTY) -> void:
+func _init(atom1: Atom, atom2: Atom) -> void:
 	self.atom1 = atom1
 	self.atom2 = atom2
-	self.parent = parent
 
 func _to_string() -> String:
 	return "%s - [%s -> %s] - %s | %s" % [atom1.to_string(), prev_order, new_order, atom2.to_string(), roundi(energy_change)]
 
-func duplicate(new_parent: BondChanges = parent) -> BondChange:
-	var new = BondChange.new(atom1, atom2, new_parent)
+func duplicate() -> BondChange:
+	var new = BondChange.new(atom1, atom2)
 	new.prev_order = prev_order
 	new.new_order = new_order
 	new.energy_change = energy_change

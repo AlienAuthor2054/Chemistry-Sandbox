@@ -56,7 +56,6 @@ func add(atom1: Atom, atom2: Atom, new_order: int, head: bool = false) -> BondCh
 	return add_change(BondChange.set_bond_order(atom1, atom2, new_order, self), head, atom1, atom2, new_order)
 
 func add_change(bond_change: BondChange, head: bool = false, atom1: Atom = bond_change.atom1, atom2: Atom = bond_change.atom2, new_order: int = bond_change.new_order) -> BondChanges:
-	bond_change.parent = self
 	changes.append(bond_change)
 	energy_change += bond_change.energy_change
 	activation_energy = maxf(energy_change, activation_energy)
@@ -77,7 +76,7 @@ func dupe_and_add_combo(combo: BondChanges) -> BondChanges:
 # Don't forget to use the duplicate() method of arrays and dictionaries! May need to pass true as param if deep
 func duplicate() -> BondChanges:
 	var new := BondChanges.new()
-	new.changes = changes.map(func(change: BondChange): return change.duplicate(new)) as Array[BondChange]
+	new.changes = changes.map(func(change: BondChange): return change.duplicate()) as Array[BondChange]
 	new.energy_change = energy_change
 	new.activation_energy = activation_energy
 	new.affected_atoms = affected_atoms.duplicate(true)

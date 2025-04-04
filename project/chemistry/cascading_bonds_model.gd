@@ -29,8 +29,8 @@ func _init(emit_dirty: bool = true) -> void:
 func from_bonding_pair(atom1: Atom, atom2: Atom) -> void:
 	if atom1.removing or atom2.removing: return
 	for bond_order in range(1, atom1.get_isolated_max_bond_order(atom2) - atom1.get_bond_order(atom2) + 1):
-		var bond_change := BondChange.modify_bond_order(atom1, atom2, bond_order, BondChanges.new())
-		CascadingBondsModelOperation.new(combos, bond_change, true)
+		var bond_change := BondChange.modify_bond_order(atom1, atom2, bond_order)
+		CascadingBondsModelOperation.new(combos, BondChanges.new(), bond_change, true)
 	_evaluate()
 
 func from_unbonded_atom(broken: Atom) -> void:
@@ -68,23 +68,22 @@ class CascadingBondsModelOperation:
 			for bonding: Atom in bond_combo:
 				if bonding.removing: continue
 				var bond_change := BondChange.modify_bond_order(broken, bonding, bond_combo[bonding], combo)
-				CascadingBondsModelOperation.new(combo_input, bond_change)
+				CascadingBondsModelOperation.new(combo_input, base_combo, bond_change)
 	
 	@warning_ignore("shadowed_variable")
-	func _init(combo_input: Array[BondChanges], bond_change: BondChange, bidirectional: bool = false) -> void:
-		var base_combo := bond_change.parent
+	func _init(combo_input: Array[BondChanges], base_combo: BondChanges, bond_change: BondChange, bidirectional: bool = false) -> void:
 		self.combo_input = combo_input
 		self.formed_order = bond_change.formed_order
 		assert(formed_order >= 1, "Parameter formed_order is less than 1")
 		base_combo.depth += 1
 		depth = base_combo.depth
-		assert(depth <= MAX_DEPTH, "Combo depth exceeds max depth allowed")
+		#assert(depth <= MAX_DEPTH, "Combo depth exceeds max depth allowed")
 		var go_deeper := depth < MAX_DEPTH
-		var combos1 := break_bonds(bond_change)
+		var combos1 := break_bonds(base_combo, bond_change)
 		if combos1.is_empty(): return
 		var combos: Array[BondChanges]
 		if bidirectional:
-			var combos2 := break_bonds(bond_change.dupe_and_swap())
+			var combos2 := break_bonds(base_combo, bond_change.dupe_and_swap())
 			if combos2.is_empty(): return
 			combos = BondChanges.combine_combos(combos1, combos2)
 		else:
@@ -96,8 +95,7 @@ class CascadingBondsModelOperation:
 			for head in combo.heads:
 				CascadingBondsModelOperation.from_broken_atoms(combo_input, combo, head)
 	
-	func break_bonds(bond_change: BondChange) -> Array[BondChanges]:
-		var base_combo := bond_change.parent
+	func break_bonds(base_combo: BondChanges, bond_change: BondChange) -> Array[BondChanges]:
 		var bonder := bond_change.atom1
 		var bonded := bond_change.atom2
 		var combos: Array[BondChanges] = []
