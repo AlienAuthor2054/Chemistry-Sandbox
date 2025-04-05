@@ -1,4 +1,4 @@
-extends Label
+class_name HotbarItem extends Button
 
 @export var element = 1
 

@@ -17,6 +17,7 @@ offset_top = -111.0
 offset_right = 80.0
 grow_vertical = 0
 theme_override_font_sizes/font_size = 75
+toggle_mode = true
 text = "H"
 metadata/_edit_use_anchors_ = true
 
@@ -25,6 +26,7 @@ wait_time = 0.05
 one_shot = true
 
 [node name="ElementHotbar" type="HBoxContainer" parent="."]
+visible = false
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0

@@ -1,11 +1,15 @@
-[gd_scene load_steps=2 format=3 uid="uid://c41ggtkksw0uk"]
+[gd_scene load_steps=3 format=3 uid="uid://c41ggtkksw0uk"]
 
 [ext_resource type="Script" uid="uid://bfbjhmoijmyx3" path="res://ui/element_hotbar_element.gd" id="1_1pbcf"]
+[ext_resource type="ButtonGroup" uid="uid://c2slx4khuhnjj" path="res://ui/hotbar_button_group.tres" id="1_3m1cc"]
 
-[node name="Element" type="Label"]
+[node name="Element" type="Button"]
 custom_minimum_size = Vector2(75, 0)
-mouse_filter = 0
+offset_right = 75.0
+offset_bottom = 111.0
 theme_override_font_sizes/font_size = 75
+toggle_mode = true
+button_group = ExtResource("1_3m1cc")
 text = "H"
 script = ExtResource("1_1pbcf")
 metadata/_edit_use_anchors_ = true

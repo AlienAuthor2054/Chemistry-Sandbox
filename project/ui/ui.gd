@@ -16,9 +16,12 @@
 
 extends CanvasLayer
 
+var hotbar_items: Dictionary[int, HotbarItem] = {}
 @onready var zoom_value: float = 1000 / get_viewport().get_visible_rect().size.y
 
 func _ready() -> void:
+	for item: HotbarItem in $ElementHotbar.get_children():
+		hotbar_items[item.element] = item
 	Simulation.running_changed.connect(_on_simulation_running_changed)
 	Global.selected_element_changed.connect(_on_selected_element_changed)
 
@@ -37,6 +40,7 @@ func _on_simulation_running_changed(running: bool) -> void:
 
 func _on_selected_element_changed(element: int) -> void:
 	$SelectedElementButton.text = ElementDB.get_data(element).symbol
+	hotbar_items[element].button_pressed = true
 
 func _on_selected_element_button_pressed() -> void:
 	$ElementHotbar.visible = not $ElementHotbar.visible
