@@ -41,7 +41,6 @@ monitorable = false
 shape = SubResource("CircleShape2D_jtbwq")
 
 [node name="SymbolLabel" type="Label" parent="."]
-visible = false
 z_index = 2
 anchors_preset = 8
 anchor_left = 0.5
@@ -54,6 +53,7 @@ offset_right = 20.0
 offset_bottom = 11.5
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_colors/font_color = Color(0.502194, 0.502193, 0.502194, 1)
 theme_override_font_sizes/font_size = 60
 text = "X"
 horizontal_alignment = 1
