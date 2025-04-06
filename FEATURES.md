@@ -54,8 +54,8 @@ However, any chemistry-related feature not listed here is likely too advanced fo
 	- [ ] Chemical reaction analyzer
 	- [ ] Custom world size
 - Tutorials
-	- [ ] Basic controls
-	- [ ] Tools
+	- [x] Basic controls
+	- [x] Tools
 	- Chemistry Guides
 		- [ ] Valence & octet rule
 		- [ ] Bond energy

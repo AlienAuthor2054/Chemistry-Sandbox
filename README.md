@@ -18,7 +18,9 @@ Due to time and knowledge constraints, compromises have to be made.
 
 Mobile support is currently low priority. The game still loads, but many features are (and will be) unavailable. Please play on PC for the best experience.
 
-For now, here is a controls tutorial for PC users:
+There is a full in-game tutorial, which aside from controls, tries to give some chemistry context. It takes about 10 minutes to complete.
+
+Here is the previous shortened controls tutorial for PC users:
 
 1. Use `Scroll Wheel` or number keys `1` to `4` to select among four elements (hydrogen, carbon, nitrogen, and oxygen). The selected element's symbol appears on the bottom-left.
 2. `Left Click` on the gray area (world) to spawn an atom.
@@ -41,15 +43,6 @@ For now, here is a controls tutorial for PC users:
 	- Clear: Removes all atoms
 	- Temp Up: Speeds up atoms
 	- Temp Down: Slows down atoms
-
-Atoms near each other will automatically form and break bonds following an adapted model of Lewis theory.
-
-Beyond this, expect interactive in-game tutorials in the future covering:
-- Controls
-- Atomic bonding
-- Bond strength and its determining factors
-
-and other chemistry concepts.
 
 ## Building
 
