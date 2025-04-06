@@ -18,6 +18,7 @@ extends Camera2D
 
 var zoom_factor := 1.25
 var mouse_move_factor := 1.0
+var key_move_factor := 20.0
 var zoom_multi: float = 1.0:
 	set(new):
 		zoom_multi = clampf(new, 0.5, 5)
@@ -37,14 +38,16 @@ var selected_atom = null
 func _ready():
 	reset_camera()
 
+func _process(delta: float) -> void:
+	var vector := Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
+	move(key_move_factor * vector)
+
 func reset_camera():
 	position = Vector2(0, 0)
 	zoom_multi = 1.0
 
-func move_from_mouse(event: InputEventMouseMotion) -> void:
-	var new_pos := position
-	new_pos += -mouse_move_factor * event.relative / zoom_value
-	position = Util.clamp_in_rect(new_pos, $"../World".world_rect)
+func move(delta: Vector2) -> void:
+	position = Util.clamp_in_rect(position + (delta / zoom_value), $"../World".world_rect)
 
 func change_zoom(zoom_in: bool):
 	zoom_multi *= zoom_factor if zoom_in else 1 / zoom_factor
@@ -52,7 +55,7 @@ func change_zoom(zoom_in: bool):
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_echo(): return
 	if Input.is_action_pressed("move_camera", true) and event is InputEventMouseMotion:
-		move_from_mouse(event as InputEventMouseMotion)
+		move(-mouse_move_factor * (event as InputEventMouseMotion).relative)
 	elif Input.is_action_pressed("zoom_in", true):
 		change_zoom(true)
 	elif Input.is_action_pressed("zoom_out", true):
