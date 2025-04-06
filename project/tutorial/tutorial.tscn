@@ -1,0 +1,240 @@
+[gd_scene load_steps=3 format=3 uid="uid://iyus6sc7bal0"]
+
+[ext_resource type="Script" uid="uid://dp4f4kueamc2h" path="res://tutorial/tutorial.gd" id="1_kcami"]
+[ext_resource type="Script" uid="uid://bpwf47tf8ltut" path="res://tutorial/tutorial_stage.gd" id="3_vy6qu"]
+
+[node name="Tutorial" type="Window"]
+title = "Tutorial"
+position = Vector2i(10, 36)
+size = Vector2i(275, 350)
+min_size = Vector2i(275, 200)
+keep_title_visible = true
+script = ExtResource("1_kcami")
+
+[node name="Box" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+color = Color(0.412153, 0.412152, 0.412152, 1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Box"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="RichTextLabel" parent="Box/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/normal_font_size = 20
+theme_override_font_sizes/bold_font_size = 20
+bbcode_enabled = true
+text = "Tutorial text
+
+Paragraph #2
+
+Paragraph #3"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Footer" type="HBoxContainer" parent="Box/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 8
+alignment = 1
+
+[node name="BackButton" type="Button" parent="Box/VBoxContainer/Footer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Back"
+
+[node name="StageNum" type="Label" parent="Box/VBoxContainer/Footer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(75, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "23 / 24"
+horizontal_alignment = 1
+vertical_alignment = 2
+
+[node name="NextButton" type="Button" parent="Box/VBoxContainer/Footer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Next"
+
+[node name="Stages" type="Node" parent="."]
+
+[node name="intro1" type="Node" parent="Stages"]
+script = ExtResource("3_vy6qu")
+text = "Welcome to [b]Chemistry Sandbox[/b]!
+
+The tutorial takes about [b]10 minutes[/b] to complete.
+
+[b]Press[/b] the [b]\"Next\" button[/b] to proceed."
+metadata/_custom_type_script = "uid://bpwf47tf8ltut"
+
+[node name="intro2" type="Node" parent="Stages"]
+script = ExtResource("3_vy6qu")
+text = "This tutorial is [b]designed for laypeople[/b]'s understanding.
+
+For all you chemists out there, please bear with me."
+metadata/_custom_type_script = "uid://bpwf47tf8ltut"
+
+[node name="intro3" type="Node" parent="Stages"]
+script = ExtResource("3_vy6qu")
+text = "The [b]sandbox[/b] game genre is built around [b]play and experimentation[/b].
+
+[b]I encourage you to do that[/b] even while taking this tutorial."
+metadata/_custom_type_script = "uid://bpwf47tf8ltut"
+
+[node name="intro4" type="Node" parent="Stages"]
+script = ExtResource("3_vy6qu")
+text = "As in, if the tutorial says you [b]can do something[/b], you should [b]do it[/b].
+
+Anyways, [b]playing around[/b] here [b]helps you bear[/b] with all the text in this tutorial."
+metadata/_custom_type_script = "uid://bpwf47tf8ltut"
+
+[node name="intro5" type="Node" parent="Stages"]
+script = ExtResource("3_vy6qu")
+text = "By the way, I'm a [b]window[/b]!
+
+[b]Move and resize me[/b] to your liking like a desktop window."
+metadata/_custom_type_script = "uid://bpwf47tf8ltut"
+
+[node name="intro6" type="Node" parent="Stages"]
+script = ExtResource("3_vy6qu")
+text = "If some [b]key inputs[/b] are [b]not working[/b], it may be because of me.
+
+[b]Click somewhere else[/b] other than this tutorial box to [b]release the focus[/b] from me and [b]fix[/b] the controls."
+metadata/_custom_type_script = "uid://bpwf47tf8ltut"
+
+[node name="about" type="Node" parent="Stages"]
+script = ExtResource("3_vy6qu")
+text = "Chemistry Sandbox is an [b]in-development interactive video game[/b] simulating high school [b]chemistry[/b] concepts at the [b]molecular level[/b]."
+metadata/_custom_type_script = "uid://bpwf47tf8ltut"
+
+[node name="world_intro" type="Node" parent="Stages"]
+script = ExtResource("3_vy6qu")
+text = "[b]Atoms[/b] are the basic units of chemistry.
+
+In this game, atoms are circles [b]enclosed[/b] within the big light gray area in the center of your screen I'll call the [b]game area[/b]."
+metadata/_custom_type_script = "uid://bpwf47tf8ltut"
+
+[node name="spawn_atom" type="Node" parent="Stages"]
+script = ExtResource("3_vy6qu")
+text = "[u]Left click[/u] on the game area to [b]place an atom[/b].
+
+You can also [u]left click[/u] then [b]drag[/b] to [b]launch[/b] one instead."
+metadata/_custom_type_script = "uid://bpwf47tf8ltut"
+
+[node name="pre_atom_bonding" type="Node" parent="Stages"]
+script = ExtResource("3_vy6qu")
+text = "You may be seeing atoms joined with a [b]line[/b].
+
+That line represents an atomic [b]bond[/b]. I'll tell more about those later on."
+metadata/_custom_type_script = "uid://bpwf47tf8ltut"
+
+[node name="element_intro" type="Node" parent="Stages"]
+script = ExtResource("3_vy6qu")
+text = "In chemistry, there's more than one kind ([b]element[/b]) of atom.
+
+This game features four elements so far, each shown as its [b]symbol[/b] (letter)."
+metadata/_custom_type_script = "uid://bpwf47tf8ltut"
+
+[node name="select_element" type="Node" parent="Stages"]
+script = ExtResource("3_vy6qu")
+text = "The currently [b]selected element[/b] is shown on the [b]bottom-left corner[/b].
+
+[b]Click it[/b] to reveal a [b]row of elements[/b], and [b]click those[/b] to [b]select[/b] it for placement."
+metadata/_custom_type_script = "uid://bpwf47tf8ltut"
+
+[node name="alt_select_element" type="Node" parent="Stages"]
+script = ExtResource("3_vy6qu")
+text = "Alternatively, you can also press [u]number keys 1 through 4[/u] to [b]select[/b] an [b]element[/b]."
+metadata/_custom_type_script = "uid://bpwf47tf8ltut"
+
+[node name="atom_bonding1" type="Node" parent="Stages"]
+script = ExtResource("3_vy6qu")
+text = "Each [b]element[/b] is [b]unique[/b] on [b]how they bond[/b] and [b]how many bonds[/b] they can handle.
+
+Speaking of bonds, you may also be seeing some [b]bonds[/b] that are [b]thicker[/b] than others."
+metadata/_custom_type_script = "uid://bpwf47tf8ltut"
+
+[node name="atom_bonding2" type="Node" parent="Stages"]
+script = ExtResource("3_vy6qu")
+text = "That represents the [b]bond strength[/b].
+
+In general, atoms seek to form the [b]strongest bonds[/b] possible, [b]breaking weaker bonds[/b] if they have to."
+metadata/_custom_type_script = "uid://bpwf47tf8ltut"
+
+[node name="atom_bonding3" type="Node" parent="Stages"]
+script = ExtResource("3_vy6qu")
+text = "That principle contributes to the sheer [b]depth of chemistry[/b].
+
+You could say that [b]atoms[/b] are expert (but disabled) [b]tacticians[/b], united in their goal to [b]make the most of their bonds[/b]."
+metadata/_custom_type_script = "uid://bpwf47tf8ltut"
+
+[node name="pause_simulation" type="Node" parent="Stages"]
+script = ExtResource("3_vy6qu")
+text = "Feeling overwhelemed with all those [b]atoms zipping about[/b]?
+
+Press the [b]'Pause'[/b] button (shortcut: [b]Q key[/b]) to observe the chemistry in peace."
+metadata/_custom_type_script = "uid://bpwf47tf8ltut"
+
+[node name="move_camera" type="Node" parent="Stages"]
+script = ExtResource("3_vy6qu")
+text = "Let's see those atoms [b]closer up[/b]! You can [b]zoom in and out[/b] the world just like any other web page.
+
+Hold the [u]Control[/u] key, hold [u]right click[/u] then [b]drag[/b] to [b]move around[/b], or use the WASD/arrow keys."
+metadata/_custom_type_script = "uid://bpwf47tf8ltut"
+
+[node name="remove_atom" type="Node" parent="Stages"]
+script = ExtResource("3_vy6qu")
+text = "Spawned [b]too many atoms[/b]? Hold the [u]Shift[/u] key, hold [u]left click[/u] then [b]drag[/b] to remove them like an eraser tool.
+
+Alternatively, press the [b]'Clear'[/b] button to remove all the atoms."
+metadata/_custom_type_script = "uid://bpwf47tf8ltut"
+
+[node name="temperature_buttons" type="Node" parent="Stages"]
+script = ExtResource("3_vy6qu")
+text = "It's all just one giant [b]atom blender[/b]!
+
+Press the [b]'Temp Up'[/b] and [b]'Temp Down'[/b] buttons to [b]speed up[/b] and [b]slow down[/b] atoms."
+metadata/_custom_type_script = "uid://bpwf47tf8ltut"
+
+[node name="atom_manipulation_intro" type="Node" parent="Stages"]
+script = ExtResource("3_vy6qu")
+text = "Why stick with one atom at a time? I'll show you how to [b]manipulate multiple atoms[/b] at a time like files in File Explorer!
+
+P.S. These features are work in progress."
+metadata/_custom_type_script = "uid://bpwf47tf8ltut"
+
+[node name="atom_selection" type="Node" parent="Stages"]
+script = ExtResource("3_vy6qu")
+text = "Hold [u]right click[/u] then [b]drag[/b] to create a [b]selection box[/b]. Hold the [u]Shift[/u] key before doing so to create a [b]deselection box[/b] instead.
+
+[b]Selected[/b] atoms are [b]outlined[/b] light blue."
+metadata/_custom_type_script = "uid://bpwf47tf8ltut"
+
+[node name="atom_manipulation" type="Node" parent="Stages"]
+script = ExtResource("3_vy6qu")
+text = "Now you can [b]cut, copy, and paste[/b] those selected atoms using the usual computer shortcuts!"
+metadata/_custom_type_script = "uid://bpwf47tf8ltut"
+
+[node name="outro" type="Node" parent="Stages"]
+script = ExtResource("3_vy6qu")
+text = "[b]Congratulations[/b], you have [b]finished the tutorial[/b]!
+
+Hopefully you have [b]learned[/b] at least a little bit about [b]chemistry[/b] along the way."
+metadata/_custom_type_script = "uid://bpwf47tf8ltut"
+
+[connection signal="pressed" from="Box/VBoxContainer/Footer/BackButton" to="." method="_on_back_button_pressed"]
+[connection signal="pressed" from="Box/VBoxContainer/Footer/NextButton" to="." method="_on_next_button_pressed"]

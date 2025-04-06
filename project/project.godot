@@ -20,12 +20,14 @@ config/icon="uid://dy0cxxn05e5kf"
 
 [autoload]
 
+SignalBus="*res://global/signal_bus.gd"
 Global="*res://global/global.gd"
 ElementDB="*res://chemistry/atom/data/element_db.gd"
 Simulation="*res://simulation/simulation.gd"
 
 [debug]
 
+gdscript/warnings/unused_signal=0
 gdscript/warnings/standalone_ternary=0
 
 [display]

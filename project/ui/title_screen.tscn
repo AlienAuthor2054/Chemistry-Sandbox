@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://lvng27v7pgm4" path="res://ui/title_screen.gd" id="1_bor1v"]
 
 [node name="TitleScreen" type="CanvasLayer"]
-layer = 2
+layer = 3
 script = ExtResource("1_bor1v")
 
 [node name="ColorRect" type="ColorRect" parent="."]
@@ -32,9 +32,7 @@ theme_override_constants/separation = 20
 
 [node name="TutorialButton" type="Button" parent="ColorRect/VBoxContainer"]
 layout_mode = 2
-tooltip_text = "Coming soon"
 theme_override_font_sizes/font_size = 60
-disabled = true
 text = "Begin Tutorial"
 
 [node name="StartButton" type="Button" parent="ColorRect/VBoxContainer"]
@@ -55,4 +53,5 @@ texture = ExtResource("1_7xhpk")
 expand_mode = 1
 stretch_mode = 5
 
+[connection signal="pressed" from="ColorRect/VBoxContainer/TutorialButton" to="." method="_on_tutorial_button_pressed"]
 [connection signal="pressed" from="ColorRect/VBoxContainer/StartButton" to="." method="_on_start_button_pressed"]

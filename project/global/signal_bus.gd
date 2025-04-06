@@ -14,11 +14,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-extends CanvasLayer
+extends Node
 
-func _on_start_button_pressed() -> void:
-	visible = false
-
-func _on_tutorial_button_pressed() -> void:
-	visible = false
-	SignalBus.start_tutorial.emit()
+signal start_tutorial()

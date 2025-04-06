@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://demuuu25tlthq"]
+[gd_scene load_steps=12 format=3 uid="uid://demuuu25tlthq"]
 
 [ext_resource type="Script" uid="uid://cc1m1nl8kagxo" path="res://simulation/camera.gd" id="1_0ogwh"]
 [ext_resource type="Script" uid="uid://dk6v4qyap0gnt" path="res://simulation/main.gd" id="1_3ujg2"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://bb1y4weslv1pe" path="res://ui/simulation_ui.tscn" id="5_ctfah"]
 [ext_resource type="PackedScene" uid="uid://38a41v2d17mg" path="res://ui/title_screen.tscn" id="6_5awmp"]
 [ext_resource type="Script" uid="uid://i0nn4tlyt7rl" path="res://simulation/selection.gd" id="7_24ldq"]
+[ext_resource type="PackedScene" uid="uid://iyus6sc7bal0" path="res://tutorial/tutorial.tscn" id="8_24ldq"]
 
 [sub_resource type="Gradient" id="Gradient_nnmox"]
 colors = PackedColorArray(0.45098, 0.45098, 0.45098, 1, 1, 1, 1, 1)
@@ -64,6 +65,10 @@ script = ExtResource("7_24ldq")
 
 [node name="CollisionShape" type="CollisionShape2D" parent="Selection"]
 shape = SubResource("RectangleShape2D_8cr32")
+
+[node name="Tutorial" parent="." instance=ExtResource("8_24ldq")]
+unique_name_in_owner = true
+visible = false
 
 [connection signal="body_exited" from="World/Area" to="World" method="_on_atom_exited"]
 [connection signal="input_event" from="World/Area" to="World" method="_on_area_input_event"]
