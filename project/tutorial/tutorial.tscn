@@ -83,7 +83,7 @@ metadata/_custom_type_script = "uid://bpwf47tf8ltut"
 
 [node name="intro2" type="Node" parent="Stages"]
 script = ExtResource("3_vy6qu")
-text = "This tutorial is [b]designed for laypeople[/b]'s understanding.
+text = "This tutorial is [b]designed for laypeople[/b]'s understanding, one reason why its quite long.
 
 For all you chemists out there, please bear with me."
 metadata/_custom_type_script = "uid://bpwf47tf8ltut"
@@ -172,9 +172,7 @@ metadata/_custom_type_script = "uid://bpwf47tf8ltut"
 
 [node name="atom_bonding3" type="Node" parent="Stages"]
 script = ExtResource("3_vy6qu")
-text = "That principle contributes to the sheer [b]depth of chemistry[/b].
-
-You could say that [b]atoms[/b] are expert (but disabled) [b]tacticians[/b], united in their goal to [b]make the most of their bonds[/b]."
+text = "That principle contributes to the sheer [b]depth of chemistry[/b]."
 metadata/_custom_type_script = "uid://bpwf47tf8ltut"
 
 [node name="pause_simulation" type="Node" parent="Stages"]
@@ -186,7 +184,7 @@ metadata/_custom_type_script = "uid://bpwf47tf8ltut"
 
 [node name="move_camera" type="Node" parent="Stages"]
 script = ExtResource("3_vy6qu")
-text = "Let's see those atoms [b]closer up[/b]! You can [b]zoom in and out[/b] the world just like any other web page.
+text = "Let's see those atoms [b]closer up[/b]! You can [b]zoom in and out[/b] just like any other web page.
 
 Hold the [u]Control[/u] key, hold [u]right click[/u] then [b]drag[/b] to [b]move around[/b], or use the WASD/arrow keys."
 metadata/_custom_type_script = "uid://bpwf47tf8ltut"
