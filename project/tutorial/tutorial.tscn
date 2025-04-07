@@ -151,7 +151,9 @@ metadata/_custom_type_script = "uid://bpwf47tf8ltut"
 
 [node name="alt_select_element" type="Node" parent="Stages"]
 script = ExtResource("3_vy6qu")
-text = "Alternatively, you can also press [u]number keys 1 through 4[/u] to [b]select[/b] an [b]element[/b]."
+text = "Alternatively, you can also press [u]number keys 1 through 4[/u] to [b]select[/b] an [b]element[/b].
+
+You can also select the [b]next/previous element[/b] with [b]scroll wheel[/b]."
 metadata/_custom_type_script = "uid://bpwf47tf8ltut"
 
 [node name="atom_bonding1" type="Node" parent="Stages"]

@@ -38,23 +38,20 @@ func _process(_delta: float) -> void:
 		if not Input.is_action_just_pressed("select_hotbar_element_" + str(index + 1), true): continue
 		element_selection_index = index
 		selected_element = elements_possible[element_selection_index]
+	if Input.is_action_pressed("control") or Input.is_action_pressed("shift"): return
+	if Input.is_action_just_pressed("hotbar_scroll_up"):
+		scroll_element(-1)
+	if Input.is_action_just_pressed("hotbar_scroll_down"):
+		scroll_element(1)
 
-@onready var db := %SimulationUI/SelectedElementButton/Timer
 func _unhandled_input(event: InputEvent) -> void:
 	Simulation.on_unhandled_input(event)
 	if event.is_action_released("spawn_atom", true):
 		$World.spawn_atom()
-	elif event is InputEventMouseButton and event is not InputEventWithModifiers:
-		if not db.is_stopped(): return
-		db.start()
-		match event.button_index:
-			MOUSE_BUTTON_WHEEL_DOWN:
-				element_selection_index += 1
-			MOUSE_BUTTON_WHEEL_UP:
-				element_selection_index -= 1
-		if element_selection_index >= elements_possible_count: element_selection_index = 0
-		if element_selection_index < 0: element_selection_index = elements_possible_count - 1
-		selected_element = elements_possible[element_selection_index]
 	elif event.is_action_pressed("ui_cancel"):
 		%TitleScreen.visible = true
 		%Tutorial.visible = false
+
+func scroll_element(delta: int) -> void:
+	element_selection_index = wrapi(element_selection_index + delta, 0, elements_possible_count)
+	selected_element = elements_possible[element_selection_index]
