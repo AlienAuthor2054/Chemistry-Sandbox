@@ -41,6 +41,12 @@ func _ready():
 func _process(delta: float) -> void:
 	var vector := Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
 	move(key_move_factor * vector)
+	if Input.is_action_just_pressed("zoom_in", true):
+		change_zoom(true)
+	elif Input.is_action_just_pressed("zoom_out", true):
+		change_zoom(false)
+	elif Input.is_action_just_pressed("reset_camera", true):
+		reset_camera()
 
 func reset_camera():
 	position = Vector2(0, 0)
@@ -53,12 +59,5 @@ func change_zoom(zoom_in: bool):
 	zoom_multi *= zoom_factor if zoom_in else 1 / zoom_factor
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event.is_echo(): return
 	if Input.is_action_pressed("move_camera", true) and event is InputEventMouseMotion:
 		move(-mouse_move_factor * (event as InputEventMouseMotion).relative)
-	elif Input.is_action_pressed("zoom_in", true):
-		change_zoom(true)
-	elif Input.is_action_pressed("zoom_out", true):
-		change_zoom(false)
-	elif Input.is_action_pressed("reset_camera", true):
-		reset_camera()

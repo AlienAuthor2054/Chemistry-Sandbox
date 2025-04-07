@@ -109,13 +109,6 @@ text = "By the way, I'm a [b]window[/b]!
 [b]Move and resize me[/b] to your liking like a desktop window."
 metadata/_custom_type_script = "uid://bpwf47tf8ltut"
 
-[node name="intro6" type="Node" parent="Stages"]
-script = ExtResource("3_vy6qu")
-text = "If some [b]key inputs[/b] are [b]not working[/b], it may be because of me.
-
-[b]Click somewhere else[/b] other than this tutorial box to [b]release the focus[/b] from me and [b]fix[/b] the controls."
-metadata/_custom_type_script = "uid://bpwf47tf8ltut"
-
 [node name="about" type="Node" parent="Stages"]
 script = ExtResource("3_vy6qu")
 text = "Chemistry Sandbox is an [b]in-development interactive video game[/b] simulating high school [b]chemistry[/b] concepts at the [b]molecular level[/b]."

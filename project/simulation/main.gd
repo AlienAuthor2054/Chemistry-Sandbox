@@ -32,6 +32,13 @@ func _ready():
 		element_selection_index = elements_possible.find(new)
 	)
 
+func _process(_delta: float) -> void:
+	if %TitleScreen.visible: return
+	for index in range(4):
+		if not Input.is_action_just_pressed("select_hotbar_element_" + str(index + 1), true): continue
+		element_selection_index = index
+		selected_element = elements_possible[element_selection_index]
+
 @onready var db := %SimulationUI/SelectedElementButton/Timer
 func _unhandled_input(event: InputEvent) -> void:
 	Simulation.on_unhandled_input(event)
@@ -48,11 +55,6 @@ func _unhandled_input(event: InputEvent) -> void:
 		if element_selection_index >= elements_possible_count: element_selection_index = 0
 		if element_selection_index < 0: element_selection_index = elements_possible_count - 1
 		selected_element = elements_possible[element_selection_index]
-	else:
-		for index in range(4):
-			if not event.is_action_pressed("select_hotbar_element_" + str(index + 1), true): continue
-			element_selection_index = index
-			selected_element = elements_possible[element_selection_index]
-	if event.is_action_pressed("ui_cancel"):
+	elif event.is_action_pressed("ui_cancel"):
 		%TitleScreen.visible = true
 		%Tutorial.visible = false

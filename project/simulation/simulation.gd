@@ -33,10 +33,12 @@ func _init() -> void:
 	world_size = world_size
 	running = true
 
-func on_unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("toggle_simulation_running", true):
+func _process(_delta: float) -> void:
+	if Input.is_action_just_pressed("toggle_simulation_running", true):
 		running = not running
-	elif event.is_action_pressed("benchmark", true):
+
+func on_unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed("benchmark", true):
 		clear()
 		SimulationBenchmark.new($"/root/Main")
 
