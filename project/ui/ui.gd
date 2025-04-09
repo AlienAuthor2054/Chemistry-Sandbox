@@ -43,3 +43,6 @@ func _on_selected_element_changed(element: int) -> void:
 
 func _on_selected_element_button_pressed() -> void:
 	%ElementHotbar.visible = not %ElementHotbar.visible
+
+func _on_title_screen_button_pressed() -> void:
+	SignalBus.show_title_screen.emit()

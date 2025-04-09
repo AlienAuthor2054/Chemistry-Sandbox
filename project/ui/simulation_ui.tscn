@@ -8,6 +8,14 @@ offset = Vector2(-10, 0)
 transform = Transform2D(1, 0, 0, 1, -10, 0)
 script = ExtResource("1_whqmj")
 
+[node name="TitleScreenButton" type="Button" parent="."]
+offset_right = 153.0
+offset_bottom = 77.0
+size_flags_horizontal = 8
+tooltip_text = "Go back to the title screen"
+theme_override_font_sizes/font_size = 50
+text = "Exit"
+
 [node name="SelectedElementButton" type="Button" parent="."]
 unique_name_in_owner = true
 anchors_preset = 2
@@ -102,6 +110,7 @@ size_flags_horizontal = 8
 theme_override_font_sizes/font_size = 50
 text = "Pause"
 
+[connection signal="pressed" from="TitleScreenButton" to="." method="_on_title_screen_button_pressed"]
 [connection signal="pressed" from="SelectedElementButton" to="." method="_on_selected_element_button_pressed"]
 [connection signal="pressed" from="Tools/ClearButton" to="." method="_on_clear_button_pressed"]
 [connection signal="pressed" from="Tools/TemperatureUpButton" to="." method="_on_temperature_button_pressed" binds= [2.0]]
