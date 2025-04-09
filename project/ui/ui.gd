@@ -20,14 +20,13 @@ var hotbar_items: Dictionary[int, HotbarItem] = {}
 @onready var zoom_value: float = 1000 / get_viewport().get_visible_rect().size.y
 
 func _ready() -> void:
-	for item: HotbarItem in $ElementHotbar.get_children():
+	for item: HotbarItem in %ElementHotbar.get_children():
 		hotbar_items[item.element] = item
 	Simulation.running_changed.connect(_on_simulation_running_changed)
 	Global.selected_element_changed.connect(_on_selected_element_changed)
 
 func _on_temperature_button_pressed(velocity_factor: float) -> void:
 	get_tree().call_group("atoms", "multiply_velocity", sqrt(velocity_factor))
-	$"..".external_change_applied.emit()
 
 func _on_clear_button_pressed() -> void:
 	Simulation.clear()
@@ -36,11 +35,11 @@ func _on_pause_toggle_pressed() -> void:
 	Simulation.running = not Simulation.running
 
 func _on_simulation_running_changed(running: bool) -> void:
-	$SimulationStateTools/PauseToggle.text = "Pause" if running else "Resume"
+	%PauseToggle.text = "Pause" if running else "Resume"
 
 func _on_selected_element_changed(element: int) -> void:
-	$SelectedElementButton.text = ElementDB.get_data(element).symbol
+	%SelectedElementButton.text = ElementDB.get_data(element).symbol
 	hotbar_items[element].button_pressed = true
 
 func _on_selected_element_button_pressed() -> void:
-	$ElementHotbar.visible = not $ElementHotbar.visible
+	%ElementHotbar.visible = not %ElementHotbar.visible

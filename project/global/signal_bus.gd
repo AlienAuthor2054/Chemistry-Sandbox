@@ -16,4 +16,5 @@
 
 extends Node
 
-signal start_tutorial()
+signal start_tutorial
+signal show_title_screen

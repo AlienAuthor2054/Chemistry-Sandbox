@@ -16,9 +16,6 @@
 
 extends Node2D
 
-@warning_ignore("unused_signal")
-signal external_change_applied
-
 var elements_possible := ElementDB.data.keys()
 var elements_possible_count := elements_possible.size()
 var element_selection_index := 0
@@ -49,8 +46,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_released("spawn_atom", true):
 		$World.spawn_atom()
 	elif event.is_action_pressed("ui_cancel"):
-		%TitleScreen.visible = true
-		%Tutorial.visible = false
+		SignalBus.show_title_screen.emit()
 
 func scroll_element(delta: int) -> void:
 	element_selection_index = wrapi(element_selection_index + delta, 0, elements_possible_count)

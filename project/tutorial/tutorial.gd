@@ -26,6 +26,7 @@ func _ready() -> void:
 		stages.append(stage)
 	stage_count = stages.size()
 	SignalBus.start_tutorial.connect(start)
+	SignalBus.show_title_screen.connect(func(): visible = false)
 
 func start() -> void:
 	active_stage_num = 1

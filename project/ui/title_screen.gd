@@ -16,6 +16,9 @@
 
 extends CanvasLayer
 
+func _ready() -> void:
+	SignalBus.show_title_screen.connect(func(): visible = true)
+
 func _on_start_button_pressed() -> void:
 	visible = false
 
