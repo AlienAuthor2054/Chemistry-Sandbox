@@ -10,7 +10,10 @@ Due to time and knowledge constraints, compromises have to be made.
 
 ## Quick Links
 
-- [Feature list](FEATURES.md)
+- [Wiki](https://github.com/AlienAuthor2054/Chemistry-Sandbox/wiki)
+	- [FAQs](https://github.com/AlienAuthor2054/Chemistry-Sandbox/wiki/FAQs)	
+	- [Feature list](https://github.com/AlienAuthor2054/Chemistry-Sandbox/wiki/Feature-List)
+	- [Changelog](https://github.com/AlienAuthor2054/Chemistry-Sandbox/wiki/Changelog)
 - [Contributing guidelines](CONTRIBUTING.md)
 	- Please read this if you want to send a bug report, issue, or pull request.
 
