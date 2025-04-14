@@ -4,4 +4,5 @@
 
 [node name="AtomBond" type="Node2D"]
 process_physics_priority = 1
+z_index = 1
 script = ExtResource("1_v2chx")

@@ -2,7 +2,7 @@
 
 [ext_resource type="PhysicsMaterial" uid="uid://dfgb2hjec0pw2" path="res://simulation/ideal_physics_material.tres" id="1_822kf"]
 [ext_resource type="Script" uid="uid://dobc6vdmqvrag" path="res://chemistry/atom/atom.gd" id="1_by0es"]
-[ext_resource type="Texture2D" uid="uid://de5x8soeffuru" path="res://chemistry/atom/atom_selection.tres" id="3_43dac"]
+[ext_resource type="Script" uid="uid://gl42udn7n6u7" path="res://chemistry/atom/selection.gd" id="3_43dac"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_rvugk"]
 radius = 50.0
@@ -11,6 +11,7 @@ radius = 50.0
 radius = 310.0
 
 [node name="Atom" type="RigidBody2D"]
+z_index = 3
 collision_layer = 2
 input_pickable = true
 physics_material_override = ExtResource("1_822kf")
@@ -22,15 +23,10 @@ script = ExtResource("1_by0es")
 [node name="AtomCollisionShape" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_rvugk")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-z_index = 2
-z_as_relative = false
-
-[node name="Selection" type="Sprite2D" parent="."]
+[node name="Selection" type="Node2D" parent="."]
 visible = false
-z_index = 1
-z_as_relative = false
-texture = ExtResource("3_43dac")
+z_index = -1
+script = ExtResource("3_43dac")
 
 [node name="AtomField" type="Area2D" parent="."]
 collision_layer = 4
@@ -41,7 +37,6 @@ monitorable = false
 shape = SubResource("CircleShape2D_jtbwq")
 
 [node name="SymbolLabel" type="Label" parent="."]
-z_index = 2
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -62,7 +57,6 @@ vertical_alignment = 1
 [node name="IdLabel" type="Label" parent="."]
 visible = false
 top_level = true
-z_index = 2
 offset_left = 80.0
 offset_bottom = -40.0
 grow_vertical = 0

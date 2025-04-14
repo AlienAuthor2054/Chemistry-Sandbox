@@ -16,8 +16,6 @@
 
 class_name ElementData extends Resource
 
-const BASE_ATOM_TEXTURE := preload("uid://c3yioj1c7fjka")
-
 @export var atomic_number: int
 @export var symbol: String
 @export var name: String
@@ -25,10 +23,3 @@ const BASE_ATOM_TEXTURE := preload("uid://c3yioj1c7fjka")
 @export var radius: float
 @export var electronegativity: float
 @export var color: Color
-
-var texture: GradientTexture2D
-var collision_shape: CollisionShape2D
-
-func initialize() -> void:
-	texture = BASE_ATOM_TEXTURE.duplicate(true)
-	texture.gradient.set_color(0, color)

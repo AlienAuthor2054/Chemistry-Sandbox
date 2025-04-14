@@ -14,22 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-extends Node
+extends Node2D
 
-const DB_PATH := "res://chemistry/atom/data/elements/"
-
-var data: Dictionary[int, ElementData] = {}
-
-func get_data(protons: int) -> ElementData:
-	return data[protons]
-
-func _init() -> void:
-	var dir = DirAccess.open(DB_PATH)
-	dir.list_dir_begin()
-	var files := dir.get_files()
-	for file_name in files:
-		if (file_name.get_extension() == "remap"):
-			file_name = file_name.replace(".remap", "")
-		var element_data: ElementData = ResourceLoader.load(DB_PATH + file_name)
-		data[element_data.atomic_number] = element_data
-		file_name = dir.get_next()
+func _draw() -> void:
+	draw_circle(Vector2.ZERO, $"..".visual_radius + 25, Color(0.5, 0.75, 1, 0.5), true, -1.0, true)

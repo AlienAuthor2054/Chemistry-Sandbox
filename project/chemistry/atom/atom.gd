@@ -18,7 +18,6 @@ class_name Atom extends RigidBody2D
 
 const ATOM_SCENE = preload("uid://b8mej4rmqjbp3")
 const ATOM_BOND_SCENE = preload("uid://d1awp4hbumust")
-const BASE_ATOM_TEXTURE: GradientTexture2D = preload("uid://c3yioj1c7fjka")
 const SPEED_LIMIT := 3000.0
 
 static var LOCK := Lock.new()
@@ -78,6 +77,7 @@ var frozen_velocity := Vector2.ZERO
 @onready var max_bonds: int = valence_shell.left
 @onready var electronegativity: float = element_data.electronegativity
 @onready var radius: float = element_data.radius
+@onready var visual_radius: float = radius * atom_visual_radius_multi
 
 static func create(parent: Node, atomic_number: int, pos: Vector2, vel: Vector2) -> Atom:
 	var atom: Atom = ATOM_SCENE.instantiate()
@@ -102,10 +102,6 @@ func initialize(atomic_number: int, pos: Vector2, vel: Vector2):
 	#print("%s: %s" % [protons, orbital_set.get_total_energy()])
 	#print(Combination.combos(range(1, 3+1), 2))
 	#print(Combination.combos_range(range(1, 4+1)))
-	var base_scale := element_data.radius * atom_visual_radius_multi / 50
-	$Sprite2D.scale = Vector2.ONE * base_scale
-	$Sprite2D.texture = element_data.texture
-	$Selection.scale = Vector2.ONE * (base_scale + 0.50)
 	position = pos
 	add_to_group("atoms")
 	atom_id_register[id] = self
@@ -335,6 +331,9 @@ func _physics_process(_delta: float) -> void:
 	if linear_velocity.length() > SPEED_LIMIT:
 		set_velocity(linear_velocity.limit_length(SPEED_LIMIT))
 	#$SymbolLabel.text = str(molecule.id)
+
+func _draw() -> void:
+	draw_circle(Vector2.ZERO, visual_radius, element_data.color, true, -1.0, true)
 
 func _on_input_event(_viewport: Node, _event: InputEvent, _shape_idx: int) -> void:
 	if Input.is_action_pressed("remove_atom", true):

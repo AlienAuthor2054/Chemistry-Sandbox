@@ -57,6 +57,7 @@ unique_name_in_owner = true
 unique_name_in_owner = true
 
 [node name="Selection" type="Area2D" parent="."]
+z_index = 10
 collision_layer = 16
 collision_mask = 2
 input_pickable = false

@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="ElementDB" load_steps=2 format=3 uid="uid://bpjys3t7440dk"]
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://bpjys3t7440dk"]
 
 [ext_resource type="Script" uid="uid://dy7iwrfmhsfoe" path="res://chemistry/atom/data/element_db.gd" id="1_0l3fm"]
 
