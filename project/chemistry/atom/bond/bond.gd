@@ -46,10 +46,8 @@ func initialize(atom: Atom, other: Atom, order: int):
 	_atom = atom
 	_other = other
 	update_order(order)
-	update_transform()
-	reset_physics_interpolation()
 
-func _physics_process(_delta: float) -> void:
+func _process(_delta: float) -> void:
 	update_transform()
 
 func update_order(new_order: int) -> void:
