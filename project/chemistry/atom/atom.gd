@@ -125,18 +125,6 @@ func add_kinetic_energy(energy: float) -> void:
 	var direction := linear_velocity.normalized() if speed > 0 else Vector2(1, 0)
 	apply_central_impulse(direction * impulse)
 
-func get_potential_energy() -> float:
-	var potential_energy := 0.0
-	for other: Atom in $AtomField.get_overlapping_bodies():
-		if other == self: continue
-		var distance := (other.position - position).length()
-		if distance > field_radius: continue
-		potential_energy += repulsion_force * (((1000 / maxf(distance, 10)) + (maxf(10 - distance, 0) * 10) - (1000 / field_radius)) / 2)
-	for other: Atom in bonds:
-		var distance := (other.position - position).length()
-		potential_energy += bond_strength * ((distance - bond_length) ** 2) / 4000 
-	return potential_energy
-
 func multiply_velocity(factor):
 	if frozen:
 		frozen_velocity *= factor
@@ -194,17 +182,6 @@ func unbond_atom(other: Atom, chemical: bool = true, broadcast_dirty_event: bool
 		bond_changed_event.execute()
 	else:
 		bond_changed_event_queue.append(bond_changed_event)
-	var difference := other.position - position
-	var _direction := difference.normalized()
-	var distance := difference.length()
-	var _potential_energy := bond_strength * ((minf(distance, max_bond_length) - bond_length) ** 2) / 4000
-	
-	# Offset to prevent temperature spiral, most likely from physics inaccuracy
-	
-	#potential_energy -= 7.5
-	
-	#add_kinetic_energy(potential_energy)
-	#other.add_kinetic_energy(potential_energy)
 	#print(str(id) + " unbonded with " + str(other.id))
 
 func unbond_all() -> void:
