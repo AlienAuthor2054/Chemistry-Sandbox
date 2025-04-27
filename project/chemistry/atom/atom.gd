@@ -45,10 +45,8 @@ var bonds_order: Dictionary[Atom, int]:
 			result[atom] = bonds[atom].order
 		return result 
 var valence_shell: ValenceShell
-var bond_length: float = 175
-var max_bond_length: float = bond_length * 1.75
-var bond_strength: float = 1000
 var repulsion_force: float = 200
+var bonding_radius: float = 175
 var field_radius: float = 175
 var atoms_in_field: Array[Atom] = []
 var atoms_in_molecule_checked: Array[Atom] = []
@@ -274,7 +272,7 @@ func _physics_process(_delta: float) -> void:
 		var direction := difference.normalized()
 		var distance := difference.length()
 		if distance > field_radius: continue
-		if distance <= bond_length:
+		if distance <= bonding_radius:
 			new_atoms_in_field.append(other)
 		if other.id < id: continue
 		var force = (repulsion_force * direction * 1000000) / (maxf(distance, 50) ** 2)
@@ -294,15 +292,6 @@ func _physics_process(_delta: float) -> void:
 		evaluate_field()
 	for other: Atom in bonds.keys():
 		if other.id < id: continue
-		var difference := other.position - position
-		var distance := difference.length()
-		if distance <= max_bond_length:
-			var direction := difference.normalized()
-			var force := bond_strength * direction * (distance - bond_length)
-			force_list.add(other, -force)
-			force_list.add(self, force)
-		else:
-			unbond_atom(other, false)
 	for atom: Atom in force_list.dict:
 		atom.apply_central_force(force_list.dict[atom])
 	if linear_velocity.length() > SPEED_LIMIT:
