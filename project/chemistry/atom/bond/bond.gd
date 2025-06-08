@@ -16,7 +16,7 @@
 
 class_name Bond extends Node2D
 
-const ATOM_BOND_LINE_SCENE = preload("uid://cqiykungxfadm")
+const ATOM_BOND_LINE_SCENE = preload("res://chemistry/atom/bond/atom_bond_line.tscn")
 
 var order: int
 var energy: float
