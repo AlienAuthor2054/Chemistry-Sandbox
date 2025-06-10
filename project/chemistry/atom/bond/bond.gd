@@ -16,15 +16,12 @@
 
 class_name Bond extends Node2D
 
-const ATOM_BOND_LINE_SCENE = preload("res://chemistry/atom/bond/atom_bond_line.tscn")
+const ATOM_BOND_LINE_SCENE = preload("uid://cqiykungxfadm")
 
 var order: int
 var energy: float
 var _atom: Atom
 var _other: Atom
-var base_length: float = 175
-var max_length: float = base_length * 1.75
-var strength: float = 1000
 var lines: Array[Polygon2D] = []
 var deleting := false
 
@@ -49,18 +46,6 @@ func initialize(atom: Atom, other: Atom, order: int):
 	_atom = atom
 	_other = other
 	update_order(order)
-
-func _physics_process(_delta: float) -> void:
-	if not (Simulation.running and not deleting): return
-	var difference := _other.position - _atom.position
-	var distance := difference.length()
-	if distance <= max_length:
-		var direction := difference.normalized()
-		var force := strength * direction * (distance - base_length)
-		_atom.apply_central_force(force)
-		_other.apply_central_force(-force)
-	else:
-		_atom.unbond_atom(_other, false)
 
 func _process(_delta: float) -> void:
 	update_transform()
