@@ -135,18 +135,9 @@ text = "You may be seeing atoms joined with a [b]line[/b].
 That line represents an atomic [b]bond[/b]. I'll tell more about those later on."
 metadata/_custom_type_script = "uid://bpwf47tf8ltut"
 
-[node name="element_intro" type="Node" parent="Stages"]
-script = ExtResource("3_vy6qu")
-text = "In chemistry, there's more than one kind ([b]element[/b]) of atom.
-
-This game features four elements so far, each shown as its [b]symbol[/b] (letter)."
-metadata/_custom_type_script = "uid://bpwf47tf8ltut"
-
 [node name="select_element" type="Node" parent="Stages"]
 script = ExtResource("3_vy6qu")
-text = "The currently [b]selected element[/b] is shown on the [b]bottom-left corner[/b].
-
-[b]Click it[/b] to reveal a [b]row of elements[/b], and [b]click those[/b] to [b]select[/b] it for placement."
+text = "[b]Select another element[/b] by clicking another atom on the hotbar at the bottom center of your screen"
 metadata/_custom_type_script = "uid://bpwf47tf8ltut"
 
 [node name="alt_select_element" type="Node" parent="Stages"]

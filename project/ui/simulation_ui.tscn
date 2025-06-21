@@ -16,33 +16,17 @@ tooltip_text = "Go back to the title screen"
 theme_override_font_sizes/font_size = 50
 text = "Exit"
 
-[node name="SelectedElementButton" type="Button" parent="."]
-unique_name_in_owner = true
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_left = 16.0
-offset_top = -111.0
-offset_right = 80.0
-grow_vertical = 0
-theme_override_font_sizes/font_size = 75
-toggle_mode = true
-text = "H"
-metadata/_edit_use_anchors_ = true
-
-[node name="Timer" type="Timer" parent="SelectedElementButton"]
-wait_time = 0.05
-one_shot = true
-
 [node name="ElementHotbar" type="HBoxContainer" parent="."]
 unique_name_in_owner = true
-visible = false
-anchors_preset = 2
+anchors_preset = 7
+anchor_left = 0.5
 anchor_top = 1.0
+anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = 120.0
-offset_top = -103.0
-offset_right = 176.0
+offset_left = -126.0
+offset_top = -60.0
+offset_right = 126.0
+grow_horizontal = 2
 grow_vertical = 0
 
 [node name="Element1" parent="ElementHotbar" instance=ExtResource("2_q2170")]
@@ -50,17 +34,14 @@ layout_mode = 2
 
 [node name="Element2" parent="ElementHotbar" instance=ExtResource("2_q2170")]
 layout_mode = 2
-text = "C"
 element = 6
 
 [node name="Element3" parent="ElementHotbar" instance=ExtResource("2_q2170")]
 layout_mode = 2
-text = "N"
 element = 7
 
 [node name="Element4" parent="ElementHotbar" instance=ExtResource("2_q2170")]
 layout_mode = 2
-text = "O"
 element = 8
 
 [node name="Tools" type="VBoxContainer" parent="."]
@@ -111,7 +92,6 @@ theme_override_font_sizes/font_size = 50
 text = "Pause"
 
 [connection signal="pressed" from="TitleScreenButton" to="." method="_on_title_screen_button_pressed"]
-[connection signal="pressed" from="SelectedElementButton" to="." method="_on_selected_element_button_pressed"]
 [connection signal="pressed" from="Tools/ClearButton" to="." method="_on_clear_button_pressed"]
 [connection signal="pressed" from="Tools/TemperatureUpButton" to="." method="_on_temperature_button_pressed" binds= [2.0]]
 [connection signal="pressed" from="Tools/TemperatureDownButton" to="." method="_on_temperature_button_pressed" binds= [0.5]]

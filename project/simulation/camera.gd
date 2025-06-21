@@ -38,7 +38,7 @@ var selected_atom = null
 func _ready():
 	reset_camera()
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	var vector := Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
 	move(key_move_factor * vector)
 	if Input.is_action_just_pressed("zoom_in", true):

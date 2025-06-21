@@ -16,6 +16,8 @@
 
 class_name SavedAtomSet extends Resource
 
+static var get_image_db := false
+
 var atom_saves: Dictionary[int, SavedAtom] = {}
 var save_rect: Rect2
 
@@ -25,14 +27,14 @@ func _init(atoms: Array[Atom]) -> void:
 	for atom in atoms:
 		atom_saves[atom.id] = SavedAtom.new(atom)
 		save_rect = save_rect.expand(atom.position)
-	save_rect = save_rect.grow(50)
+	save_rect = save_rect.grow(100)
 	rect_center = save_rect.get_center()
 	save_rect = Util.rect_with_center(save_rect, Vector2.ZERO)
 	for id in atom_saves:
 		var save := atom_saves[id]
 		save.position -= rect_center
 
-func spawn(parent: Node, spawn_center: Vector2) -> Array[Atom]:
+func spawn(parent: Node, spawn_center: Vector2, frozen: bool = false) -> Array[Atom]:
 	var spawned_atoms: Dictionary[int, Atom] = {}
 	var spawned_saves: Dictionary[int, SavedAtom] = {}
 	spawn_center = Util.enclose_rect(
@@ -43,10 +45,12 @@ func spawn(parent: Node, spawn_center: Vector2) -> Array[Atom]:
 		var save := atom_saves[id]
 		var spawn_pos := spawn_center + save.position
 		if not Simulation.is_point_in_world(spawn_pos): continue
-		spawned_atoms[id] = Atom.create(parent, save.atomic_number, spawn_pos, save.velocity)
+		spawned_atoms[id] = Atom.create(parent, save.atomic_number, spawn_pos, save.velocity if not frozen else Vector2.ZERO)
 		spawned_saves[id] = save
 	for id in spawned_saves:
 		var spawned_atom := spawned_atoms[id]
+		if frozen:
+			spawned_atom.set_physics_process(false)
 		var bonds := spawned_saves[id].bonds
 		for bonded_id in bonds:
 			var bonded: Atom = spawned_atoms.get(bonded_id)

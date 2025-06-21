@@ -32,13 +32,13 @@ func _ready() -> void:
 	world_size = world_size
 
 func _on_area_input_event(_viewport: Node, event: InputEventWithModifiers, _shape_idx: int) -> void:
-	if not event.is_action_pressed("spawn_atom", true): return
+	if not event.is_action_pressed("spawn_atom", true) or Global.selected_element == 0: return
 	clicked_point = get_global_mouse_position()
 	spawning_atom = true
 
 func _on_atom_exited(atom: Atom) -> void:
 	if Simulation.running:
-		atom.remove()
+		atom.queue_free()
 
 func spawn_atom() -> void:
 	if not spawning_atom: return

@@ -23,9 +23,9 @@ Mobile support is currently low priority. The game still loads, but many feature
 
 There is a full in-game tutorial, which aside from controls, tries to give some chemistry context. It takes about 10 minutes to complete.
 
-Here is the previous shortened controls tutorial for PC users:
+Here is a shortened controls tutorial for PC users:
 
-1. Use `Scroll Wheel` or number keys `1` to `4` to select among four elements (hydrogen, carbon, nitrogen, and oxygen). The selected element's symbol appears on the bottom-left.
+1. Use `Scroll Wheel` or number keys `1` to `4` to select among four elements (hydrogen, carbon, nitrogen, and oxygen).
 2. `Left Click` on the gray area (world) to spawn an atom.
 	- Drag while holding `Left Click`, then release to launch the spawned atom.
 3. `Shift Left Click` on an atom to remove it.

@@ -23,8 +23,10 @@ var selected_element: int:
 	get(): return Global.selected_element
 	set(new): Global.selected_element = new
 
-func _ready():
+func _init() -> void:
 	Global.MAIN_NODE = self
+
+func _ready() -> void:
 	Global.selected_element_changed.connect(func(new: int):
 		element_selection_index = elements_possible.find(new)
 	)
@@ -33,8 +35,11 @@ func _process(_delta: float) -> void:
 	if %TitleScreen.visible: return
 	for index in range(4):
 		if not Input.is_action_just_pressed("select_hotbar_element_" + str(index + 1), true): continue
-		element_selection_index = index
-		selected_element = elements_possible[element_selection_index]
+		if element_selection_index == index:
+			selected_element = 0
+		else:
+			element_selection_index = index
+			selected_element = elements_possible[index]
 	if Input.is_action_pressed("control") or Input.is_action_pressed("shift"): return
 	if Input.is_action_just_pressed("hotbar_scroll_up"):
 		scroll_element(-1)

@@ -43,7 +43,7 @@ func on_unhandled_input(event: InputEvent) -> void:
 		SimulationBenchmark.new($"/root/Main")
 
 func clear() -> void:
-	get_tree().call_group("atoms", "remove")
+	get_tree().call_group("atoms", "queue_free")
 
 func is_point_in_world(position: Vector2) -> bool:
 	return world_rect.has_point(position)

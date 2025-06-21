@@ -80,7 +80,7 @@ func clear() -> void:
 
 func remove_selected() -> void:
 	for atom in selected:
-		atom.remove()
+		atom.queue_free()
 	selected.clear()
 
 func cut() -> void:

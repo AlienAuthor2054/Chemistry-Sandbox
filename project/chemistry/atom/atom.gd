@@ -79,7 +79,7 @@ var frozen_velocity := Vector2.ZERO
 @onready var radius: float = element_data.radius
 @onready var visual_radius: float = radius * atom_visual_radius_multi
 
-static func create(parent: Node, atomic_number: int, pos: Vector2, vel: Vector2) -> Atom:
+static func create(parent: Node, atomic_number: int, pos: Vector2, vel: Vector2 = Vector2.ZERO) -> Atom:
 	var atom: Atom = ATOM_SCENE.instantiate()
 	atom.initialize(atomic_number, pos, vel)
 	parent.add_child(atom)
@@ -243,7 +243,8 @@ func select() -> void:
 func deselect() -> void:
 	$Selection.visible = false
 
-func remove() -> void:
+func _notification(what: int) -> void:
+	if what != NOTIFICATION_PREDELETE: return
 	removing = true
 	if molecule.dirty.is_connected(_on_molecule_dirty):
 		molecule.dirty.disconnect(_on_molecule_dirty)
@@ -251,7 +252,6 @@ func remove() -> void:
 	unbond_all()
 	atom_id_register.erase(id)
 	remove_from_group("atoms")
-	queue_free()
 
 func on_simulation_running_changed(running: bool) -> void:
 	set_physics_process(running)
@@ -314,7 +314,7 @@ func _draw() -> void:
 
 func _on_input_event(_viewport: Node, _event: InputEvent, _shape_idx: int) -> void:
 	if Input.is_action_pressed("remove_atom", true):
-		remove()
+		queue_free()
 
 func _on_field_dirty() -> void:
 	evaluate_field(false)

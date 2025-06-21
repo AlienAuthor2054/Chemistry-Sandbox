@@ -16,6 +16,8 @@
 
 extends CanvasLayer
 
+const HOTBAR_BUTTON_GROUP = preload("res://ui/hotbar_button_group.tres")
+
 var hotbar_items: Dictionary[int, HotbarItem] = {}
 @onready var zoom_value: float = 1000 / get_viewport().get_visible_rect().size.y
 
@@ -38,11 +40,10 @@ func _on_simulation_running_changed(running: bool) -> void:
 	%PauseToggle.text = "Pause" if running else "Resume"
 
 func _on_selected_element_changed(element: int) -> void:
-	%SelectedElementButton.text = ElementDB.get_data(element).symbol
-	hotbar_items[element].button_pressed = true
-
-func _on_selected_element_button_pressed() -> void:
-	%ElementHotbar.visible = not %ElementHotbar.visible
+	if element == 0:
+		HOTBAR_BUTTON_GROUP.get_pressed_button().button_pressed = false
+	else:
+		hotbar_items[element].select()
 
 func _on_title_screen_button_pressed() -> void:
 	SignalBus.show_title_screen.emit()
