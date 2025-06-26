@@ -22,6 +22,9 @@ var order: int
 var energy: float
 var _atom: Atom
 var _other: Atom
+var base_length: float = 175
+var max_length: float = base_length * 1.75
+var strength: float = 1000
 var lines: Array[Polygon2D] = []
 var deleting := false
 
