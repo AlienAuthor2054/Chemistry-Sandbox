@@ -19,6 +19,9 @@ class_name Atom extends RigidBody2D
 const ATOM_SCENE = preload("uid://b8mej4rmqjbp3")
 const ATOM_BOND_SCENE = preload("uid://d1awp4hbumust")
 const SPEED_LIMIT := 3000.0
+const BOND_STIFFNESS := 0.035
+const BOND_STRENGTH := 120000
+const MAX_FORCE := SPEED_LIMIT * 300
 
 static var LOCK := Lock.new()
 static var next_id := 1
@@ -297,7 +300,10 @@ func _physics_process(_delta: float) -> void:
 		var distance := difference.length()
 		if distance <= bond.max_length:
 			var direction := difference.normalized()
-			var force := bond.strength * direction * (distance - bond.base_length)
+			var factor := exp(-BOND_STIFFNESS * (distance - bond.base_length))
+			var force_strength := -BOND_STRENGTH * BOND_STIFFNESS * bond.energy * factor * (factor - 1)
+			var force = minf(MAX_FORCE, absf(force_strength)) * signf(force_strength) * direction
+			#print(-BOND_STRENGTH * BOND_STIFFNESS * bond.energy * factor * (factor - 1))
 			force_list.add(other, -force)
 			force_list.add(self, force)
 		else:
