@@ -22,6 +22,7 @@ var order: int
 var energy: float
 var _atom: Atom
 var _other: Atom
+var force_multi := 1.0
 var base_length: float = 175
 var max_length: float = base_length * 1.75
 var strength: float = 1000
@@ -48,6 +49,7 @@ static func get_energy(atom1: Atom, atom2: Atom, order: int) -> float:
 func initialize(atom: Atom, other: Atom, order: int):
 	_atom = atom
 	_other = other
+	force_multi = _atom.mass * _other.mass / (_atom.mass + _other.mass)
 	update_order(order)
 
 func _process(_delta: float) -> void:

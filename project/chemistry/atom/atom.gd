@@ -282,7 +282,7 @@ func _physics_process(_delta: float) -> void:
 		if is_zero_approx(distance):
 			force = RNGUtil.new(RandomNumberGenerator.new()).unit_vec() * 1000
 		elif not other in bonds.keys():
-			force = minf(MAX_FORCE, (repulsion_force * 1000000) / (distance ** 2)) * direction
+			force = minf(MAX_FORCE, (repulsion_force * 1000000) * mass * other.mass / (mass + other.mass) / (distance ** 2)) * direction
 		force_list.add(other, force)
 		force_list.add(self, -force)
 	if atoms_in_field_changed(new_atoms_in_field):
@@ -306,7 +306,7 @@ func _physics_process(_delta: float) -> void:
 			var direction := difference.normalized()
 			var factor := exp(-BOND_STIFFNESS * (distance - bond.base_length))
 			var force_strength := -BOND_STRENGTH * BOND_STIFFNESS * bond.energy * factor * (factor - 1)
-			var force = minf(MAX_FORCE, absf(force_strength)) * signf(force_strength) * direction
+			var force = minf(MAX_FORCE, absf(force_strength) * bond.force_multi) * signf(force_strength) * direction
 			#print(-BOND_STRENGTH * BOND_STIFFNESS * bond.energy * factor * (factor - 1))
 			force_list.add(other, -force)
 			force_list.add(self, force)
