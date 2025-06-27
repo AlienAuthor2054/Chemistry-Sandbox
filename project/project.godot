@@ -197,6 +197,8 @@ hotbar_scroll_down={
 
 [physics]
 
+common/physics_ticks_per_second=240
+common/max_physics_steps_per_frame=32
 2d/default_gravity=0.0
 2d/default_linear_damp=0.0
 2d/default_angular_damp=0.0
