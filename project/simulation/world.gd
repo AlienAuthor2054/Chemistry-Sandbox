@@ -41,7 +41,7 @@ func _on_atom_exited(atom: Atom) -> void:
 		atom.queue_free()
 
 func spawn_atom() -> void:
-	if not spawning_atom: return
+	if not spawning_atom or Global.selected_element == 0: return
 	Atom.create(
 			self,
 			Global.selected_element,
