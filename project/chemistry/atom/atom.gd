@@ -19,7 +19,7 @@ class_name Atom extends RigidBody2D
 const ATOM_SCENE = preload("uid://b8mej4rmqjbp3")
 const ATOM_BOND_SCENE = preload("uid://d1awp4hbumust")
 const SPEED_LIMIT := 3000.0
-const BOND_STIFFNESS := 0.035
+const BOND_STIFFNESS := 0.03
 const BOND_STRENGTH := 120000
 const MAX_FORCE := SPEED_LIMIT * 300
 
