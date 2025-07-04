@@ -48,7 +48,7 @@ var bonds_order: Dictionary[Atom, int]:
 			result[atom] = bonds[atom].order
 		return result 
 var valence_shell: ValenceShell
-var repulsion_force: float = 200
+var repulsion_force: float = 5000
 var bonding_radius: float = 175
 var field_radius: float = 175
 var atoms_in_field: Array[Atom] = []
@@ -281,8 +281,11 @@ func _physics_process(_delta: float) -> void:
 		var force: Vector2
 		if is_zero_approx(distance):
 			force = RNGUtil.new(RandomNumberGenerator.new()).unit_vec() * 1000
-		elif not other in bonds.keys():
-			force = minf(MAX_FORCE, (repulsion_force * 1000000) * mass * other.mass / (mass + other.mass) / (distance ** 2)) * direction
+		elif not other in bonds:
+			var vdw_distance := radius + other.radius
+			if distance < vdw_distance:
+				force = minf(MAX_FORCE, repulsion_force * mass * other.mass / (mass + other.mass)
+						/ ((distance / vdw_distance) ** 2)) * direction
 		force_list.add(other, force)
 		force_list.add(self, -force)
 	if atoms_in_field_changed(new_atoms_in_field):
