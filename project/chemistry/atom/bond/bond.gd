@@ -32,18 +32,7 @@ var deleting := false
 @warning_ignore("shadowed_variable")
 static func get_energy(atom1: Atom, atom2: Atom, order: int) -> float:
 	if order == 0: return 0.0
-	@warning_ignore("shadowed_variable")
-	var energy: float = 100
-	var bond_length := (atom1.radius + atom2.radius) / 2.0
-	# Electronegativity difference -> Ionic character (strengthens)
-	energy += 50 * (absf(atom1.electronegativity - atom2.electronegativity) ** 2)
-	# Bond order -> Bonded electrons (strengthens)
-	energy *= [1.0, 1.8, 2.6][order - 1]
-	# Unbonded electron repulsion (weakens)
-	# TODO: Consider external bonds. With that, external changes can affect bond energy, which CBM does not currently support.
-	energy -= (atom1.valence_count - order) * (atom2.valence_count - order) * 40000 / (bond_length ** 2)
-	assert(energy > 0, "Bond energy should be more than zero")
-	return energy
+	return BondDB.get_data(atom1, atom2, order)[0]
 
 @warning_ignore("shadowed_variable")
 func initialize(atom: Atom, other: Atom, order: int):
@@ -64,7 +53,7 @@ func update_order(new_order: int) -> void:
 	var y_offset := (order - 1) / 2.0
 	for index in range(order):
 		var line: Polygon2D = ATOM_BOND_LINE_SCENE.instantiate()
-		var line_width_scale = energy / order / 100
+		var line_width_scale = energy / order / 250
 		line.position = Vector2(0, (16 + (line_width_scale * 16)) * (index - y_offset))
 		line.scale = Vector2(1, line_width_scale)
 		add_child(line)

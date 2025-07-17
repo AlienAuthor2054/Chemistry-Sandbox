@@ -23,6 +23,7 @@ config/icon="uid://dy0cxxn05e5kf"
 SignalBus="*res://global/signal_bus.gd"
 Global="*res://global/global.gd"
 ElementDB="*res://chemistry/atom/data/element_db.gd"
+BondDB="*res://chemistry/atom/bond/bond_db.gd"
 Simulation="*res://simulation/simulation.gd"
 
 [debug]
