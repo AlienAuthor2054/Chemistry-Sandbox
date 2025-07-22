@@ -16,8 +16,6 @@
 
 class_name SavedAtomSet extends Resource
 
-static var get_image_db := false
-
 var atom_saves: Dictionary[int, SavedAtom] = {}
 var save_rect: Rect2
 
