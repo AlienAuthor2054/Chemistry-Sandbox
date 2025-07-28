@@ -20,14 +20,12 @@ var atom_saves: Dictionary[int, SavedAtom] = {}
 var save_rect: Rect2
 
 func _init(atoms: Array[Atom]) -> void:
-	var rect_center := Vector2.ZERO
 	save_rect = Rect2(atoms[0].position, Vector2.ZERO)
 	for atom in atoms:
 		atom_saves[atom.id] = SavedAtom.new(atom)
 		save_rect = save_rect.expand(atom.position)
-	save_rect = save_rect.grow(100)
-	rect_center = save_rect.get_center()
-	save_rect = Util.rect_with_center(save_rect, Vector2.ZERO)
+	var rect_center = save_rect.get_center()
+	save_rect = Util.rect_with_center(save_rect.grow(100), Vector2.ZERO)
 	for id in atom_saves:
 		var save := atom_saves[id]
 		save.position -= rect_center
