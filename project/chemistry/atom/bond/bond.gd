@@ -64,6 +64,7 @@ func update_lines() -> void:
 	lines.clear()
 	for line: Polygon2D in self.get_children():
 		line.queue_free()
+	if energy <= 0: return
 	var y_offset := (order - 1) / 2.0
 	for index in range(order):
 		var line: Polygon2D = ATOM_BOND_LINE_SCENE.instantiate()
