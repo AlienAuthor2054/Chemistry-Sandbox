@@ -222,12 +222,6 @@ func evaluate_field(emit_dirty: bool = true) -> void:
 		# TODO: Allow intramolecular bonding (rings)
 		if id > other.id: continue
 		#if id > other.id or molecule.id == other.molecule.id: continue
-		if molecule.id == other.molecule.id:
-			if other in atoms_in_molecule_checked: continue
-			atoms_in_molecule_checked.append(other)
-		else:
-			if atoms_outside_molecule_checked.has(other): continue
-			atoms_outside_molecule_checked.add(other.dirty)
 		CascadingBondsModel.new(emit_dirty).from_bonding_pair(self, other)
 
 func atom_list_to_ids(_accum, _atom_list: Array[Atom]) -> Array[int]:
@@ -299,7 +293,7 @@ func _physics_process(_delta: float) -> void:
 				new_atom.atom_removing.connect(_on_atom_removing, CONNECT_ONE_SHOT)
 			new_atom.dirty.connect(_on_field_dirty)
 		atoms_in_field = new_atoms_in_field
-		evaluate_field()
+	evaluate_field()
 	for other: Atom in bonds:
 		var bond := bonds[other]
 		if other.id < id: continue
