@@ -32,9 +32,17 @@ var lines: Array[Polygon2D] = []
 var deleting := false
 
 @warning_ignore("shadowed_variable")
-static func get_energy(atom1: Atom, atom2: Atom, order: int) -> float:
+static func get_base_energy(atom1: Atom, atom2: Atom, order: int) -> float:
 	if order == 0: return 0.0
 	return BondDB.get_data(atom1, atom2, order)[0]
+
+@warning_ignore("shadowed_variable")
+static func get_energy(atom1: Atom, atom2: Atom, order: int) -> float:
+	if order == 0: return 0.0
+	return BondDB.get_data(atom1, atom2, order)[0] - (
+			(atom2.linear_velocity - atom1.linear_velocity).length_squared()
+			* atom1.mass * atom2.mass / (atom1.mass + atom2.mass) / Atom.BOND_STRENGTH
+	)
 
 @warning_ignore("shadowed_variable")
 func initialize(atom: Atom, other: Atom, order: int):
@@ -49,7 +57,7 @@ func _process(_delta: float) -> void:
 
 func update_order(new_order: int) -> void:
 	order = new_order
-	base_energy = get_energy(_atom, _other, order)
+	base_energy = get_base_energy(_atom, _other, order)
 	update_energy()
 
 func update_lines() -> void:
