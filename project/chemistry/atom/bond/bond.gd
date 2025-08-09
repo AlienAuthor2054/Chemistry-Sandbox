@@ -19,12 +19,14 @@ class_name Bond extends Node2D
 const ATOM_BOND_LINE_SCENE = preload("uid://cqiykungxfadm")
 
 var order: int
+var base_energy: float
 var energy: float
 var _atom: Atom
 var _other: Atom
 var force_multi := 1.0
 var base_length: float = 175
 var max_length: float = base_length * 1.75
+var length: float
 var strength: float = 1000
 var lines: Array[Polygon2D] = []
 var deleting := false
@@ -42,11 +44,15 @@ func initialize(atom: Atom, other: Atom, order: int):
 	update_order(order)
 
 func _process(_delta: float) -> void:
+	update_energy()
 	update_transform()
 
 func update_order(new_order: int) -> void:
 	order = new_order
-	energy = get_energy(_atom, _other, order)
+	base_energy = get_energy(_atom, _other, order)
+	update_energy()
+
+func update_lines() -> void:
 	lines.clear()
 	for line: Polygon2D in self.get_children():
 		line.queue_free()
@@ -59,10 +65,17 @@ func update_order(new_order: int) -> void:
 		add_child(line)
 		lines.append(line)
 
+func update_energy() -> void:
+	energy = base_energy - (
+			(_other.linear_velocity - _atom.linear_velocity).length_squared()
+			* force_multi / Atom.BOND_STRENGTH
+	)
+	update_lines()
+
 func update_transform() -> void:
 	if deleting == true: return
 	var difference := _other.position - _atom.position
-	var distance := difference.length()
+	length = difference.length()
 	var direction := difference.normalized()
 	rotation = atan2(direction.y, direction.x)
-	scale = Vector2(distance / 100, 1)
+	scale = Vector2(length / 100, 1)
