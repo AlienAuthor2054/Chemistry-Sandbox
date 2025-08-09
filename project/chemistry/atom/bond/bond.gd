@@ -79,6 +79,7 @@ func update_energy() -> void:
 			(_other.linear_velocity - _atom.linear_velocity).length_squared()
 			* force_multi / Atom.BOND_STRENGTH
 	)
+	assert(energy < base_energy, "Negative bond excitation!")
 	update_lines()
 
 func update_transform() -> void:
