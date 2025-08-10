@@ -56,7 +56,7 @@ func initialize(atom: Atom, other: Atom, order: int):
 	force_multi = _atom.mass * _other.mass / (_atom.mass + _other.mass)
 	update_order(order)
 
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	update_energy()
 
 func _process(_delta: float) -> void:
