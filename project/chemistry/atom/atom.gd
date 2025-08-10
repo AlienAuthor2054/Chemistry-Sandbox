@@ -72,6 +72,8 @@ var bond_changed_event_queue: Array[BondChangedEvent] = []
 var removing := false
 var frozen := false
 var frozen_velocity := Vector2.ZERO
+var velocity: Vector2:
+	get: return frozen_velocity if frozen else linear_velocity
 
 @onready var max_bonds: int = valence_shell.left
 @onready var electronegativity: float = element_data.electronegativity
