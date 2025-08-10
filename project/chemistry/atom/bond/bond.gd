@@ -56,9 +56,12 @@ func initialize(atom: Atom, other: Atom, order: int):
 	force_multi = _atom.mass * _other.mass / (_atom.mass + _other.mass)
 	update_order(order)
 
-func _process(_delta: float) -> void:
+func _physics_process(delta: float) -> void:
 	update_energy()
+
+func _process(_delta: float) -> void:
 	update_transform()
+	update_lines()
 
 func update_order(new_order: int) -> void:
 	order = new_order
@@ -82,7 +85,6 @@ func update_lines() -> void:
 func update_energy() -> void:
 	energy = get_energy(_atom, _other, order)
 	assert(energy < base_energy, "Negative bond excitation!")
-	update_lines()
 
 func update_transform() -> void:
 	if deleting == true: return
