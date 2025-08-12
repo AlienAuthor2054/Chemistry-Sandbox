@@ -42,7 +42,7 @@ static func get_energy(atom1: Atom, atom2: Atom, order: int) -> float:
 	if order == 0: return 0.0
 	var bond_data := BondDB.get_data(atom1, atom2, order)
 	var morse_energy := -bond_data[0] * ((1 - 
-			exp(-STIFFNESS * ((atom2.position - atom1.position).length() - 175))
+			exp(-STIFFNESS * (maxf(Atom.MIN_REPULSION_DISTANCE, (atom2.position - atom1.position).length()) - 175))
 	) ** 2 - 1)
 	return morse_energy - (
 			(atom2.velocity - atom1.velocity).length_squared() / STRENGTH

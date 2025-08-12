@@ -19,7 +19,7 @@ class_name Atom extends RigidBody2D
 const ATOM_SCENE = preload("uid://b8mej4rmqjbp3")
 const ATOM_BOND_SCENE = preload("uid://d1awp4hbumust")
 const SPEED_LIMIT := 3000.0
-const MAX_FORCE := SPEED_LIMIT * 300
+const MIN_REPULSION_DISTANCE: float = 50
 
 static var LOCK := Lock.new()
 static var next_id := 1
@@ -278,8 +278,8 @@ func _physics_process(_delta: float) -> void:
 		elif not other in bonds:
 			var vdw_distance := radius + other.radius
 			if distance < vdw_distance:
-				force = minf(MAX_FORCE, repulsion_force * mass * other.mass / (mass + other.mass)
-						/ ((distance / vdw_distance) ** 2)) * direction
+				force = repulsion_force * mass * other.mass / (mass + other.mass) \
+						/ ((maxf(MIN_REPULSION_DISTANCE, distance) / vdw_distance) ** 2) * direction
 		force_list.add(other, force)
 		force_list.add(self, -force)
 	if atoms_in_field_changed(new_atoms_in_field):
@@ -301,9 +301,9 @@ func _physics_process(_delta: float) -> void:
 		var distance := difference.length()
 		if distance <= bond.max_length:
 			var direction := difference.normalized()
-			var factor := exp(-Bond.STIFFNESS * (distance - bond.base_length))
+			var factor := exp(-Bond.STIFFNESS * (maxf(MIN_REPULSION_DISTANCE, distance) - bond.base_length))
 			var force_strength := -Bond.STRENGTH * Bond.STIFFNESS * bond.base_energy * factor * (factor - 1)
-			var force = minf(MAX_FORCE, absf(force_strength) * bond.force_multi) * signf(force_strength) * direction
+			var force = absf(force_strength) * bond.force_multi * signf(force_strength) * direction
 			#print(-BOND_STRENGTH * BOND_STIFFNESS * bond.energy * factor * (factor - 1))
 			force_list.add(other, -force)
 			force_list.add(self, force)
@@ -312,6 +312,7 @@ func _physics_process(_delta: float) -> void:
 	for atom: Atom in force_list.dict:
 		atom.apply_central_force(force_list.dict[atom])
 	if linear_velocity.length() > SPEED_LIMIT:
+		#print(str(self), " is too fast!")
 		set_velocity(linear_velocity.limit_length(SPEED_LIMIT))
 	#$SymbolLabel.text = str(molecule.id)
 
