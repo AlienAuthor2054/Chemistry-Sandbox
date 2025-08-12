@@ -18,7 +18,7 @@ class_name Atom extends RigidBody2D
 
 const ATOM_SCENE = preload("uid://b8mej4rmqjbp3")
 const ATOM_BOND_SCENE = preload("uid://d1awp4hbumust")
-const SPEED_LIMIT := 3000.0
+const SPEED_LIMIT: float = 4000
 const MIN_REPULSION_DISTANCE: float = 50
 
 static var LOCK := Lock.new()
