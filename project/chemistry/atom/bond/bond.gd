@@ -45,8 +45,7 @@ static func get_energy(atom1: Atom, atom2: Atom, order: int) -> float:
 			exp(-STIFFNESS * ((atom2.position - atom1.position).length() - 175))
 	) ** 2 - 1)
 	return morse_energy - (
-			(atom2.velocity - atom1.velocity).length_squared()
-			* atom1.mass * atom2.mass / (atom1.mass + atom2.mass) / STRENGTH
+			(atom2.velocity - atom1.velocity).length_squared() / STRENGTH
 	)
 
 @warning_ignore("shadowed_variable")
