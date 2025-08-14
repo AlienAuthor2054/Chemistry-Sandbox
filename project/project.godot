@@ -25,6 +25,7 @@ Global="*res://global/global.gd"
 ElementDB="*res://chemistry/atom/data/element_db.gd"
 BondDB="*res://chemistry/atom/bond/bond_db.gd"
 Simulation="*res://simulation/simulation.gd"
+PerfReactions="*res://global/perf_reactions.gd"
 
 [debug]
 

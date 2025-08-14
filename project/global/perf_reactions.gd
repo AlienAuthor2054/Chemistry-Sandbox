@@ -14,32 +14,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-class_name RunningList extends RefCounted
+extends Node
 
-var list: Array[float] = []
-var max_size := 0
-var sum := 0.0
-var average := 0.0
-var max_num := 0.0
+var enabled := false
+var running_list := RunningList.new(Engine.physics_ticks_per_second)
+var frame_combos := 0
 
-func _init(_max_size: int) -> void:
-	max_size = _max_size
+func _ready() -> void:
+	process_physics_priority = 999
+	Performance.add_custom_monitor("Reaction/CPS", func(): return running_list.sum)
+	Performance.add_custom_monitor("Reaction/CPF Worst", func(): return running_list.max_num)
 
-func insert(number: float) -> void:
-	if list.size() == max_size:
-		list.resize(max_size - 1)
-	list.push_front(number)
-	var _sum := 0.0
-	var _max := -INF
-	for entry in list:
-		_sum += entry
-		_max = maxf(_max, entry)
-	sum = _sum
-	average = _sum / list.size()
-	max_num = _max
-	
-func clear() -> void:
-	list.clear()
-	sum = 0.0
-	average = 0.0
-	max_num = 0.0
+func _physics_process(_delta: float) -> void:
+	running_list.insert(frame_combos)
+	frame_combos = 0
