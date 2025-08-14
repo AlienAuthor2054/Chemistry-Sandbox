@@ -45,7 +45,7 @@ func debug():
 
 func _evaluate() -> void:
 	BondChanges.sort_combos(combos)
-	#debug()
+	PerfReactions.frame_combos += combos.size()
 	combos[0].execute(_emit_dirty)
 
 func _add_combo(combo: BondChanges, dupe: bool = false) -> void:
