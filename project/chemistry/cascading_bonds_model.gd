@@ -24,7 +24,6 @@ var _emit_dirty: bool
 
 func _init(emit_dirty: bool = true) -> void:
 	_emit_dirty = emit_dirty
-	_add_combo(BondChanges.EMPTY)
 
 func from_bonding_pair(atom1: Atom, atom2: Atom) -> void:
 	if atom1.removing or atom2.removing: return
@@ -44,9 +43,17 @@ func debug():
 		combo.debug()
 
 func _evaluate() -> void:
-	BondChanges.sort_combos(combos)
+	if combos.is_empty(): return
 	PerfReactions.frame_combos += combos.size()
-	combos[0].execute(_emit_dirty)
+	var winning_combo: BondChanges
+	var energy_change := 0.0
+	for combo in combos:
+		var combo_energy := combo.energy_change
+		if combo_energy >= energy_change: continue
+		winning_combo = combo
+		energy_change = combo_energy
+	if winning_combo == null: return
+	winning_combo.execute(_emit_dirty)
 
 func _add_combo(combo: BondChanges, dupe: bool = false) -> void:
 	if dupe:
