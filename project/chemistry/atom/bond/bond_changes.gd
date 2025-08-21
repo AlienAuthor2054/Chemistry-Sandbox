@@ -30,16 +30,6 @@ var heads: Array[Atom] = []
 static func init_and_add(atom1: Atom, atom2: Atom, new_order: int) -> BondChanges:
 	return BondChanges.new().add(atom1, atom2, new_order)
 
-static func _sort_combos_callable(combo1: BondChanges, combo2: BondChanges) -> bool:
-	if not is_equal_approx(combo1.energy_change, combo2.energy_change):
-		return combo1.energy_change < combo2.energy_change
-	if not is_equal_approx(combo1.activation_energy, combo2.activation_energy):
-		return combo1.activation_energy < combo2.activation_energy
-	return combo1.changes.size() < combo1.changes.size()
-
-static func sort_combos(combos: Array[BondChanges]):
-	combos.sort_custom(_sort_combos_callable)
-
 static func combine_combos(combos1: Array[BondChanges], combos2: Array[BondChanges]) -> Array[BondChanges]:
 	var combined_combos: Array[BondChanges] = []
 	for combo1 in combos1:
