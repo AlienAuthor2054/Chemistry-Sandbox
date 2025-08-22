@@ -303,7 +303,7 @@ func _physics_process(_delta: float) -> void:
 			var direction := difference.normalized()
 			var factor := exp(-Bond.STIFFNESS * (maxf(MIN_REPULSION_DISTANCE, distance) - bond.base_length))
 			var force_strength := -Bond.STRENGTH * Bond.STIFFNESS * bond.base_energy * factor * (factor - 1)
-			var force = absf(force_strength) * bond.force_multi * signf(force_strength) * direction
+			var force = absf(force_strength) * signf(force_strength) * direction
 			#print(-BOND_STRENGTH * BOND_STIFFNESS * bond.energy * factor * (factor - 1))
 			force_list.add(other, -force)
 			force_list.add(self, force)

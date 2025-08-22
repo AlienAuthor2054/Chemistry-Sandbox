@@ -25,7 +25,6 @@ var base_energy: float
 var energy: float
 var _atom: Atom
 var _other: Atom
-var force_multi := 1.0
 var base_length: float = 175
 var max_length: float = base_length * 1.75
 var length: float
@@ -45,14 +44,14 @@ static func get_energy(atom1: Atom, atom2: Atom, order: int) -> float:
 			exp(-STIFFNESS * (maxf(Atom.MIN_REPULSION_DISTANCE, (atom2.position - atom1.position).length()) - 175))
 	) ** 2 - 1)
 	return morse_energy - (
-			(atom2.velocity - atom1.velocity).length_squared() / STRENGTH
+			(atom2.velocity - atom1.velocity).length_squared()
+			* atom1.mass * atom2.mass / (atom1.mass + atom2.mass) / STRENGTH
 	)
 
 @warning_ignore("shadowed_variable")
 func initialize(atom: Atom, other: Atom, order: int):
 	_atom = atom
 	_other = other
-	force_multi = _atom.mass * _other.mass / (_atom.mass + _other.mass)
 	update_order(order)
 
 func _physics_process(_delta: float) -> void:
