@@ -20,7 +20,7 @@ concurrency:
 # NOTE: If your `project.godot` is at the repository root, set `PROJECT_PATH` below to ".".
 
 env:
-  GODOT_VERSION: 4.4.1
+  GODOT_VERSION: 4.5
   EXPORT_NAME: project
   PROJECT_PATH: project
 
@@ -29,7 +29,7 @@ jobs:
     name: Web Export
     runs-on: ubuntu-22.04  # Use 22.04 with godot 4
     container:
-      image: barichello/godot-ci:4.4.1
+      image: barichello/godot-ci:4.5
     steps:
       - name: Checkout
         uses: actions/checkout@v4

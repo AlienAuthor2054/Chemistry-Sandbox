@@ -14,7 +14,7 @@ config/name="Chemistry Sandbox"
 config/description="An in-development interactive video game simulating high school chemistry concepts at the molecular level."
 config/version="0.5.2"
 run/main_scene="res://simulation/main.tscn"
-config/features=PackedStringArray("4.4", "GL Compatibility")
+config/features=PackedStringArray("4.5", "GL Compatibility")
 boot_splash/bg_color=Color(0.45098, 0.45098, 0.45098, 1)
 config/icon="uid://dy0cxxn05e5kf"
 
