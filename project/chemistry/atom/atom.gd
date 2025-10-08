@@ -18,15 +18,15 @@ class_name Atom extends RigidBody2D
 
 const ATOM_SCENE = preload("uid://b8mej4rmqjbp3")
 const ATOM_BOND_SCENE = preload("uid://d1awp4hbumust")
-const SPEED_LIMIT := 3000.0
+const SPEED_LIMIT := 6000.0
 const BOND_STIFFNESS := 0.03
-const BOND_STRENGTH := 30000
+const BOND_STRENGTH := 150000.0
 const MAX_FORCE := SPEED_LIMIT * 300
 
 static var LOCK := Lock.new()
 static var next_id := 1
 static var atom_id_register: Dictionary[int, Atom] = {}
-static var atom_visual_radius_multi := 0.5
+static var atom_visual_radius_multi := 0.4
 
 @warning_ignore("unused_signal")
 signal electronAdded
@@ -48,9 +48,8 @@ var bonds_order: Dictionary[Atom, int]:
 			result[atom] = bonds[atom].order
 		return result 
 var valence_shell: ValenceShell
-var repulsion_force: float = 5000
-var bonding_radius: float = 175
-var field_radius: float = 175
+var repulsion_force: float = 2000
+var bonding_radius: float = 200
 var atoms_in_field: Array[Atom] = []
 var atoms_in_molecule_checked: Array[Atom] = []
 var atoms_outside_molecule_checked := AtomSignalSet.new(_on_other_molecule_dirty, true)
@@ -78,6 +77,7 @@ var frozen_velocity := Vector2.ZERO
 @onready var max_bonds: int = valence_shell.left
 @onready var electronegativity: float = element_data.electronegativity
 @onready var radius: float = element_data.radius
+@onready var collision_radius: float = element_data.collision_shape.radius
 @onready var visual_radius: float = radius * atom_visual_radius_multi
 
 static func create(parent: Node, atomic_number: int, pos: Vector2, vel: Vector2 = Vector2.ZERO) -> Atom:
@@ -97,8 +97,9 @@ func initialize(atomic_number: int, pos: Vector2, vel: Vector2):
 	symbol = element_data.symbol
 	mass = protons * 2 if protons > 1 else protons
 	valence_shell = ValenceShell.new(protons)
+	$CollisionShape.shape = element_data.collision_shape
 	$SymbolLabel.text = symbol
-	$SymbolLabel.add_theme_font_size_override("font_size", element_data.radius * 0.6)
+	$SymbolLabel.add_theme_font_size_override("font_size", element_data.radius * atom_visual_radius_multi * 1.5)
 	$IdLabel.text = str(id)
 	#print("%s: %s" % [protons, orbital_set.get_total_energy()])
 	#print(Combination.combos(range(1, 3+1), 2))
@@ -196,6 +197,9 @@ func unbond_all() -> void:
 		other.execute_bond_changed_event_queue(BOTH)
 	#print(str(id) + " end unbond all")	
 
+func get_collision_distance(other: Atom):
+	return collision_radius + other.collision_radius
+
 @warning_ignore("shadowed_variable")
 func get_bond_energy(other: Atom, bond_order: int) -> float:
 	return Bond.get_energy(self, other, bond_order)
@@ -264,7 +268,7 @@ func on_simulation_running_changed(running: bool) -> void:
 		apply_central_impulse(frozen_velocity * mass)
 		frozen_velocity = Vector2.ZERO
 
-func _physics_process(_delta: float) -> void:
+func _physics_process(dt: float) -> void:
 	if frozen: return
 	var force_list = AdderDict.new()
 	var new_atoms_in_field: Array[Atom] = []
@@ -273,10 +277,9 @@ func _physics_process(_delta: float) -> void:
 		if other == self or other.removing: continue
 		var difference := other.position - position
 		var direction := difference.normalized()
-		var distance := difference.length()
-		if distance > field_radius: continue
-		if distance <= bonding_radius:
-			new_atoms_in_field.append(other)
+		var distance := maxf(difference.length(), get_collision_distance(other))
+		if distance > bonding_radius: continue
+		new_atoms_in_field.append(other)
 		if other.id < id: continue
 		var force: Vector2
 		if is_zero_approx(distance):
@@ -304,15 +307,68 @@ func _physics_process(_delta: float) -> void:
 		var bond := bonds[other]
 		if other.id < id: continue
 		var difference := other.position - position
-		var distance := difference.length()
+		var distance := maxf(difference.length(), get_collision_distance(other))
 		if distance <= bond.max_length:
 			var direction := difference.normalized()
+			var deformation := distance - bond.base_length
+			var state := bond.state
+			if state == Bond.STATE.FIRST_ATTRACTION:
+				if deformation <= 0:
+					bond.state = Bond.STATE.REACHED_REST_LENGTH
+			elif state <= 0 and deformation > 0:
+				bond.state = Bond.STATE.REBOUND_REST_LENGTH
+				if state == Bond.STATE.FIRST_REPULSION:
+					bond.transitional_total_impulse *= -1.0
 			var factor := exp(-BOND_STIFFNESS * (distance - bond.base_length))
-			var force_strength := -BOND_STRENGTH * BOND_STIFFNESS * bond.energy * factor * (factor - 1)
-			var force = minf(MAX_FORCE, absf(force_strength) * bond.force_multi) * signf(force_strength) * direction
+			var force_strength := -BOND_STRENGTH * BOND_STIFFNESS \
+					* bond.energy * bond.physical_strength_multi * factor * (factor - 1)
+			force_strength = minf(MAX_FORCE, absf(force_strength)) * signf(force_strength)
+			var pair_force := true
+			if bond.state < 0:
+				# The sudden jerk of the initial force unduly destabilizes molecules
+				force_strength /= 5
+				bond.transitional_total_impulse += force_strength
+			var force = force_strength * direction
+			if bond.state == 1 and deformation > 0:
+				# Strengthen rebound attraction to counter energy from initial force
+				# Without this, most bonds will completely rebound and debond
+				# Dissipate by at least half every cycle instead of all at once for more stability
+				var delta_v := (linear_velocity - other.linear_velocity).length()
+				var max_force := minf(maxf(100, delta_v / 2), delta_v) \
+						* bond.reduced_mass / dt
+				var extra_attraction := maxf(0, max_force - force_strength)
+				if extra_attraction < bond.transitional_total_impulse:
+					force_strength += extra_attraction
+					bond.transitional_total_impulse -= extra_attraction
+				else:
+					force_strength += bond.transitional_total_impulse
+					bond.transitional_total_impulse = 0
+					bond.state = Bond.STATE.FINAL
+				force = force_strength * direction
+				for _i in range(1):
+					var atom1_mol := Molecule.MoleculeGetter.new(self, other)
+					if atom1_mol.excluded_atom_included: continue
+					var atom2_mol := Molecule.MoleculeGetter.new(other, self)
+					if atom2_mol.excluded_atom_included: continue
+					pair_force = false
+					var atom1_mol_force = force / (
+						atom1_mol.atoms.reduce(func sum_mass(accum, atom):
+						return accum + atom.mass, 0
+					))
+					for atom in atom1_mol.atoms:
+						force_list.add(other, -atom1_mol_force * atom.mass)
+						force_list.add(self, atom1_mol_force * atom.mass)
+					var atom2_mol_force = force / (
+						atom2_mol.atoms.reduce(func sum_mass(accum, atom):
+						return accum + atom.mass, 0
+					))
+					for atom in atom2_mol.atoms:
+						force_list.add(other, -atom2_mol_force * atom.mass)
+						force_list.add(self, atom2_mol_force * atom.mass)
 			#print(-BOND_STRENGTH * BOND_STIFFNESS * bond.energy * factor * (factor - 1))
-			force_list.add(other, -force)
-			force_list.add(self, force)
+			if pair_force:
+				force_list.add(other, -force)
+				force_list.add(self, force)
 		else:
 			unbond_atom(other, false)
 	for atom: Atom in force_list.dict:

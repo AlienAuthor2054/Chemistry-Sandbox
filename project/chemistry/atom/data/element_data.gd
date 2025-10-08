@@ -16,6 +16,8 @@
 
 class_name ElementData extends Resource
 
+const COLLISION_RADIUS_RATIO = 0.33
+
 @export var atomic_number: int
 @export var symbol: String
 @export var name: String
@@ -23,3 +25,8 @@ class_name ElementData extends Resource
 @export var radius: float
 @export var electronegativity: float
 @export var color: Color
+
+var collision_shape := CircleShape2D.new()
+
+func initialize() -> void:
+	collision_shape.radius = radius * COLLISION_RADIUS_RATIO

@@ -16,16 +16,32 @@
 
 class_name Bond extends Node2D
 
+enum STATE {
+	FIRST_ATTRACTION = -2,
+	FIRST_REPULSION = -1,
+	REACHED_REST_LENGTH = 0,
+	REBOUND_REST_LENGTH = 1,
+	FINAL = 2,
+}
+
 const ATOM_BOND_LINE_SCENE = preload("uid://cqiykungxfadm")
+# Physical bond strength nerfed according to hydrogen count
+const H_BOND_PHYSICAL_STRENGTH_MULTI: Array[float] = [0.4, 0.2]
 
 var order: int
 var energy: float
 var _atom: Atom
 var _other: Atom
-var force_multi := 1.0
+var state: STATE = STATE.FIRST_ATTRACTION
 var base_length: float = 175
-var max_length: float = base_length * 1.75
-var strength: float = 1000
+var max_length: float = 200
+var length: float:
+	get():
+		return (_other.position - _atom.position).length()
+var physical_strength_multi := 1.0
+var reduced_mass: float
+var vdw_distance: float
+var transitional_total_impulse := 0.0
 var lines: Array[Polygon2D] = []
 var deleting := false
 
@@ -38,7 +54,11 @@ static func get_energy(atom1: Atom, atom2: Atom, order: int) -> float:
 func initialize(atom: Atom, other: Atom, order: int):
 	_atom = atom
 	_other = other
-	force_multi = _atom.mass * _other.mass / (_atom.mass + _other.mass)
+	var hydrogens := int(atom.protons == 1) + int(other.protons == 1)
+	if hydrogens >= 1:
+		physical_strength_multi = H_BOND_PHYSICAL_STRENGTH_MULTI[hydrogens - 1]
+	reduced_mass = (_atom.mass * _other.mass) / (_atom.mass + _other.mass)
+	vdw_distance = (_atom.radius + _other.radius) / 2.0
 	update_order(order)
 
 func _process(_delta: float) -> void:
@@ -46,7 +66,15 @@ func _process(_delta: float) -> void:
 
 func update_order(new_order: int) -> void:
 	order = new_order
-	energy = get_energy(_atom, _other, order)
+	var bond_data := BondDB.get_data(_atom, _other, order)
+	energy = bond_data[0]
+	base_length = bond_data[1]
+	if length > base_length:
+		state = STATE.FIRST_ATTRACTION
+	elif length < base_length:
+		state = STATE.FIRST_REPULSION
+	else:
+		state = STATE.FINAL
 	lines.clear()
 	for line: Polygon2D in self.get_children():
 		line.queue_free()

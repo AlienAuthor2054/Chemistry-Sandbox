@@ -121,10 +121,8 @@ class CascadingBondsModelOperation:
 			#print("\tBreak combo:")
 			# TODO: In cases of more than one broken atom, combos only continue on one broken atom each
 			var combo := base_combo.duplicate()
-			var broken_atoms: Array[Atom] = []
 			for broken: Atom in break_combo:
 				#print("\t\t%s x%s" % [broken.to_string(), break_combo[broken]])
 				combo.add(bonder, broken, combo.get_bond_order(bonder, broken) - break_combo[broken], true)
-				broken_atoms.append(broken)
 			combos.append(combo)
 		return combos

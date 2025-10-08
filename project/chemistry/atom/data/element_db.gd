@@ -31,5 +31,6 @@ func _init() -> void:
 		if (file_name.get_extension() == "remap"):
 			file_name = file_name.replace(".remap", "")
 		var element_data: ElementData = ResourceLoader.load(DB_PATH + file_name)
+		element_data.initialize()
 		data[element_data.atomic_number] = element_data
 		file_name = dir.get_next()
