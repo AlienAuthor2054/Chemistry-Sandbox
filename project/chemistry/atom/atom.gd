@@ -73,6 +73,8 @@ var bond_changed_event_queue: Array[BondChangedEvent] = []
 var removing := false
 var frozen := false
 var frozen_velocity := Vector2.ZERO
+var velocity: Vector2:
+	get: return frozen_velocity if frozen else linear_velocity
 
 @onready var max_bonds: int = valence_shell.left
 @onready var electronegativity: float = element_data.electronegativity
@@ -226,12 +228,6 @@ func evaluate_field(emit_dirty: bool = true) -> void:
 		# TODO: Allow intramolecular bonding (rings)
 		if id > other.id: continue
 		#if id > other.id or molecule.id == other.molecule.id: continue
-		if molecule.id == other.molecule.id:
-			if other in atoms_in_molecule_checked: continue
-			atoms_in_molecule_checked.append(other)
-		else:
-			if atoms_outside_molecule_checked.has(other): continue
-			atoms_outside_molecule_checked.add(other.dirty)
 		CascadingBondsModel.new(emit_dirty).from_bonding_pair(self, other)
 
 func atom_list_to_ids(_accum, _atom_list: Array[Atom]) -> Array[int]:
@@ -287,8 +283,8 @@ func _physics_process(dt: float) -> void:
 		elif not other in bonds:
 			var vdw_distance := radius + other.radius
 			if distance < vdw_distance:
-				force = minf(MAX_FORCE, repulsion_force * mass * other.mass / (mass + other.mass)
-						/ ((distance / vdw_distance) ** 2)) * direction
+				force = repulsion_force * mass * other.mass / (mass + other.mass) \
+						/ ((maxf(MIN_REPULSION_DISTANCE, distance) / vdw_distance) ** 2) * direction
 		force_list.add(other, force)
 		force_list.add(self, -force)
 	if atoms_in_field_changed(new_atoms_in_field):
@@ -302,7 +298,7 @@ func _physics_process(dt: float) -> void:
 				new_atom.atom_removing.connect(_on_atom_removing, CONNECT_ONE_SHOT)
 			new_atom.dirty.connect(_on_field_dirty)
 		atoms_in_field = new_atoms_in_field
-		evaluate_field()
+	evaluate_field()
 	for other: Atom in bonds:
 		var bond := bonds[other]
 		if other.id < id: continue
@@ -374,6 +370,7 @@ func _physics_process(dt: float) -> void:
 	for atom: Atom in force_list.dict:
 		atom.apply_central_force(force_list.dict[atom])
 	if linear_velocity.length() > SPEED_LIMIT:
+		#print(str(self), " is too fast!")
 		set_velocity(linear_velocity.limit_length(SPEED_LIMIT))
 	#$SymbolLabel.text = str(molecule.id)
 

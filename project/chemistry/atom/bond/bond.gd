@@ -25,19 +25,20 @@ enum STATE {
 }
 
 const ATOM_BOND_LINE_SCENE = preload("uid://cqiykungxfadm")
+const STIFFNESS := 0.03
+const STRENGTH := 30000
 # Physical bond strength nerfed according to hydrogen count
 const H_BOND_PHYSICAL_STRENGTH_MULTI: Array[float] = [0.4, 0.2]
 
 var order: int
+var base_energy: float
 var energy: float
 var _atom: Atom
 var _other: Atom
 var state: STATE = STATE.FIRST_ATTRACTION
 var base_length: float = 175
 var max_length: float = 200
-var length: float:
-	get():
-		return (_other.position - _atom.position).length()
+var length: float
 var physical_strength_multi := 1.0
 var reduced_mass: float
 var vdw_distance: float
@@ -46,9 +47,21 @@ var lines: Array[Polygon2D] = []
 var deleting := false
 
 @warning_ignore("shadowed_variable")
-static func get_energy(atom1: Atom, atom2: Atom, order: int) -> float:
+static func get_base_energy(atom1: Atom, atom2: Atom, order: int) -> float:
 	if order == 0: return 0.0
 	return BondDB.get_data(atom1, atom2, order)[0]
+
+@warning_ignore("shadowed_variable")
+static func get_energy(atom1: Atom, atom2: Atom, order: int) -> float:
+	if order == 0: return 0.0
+	var bond_data := BondDB.get_data(atom1, atom2, order)
+	var morse_energy := -bond_data[0] * ((1 - 
+			exp(-STIFFNESS * (maxf(Atom.MIN_REPULSION_DISTANCE, (atom2.position - atom1.position).length()) - 175))
+	) ** 2 - 1)
+	return morse_energy - (
+			(atom2.velocity - atom1.velocity).length_squared()
+			* atom1.mass * atom2.mass / (atom1.mass + atom2.mass) / STRENGTH
+	)
 
 @warning_ignore("shadowed_variable")
 func initialize(atom: Atom, other: Atom, order: int):
@@ -61,13 +74,16 @@ func initialize(atom: Atom, other: Atom, order: int):
 	vdw_distance = (_atom.radius + _other.radius) / 2.0
 	update_order(order)
 
+func _physics_process(_delta: float) -> void:
+	update_energy()
+
 func _process(_delta: float) -> void:
 	update_transform()
+	update_lines()
 
 func update_order(new_order: int) -> void:
 	order = new_order
 	var bond_data := BondDB.get_data(_atom, _other, order)
-	energy = bond_data[0]
 	base_length = bond_data[1]
 	if length > base_length:
 		state = STATE.FIRST_ATTRACTION
@@ -75,9 +91,14 @@ func update_order(new_order: int) -> void:
 		state = STATE.FIRST_REPULSION
 	else:
 		state = STATE.FINAL
+	base_energy = get_base_energy(_atom, _other, order)
+	update_energy()
+
+func update_lines() -> void:
 	lines.clear()
 	for line: Polygon2D in self.get_children():
 		line.queue_free()
+	if energy <= 0: return
 	var y_offset := (order - 1) / 2.0
 	for index in range(order):
 		var line: Polygon2D = ATOM_BOND_LINE_SCENE.instantiate()
@@ -87,10 +108,14 @@ func update_order(new_order: int) -> void:
 		add_child(line)
 		lines.append(line)
 
+func update_energy() -> void:
+	energy = get_energy(_atom, _other, order)
+	assert(energy < base_energy, "Negative bond excitation!")
+
 func update_transform() -> void:
 	if deleting == true: return
 	var difference := _other.position - _atom.position
-	var distance := difference.length()
+	length = difference.length()
 	var direction := difference.normalized()
 	rotation = atan2(direction.y, direction.x)
-	scale = Vector2(distance / 100, 1)
+	scale = Vector2(length / 100, 1)
