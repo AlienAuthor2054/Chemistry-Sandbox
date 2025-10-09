@@ -19,8 +19,6 @@ class_name Atom extends RigidBody2D
 const ATOM_SCENE = preload("uid://b8mej4rmqjbp3")
 const ATOM_BOND_SCENE = preload("uid://d1awp4hbumust")
 const SPEED_LIMIT := 6000.0
-const BOND_STIFFNESS := 0.03
-const BOND_STRENGTH := 150000.0
 const MAX_FORCE := SPEED_LIMIT * 300
 
 static var LOCK := Lock.new()
@@ -283,8 +281,8 @@ func _physics_process(dt: float) -> void:
 		elif not other in bonds:
 			var vdw_distance := radius + other.radius
 			if distance < vdw_distance:
-				force = repulsion_force * mass * other.mass / (mass + other.mass) \
-						/ ((maxf(MIN_REPULSION_DISTANCE, distance) / vdw_distance) ** 2) * direction
+				force = minf(MAX_FORCE, repulsion_force * mass * other.mass / (mass + other.mass)
+						/ ((distance / vdw_distance) ** 2)) * direction
 		force_list.add(other, force)
 		force_list.add(self, -force)
 	if atoms_in_field_changed(new_atoms_in_field):
@@ -315,9 +313,9 @@ func _physics_process(dt: float) -> void:
 				bond.state = Bond.STATE.REBOUND_REST_LENGTH
 				if state == Bond.STATE.FIRST_REPULSION:
 					bond.transitional_total_impulse *= -1.0
-			var factor := exp(-BOND_STIFFNESS * (distance - bond.base_length))
-			var force_strength := -BOND_STRENGTH * BOND_STIFFNESS \
-					* bond.energy * bond.physical_strength_multi * factor * (factor - 1)
+			var factor := exp(-Bond.STIFFNESS * (distance - bond.base_length))
+			var force_strength := -Bond.STRENGTH * Bond.STIFFNESS \
+					* bond.base_energy * bond.physical_strength_multi * factor * (factor - 1)
 			force_strength = minf(MAX_FORCE, absf(force_strength)) * signf(force_strength)
 			var pair_force := true
 			if bond.state < 0:

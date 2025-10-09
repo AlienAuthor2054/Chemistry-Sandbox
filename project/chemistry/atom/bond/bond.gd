@@ -25,8 +25,8 @@ enum STATE {
 }
 
 const ATOM_BOND_LINE_SCENE = preload("uid://cqiykungxfadm")
-const STIFFNESS := 0.03
-const STRENGTH := 30000
+const STIFFNESS = 0.03
+const STRENGTH = 150000.0
 # Physical bond strength nerfed according to hydrogen count
 const H_BOND_PHYSICAL_STRENGTH_MULTI: Array[float] = [0.4, 0.2]
 
@@ -56,7 +56,7 @@ static func get_energy(atom1: Atom, atom2: Atom, order: int) -> float:
 	if order == 0: return 0.0
 	var bond_data := BondDB.get_data(atom1, atom2, order)
 	var morse_energy := -bond_data[0] * ((1 - 
-			exp(-STIFFNESS * (maxf(Atom.MIN_REPULSION_DISTANCE, (atom2.position - atom1.position).length()) - 175))
+			exp(-STIFFNESS * ((atom2.position - atom1.position).length() - bond_data[1]))
 	) ** 2 - 1)
 	return morse_energy - (
 			(atom2.velocity - atom1.velocity).length_squared()
@@ -72,6 +72,7 @@ func initialize(atom: Atom, other: Atom, order: int):
 		physical_strength_multi = H_BOND_PHYSICAL_STRENGTH_MULTI[hydrogens - 1]
 	reduced_mass = (_atom.mass * _other.mass) / (_atom.mass + _other.mass)
 	vdw_distance = (_atom.radius + _other.radius) / 2.0
+	length = (_other.position - _atom.position).length()
 	update_order(order)
 
 func _physics_process(_delta: float) -> void:
@@ -110,10 +111,11 @@ func update_lines() -> void:
 
 func update_energy() -> void:
 	energy = get_energy(_atom, _other, order)
-	assert(energy < base_energy, "Negative bond excitation!")
+	assert(energy <= base_energy, "Bond should not be more stable than ground state!")
 
 func update_transform() -> void:
 	if deleting == true: return
+	#print(int(energy/base_energy*100))
 	var difference := _other.position - _atom.position
 	length = difference.length()
 	var direction := difference.normalized()
