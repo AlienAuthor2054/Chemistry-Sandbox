@@ -35,9 +35,12 @@ static func combine_combos(combos1: Array[BondChanges], combos2: Array[BondChang
 	for combo1 in combos1:
 		for combo2 in combos2:
 			var combined_combo := combo1.duplicate().add_combo(combo2)
-			var combined_heads := combo1.heads.duplicate()
-			combined_heads.append_array(combo2.heads)
-			combined_combo.set_heads(combined_heads)
+			var heads_dict: Dictionary[Atom, bool] = {}
+			for head in combo1.heads:
+				heads_dict[head] = true
+			for head in combo2.heads:
+				heads_dict[head] = true
+			combined_combo.set_heads(heads_dict.keys())
 			combined_combos.append(combined_combo)
 	return combined_combos
 
