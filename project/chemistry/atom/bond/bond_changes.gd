@@ -99,10 +99,8 @@ func get_atom_bonds(atom: Atom) -> Dictionary[Atom, int]:
 	return affected_atoms[atom] if affected_atoms.has(atom) else atom.bonds_order
 
 func get_bond_order(atom: Atom, other: Atom) -> int:
-	if affected_atoms.has(atom):
-		var bonds := get_atom_bonds(atom)
-		return bonds[other] if bonds.has(other) else atom.get_bond_order(other)
-	return atom.get_bond_order(other)
+	var bonds_order := get_atom_bonds(atom)
+	return bonds_order[other] if other in bonds_order else 0
 
 func get_atom_bond_order(atom: Atom) -> int:
 	return Util.sumi_dict_values(get_atom_bonds(atom))
