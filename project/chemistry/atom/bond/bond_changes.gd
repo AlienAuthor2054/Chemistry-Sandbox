@@ -121,13 +121,13 @@ func get_bond_break_combos(atom: Atom, min_bonds: int, max_bonds: int, excluded_
 			bonds_array.append(other)
 	return _get_bond_combos(bonds_array, min_bonds, max_bonds)
 
-func get_bond_form_combos(atom: Atom, min_bonds: int, max_bonds: int) -> Array:
+func get_bond_form_combos(atom: Atom, min_bonds: int, max_bonds: int, excluded_atom_id: int = 0) -> Array:
 	if atom.removing: return []
 	var bonds := get_atom_bonds(atom)
 	var bonds_array: Array[Atom] = []
 	max_bonds = mini(max_bonds, get_atom_bonds_left(atom))
 	for other: Atom in atom.atoms_in_field:
-		if other in bonds: continue
+		if other.id == excluded_atom_id or other in bonds: continue
 		bonds[other] = 0
 	for other: Atom in bonds:
 		if other.removing or not (depth <= 1 and other in affected_atoms): continue

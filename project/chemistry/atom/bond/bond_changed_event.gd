@@ -38,5 +38,5 @@ func execute(emit_atom_dirty: int = Atom.ID_PRIORITY, emit_mol_dirty: bool = tru
 	if _atom.molecule.id != _other.molecule.id:
 		_other.molecule.dirty.emit()
 	if _broadcast_unbond_event and _atom.molecule.id != _other.molecule.id:
-		CascadingBondsModel.new().from_unbonded_atom(_atom)
-		CascadingBondsModel.new().from_unbonded_atom(_other)
+		CascadingBondsModel.new().from_unbonded_atom(_atom, _other.id)
+		CascadingBondsModel.new().from_unbonded_atom(_other, _atom.id)

@@ -32,9 +32,9 @@ func from_bonding_pair(atom1: Atom, atom2: Atom) -> void:
 		calculate([Operation.new(final_combos, BondChanges.EMPTY, bond_change, true)])
 	_evaluate()
 
-func from_unbonded_atom(broken: Atom) -> void:
+func from_unbonded_atom(broken: Atom, breaker_id: int = 0) -> void:
 	if broken.removing: return
-	calculate(Operation.from_broken_atoms(final_combos, BondChanges.new(), broken))
+	calculate(Operation.from_broken_atoms(final_combos, BondChanges.new(), broken, breaker_id))
 	
 func calculate(operations: Array[Operation]) -> void:
 	var next_depth_operations: Array[Operation] = []
@@ -73,9 +73,9 @@ class Operation:
 	var depth: int
 	
 	@warning_ignore("shadowed_variable")
-	static func from_broken_atoms(combo_input: Array[BondChanges], base_combo: BondChanges, broken: Atom) -> Array[Operation]:
+	static func from_broken_atoms(combo_input: Array[BondChanges], base_combo: BondChanges, broken: Atom, breaker_id: int = 0) -> Array[Operation]:
 		var result: Array[Operation] = []
-		var bond_combos := base_combo.get_bond_form_combos(broken, 0, 3)
+		var bond_combos := base_combo.get_bond_form_combos(broken, 0, 3, breaker_id)
 		for bond_combo: Dictionary in bond_combos:
 			# TODO: In cases of more than one broken atom, combos only continue on one broken atom each
 			var combo := base_combo.duplicate()
