@@ -76,7 +76,7 @@ class Operation:
 	@warning_ignore("shadowed_variable")
 	static func from_broken_atoms(combo_input: Array[BondChanges], base_combo: BondChanges, broken: Atom, breaker_id: int = 0) -> Array[Operation]:
 		var result: Array[Operation] = []
-		var bond_combos := base_combo.get_bond_form_combos(broken, 0, 3, breaker_id)
+		var bond_combos := base_combo.get_bond_form_combos(broken, 1, 3, breaker_id)
 		for bond_combo: Dictionary in bond_combos:
 			# TODO: In cases of more than one broken atom, combos only continue on one broken atom each
 			var combo := base_combo.duplicate()
