@@ -130,7 +130,7 @@ func get_bond_form_combos(atom: Atom, min_bonds: int, max_bonds: int, excluded_a
 		if other.id == excluded_atom_id or other in bonds: continue
 		bonds[other] = 0
 	for other: Atom in bonds:
-		if other.removing or not (depth <= 1 and other in affected_atoms): continue
+		if other.removing or (other in affected_atoms and depth > 1): continue
 		for _i in range(mini(max_bonds, get_max_bond_order(atom, other) - bonds[other])):
 			bonds_array.append(other)
 	return _get_bond_combos(bonds_array, min_bonds, max_bonds)
