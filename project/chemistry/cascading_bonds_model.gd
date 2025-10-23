@@ -35,6 +35,7 @@ func from_bonding_pair(atom1: Atom, atom2: Atom) -> void:
 func from_unbonded_atom(broken: Atom, breaker_id: int = 0) -> void:
 	if broken.removing: return
 	calculate(Operation.from_broken_atoms(final_combos, BondChanges.new(), broken, breaker_id))
+	_evaluate()
 	
 func calculate(operations: Array[Operation]) -> void:
 	var next_depth_operations: Array[Operation] = []
