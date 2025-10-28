@@ -33,7 +33,7 @@ static func modify_bond_order(atom1: Atom, atom2: Atom, order_mod: int, parent: 
 	var new_order = prev_order + order_mod
 	new.prev_order = prev_order
 	new.new_order = new_order
-	new.energy_change = atom1.get_bond_energy(atom2, prev_order) - atom1.get_bond_energy(atom2, new_order)
+	new.compute_energy_change()
 	return new
 
 @warning_ignore("shadowed_variable")
@@ -43,7 +43,7 @@ static func set_bond_order(atom1: Atom, atom2: Atom, new_order: int, parent: Bon
 	var prev_order = parent.get_bond_order(atom1, atom2)
 	new.prev_order = prev_order
 	new.new_order = new_order
-	new.energy_change = atom1.get_bond_energy(atom2, prev_order) - atom1.get_bond_energy(atom2, new_order)
+	new.compute_energy_change()
 	return new
 
 @warning_ignore("shadowed_variable")
@@ -53,6 +53,16 @@ func _init(atom1: Atom, atom2: Atom) -> void:
 
 func _to_string() -> String:
 	return "%s - [%s -> %s] - %s | %s" % [atom1.to_string(), prev_order, new_order, atom2.to_string(), roundi(energy_change)]
+
+func compute_energy_change() -> float:
+	if prev_order == 0:
+		energy_change = -Bond.get_energy(atom1, atom2, new_order)
+		return energy_change
+	# Uses bond stability (energy / base_energy) to eliminate confounding factor bond length
+	var prev_energy := Bond.get_energy(atom1, atom2, prev_order)
+	energy_change = prev_energy - (Bond.get_base_energy(atom1, atom2, new_order) *
+			prev_energy / Bond.get_base_energy(atom1, atom2, prev_order))
+	return energy_change
 
 func duplicate() -> BondChange:
 	var new = BondChange.new(atom1, atom2)
