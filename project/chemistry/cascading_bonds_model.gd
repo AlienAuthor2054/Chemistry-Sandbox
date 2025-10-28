@@ -27,7 +27,12 @@ func _init(emit_dirty: bool = true) -> void:
 func from_bonding_pair(atom1: Atom, atom2: Atom) -> void:
 	if atom1.removing or atom2.removing: return
 	#print("start %s" % [atom1.get_bond_order(atom2)])
-	for bond_order in range(1, atom1.get_isolated_max_bond_order(atom2) - atom1.get_bond_order(atom2) + 1):
+	var max_form_order := atom1.get_isolated_max_bond_order(atom2) - atom1.get_bond_order(atom2)
+	if max_form_order <= 0: return
+	for bond_order in range(
+			clampi(mini(atom1.bonds_left, atom2.bonds_left), 1, 3),
+			max_form_order + 1
+	):
 		var bond_change := BondChange.modify_bond_order(atom1, atom2, bond_order, BondChanges.new())
 		calculate([Operation.new(final_combos, BondChanges.EMPTY, bond_change, true)])
 	_evaluate()

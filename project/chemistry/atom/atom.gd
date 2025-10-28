@@ -64,7 +64,7 @@ var bond_order: int:
 var valence_count: int:
 	get: return valence_shell.count
 var valence_left: int:
-	get: return valence_shell.max
+	get: return valence_shell.left
 var bonds_left: int:
 	get: return valence_left - bond_order
 var bond_changed_event_queue: Array[BondChangedEvent] = []
