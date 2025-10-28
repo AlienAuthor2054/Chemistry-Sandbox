@@ -86,6 +86,8 @@ func update_order(new_order: int) -> void:
 	order = new_order
 	var bond_data := BondDB.get_data(_atom, _other, order)
 	base_length = bond_data[1]
+	# Reset accumulated impulse on bond order change
+	transitional_total_impulse = 0.0
 	if length > base_length:
 		state = STATE.FIRST_ATTRACTION
 	elif length < base_length:
