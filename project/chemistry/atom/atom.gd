@@ -109,7 +109,7 @@ func initialize(atomic_number: int, pos: Vector2, vel: Vector2):
 	atom_id_register[id] = self
 	molecule = Molecule.new([self])
 	if Simulation.running:
-		apply_central_impulse(vel)
+		linear_velocity = vel
 	else:
 		frozen_velocity = vel
 	on_simulation_running_changed(Simulation.running)
