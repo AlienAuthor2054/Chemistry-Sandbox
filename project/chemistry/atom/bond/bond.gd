@@ -35,8 +35,10 @@ var base_energy: float
 var energy: float
 var _atom: Atom
 var _other: Atom
+var _stick: Stick
 var state: STATE = STATE.FIRST_ATTRACTION
 var base_length: float = 175
+var target_length: float = base_length
 var max_length: float = 200
 var length: float
 var physical_strength_multi := 1.0
@@ -55,6 +57,7 @@ static func get_base_energy(atom1: Atom, atom2: Atom, order: int) -> float:
 static func get_energy(atom1: Atom, atom2: Atom, order: int) -> float:
 	if order == 0: return 0.0
 	var bond_data := BondDB.get_data(atom1, atom2, order)
+	return bond_data[0]
 	var morse_energy := -bond_data[0] * ((1 - 
 			exp(-STIFFNESS * ((atom2.position - atom1.position).length() - bond_data[1]))
 	) ** 2 - 1)
@@ -67,6 +70,7 @@ static func get_energy(atom1: Atom, atom2: Atom, order: int) -> float:
 func initialize(atom: Atom, other: Atom, order: int):
 	_atom = atom
 	_other = other
+	_stick = Stick.bond(atom, other, BondDB.get_data(atom, other, order)[1])
 	var hydrogens := int(atom.protons == 1) + int(other.protons == 1)
 	if hydrogens >= 1:
 		physical_strength_multi = H_BOND_PHYSICAL_STRENGTH_MULTI[hydrogens - 1]
@@ -86,6 +90,7 @@ func update_order(new_order: int) -> void:
 	order = new_order
 	var bond_data := BondDB.get_data(_atom, _other, order)
 	base_length = bond_data[1]
+	_stick.length = base_length
 	# Reset accumulated impulse on bond order change
 	transitional_total_impulse = 0.0
 	if length > base_length:
@@ -99,7 +104,7 @@ func update_order(new_order: int) -> void:
 
 func update_lines() -> void:
 	lines.clear()
-	for line: Polygon2D in self.get_children():
+	for line: Polygon2D in get_children():
 		line.queue_free()
 	if energy <= 0: return
 	var y_offset := (order - 1) / 2.0
@@ -123,3 +128,6 @@ func update_transform() -> void:
 	var direction := difference.normalized()
 	rotation = atan2(direction.y, direction.x)
 	scale = Vector2(length / 100, 1)
+
+func _exit_tree() -> void:
+	_stick.queue_free()

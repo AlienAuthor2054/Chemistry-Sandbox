@@ -1,0 +1,26 @@
+[gd_scene load_steps=4 format=3 uid="uid://bq2hpef0mh0ks"]
+
+[ext_resource type="PhysicsMaterial" uid="uid://dfgb2hjec0pw2" path="res://simulation/ideal_physics_material.tres" id="1_0algd"]
+[ext_resource type="Script" uid="uid://cflqtk6q3va88" path="res://chemistry/atom/bond/stick.gd" id="2_mwuup"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_tli72"]
+size = Vector2(50, 10)
+
+[node name="Stick" type="RigidBody2D"]
+collision_layer = 4
+collision_mask = 0
+mass = 0.01
+physics_material_override = ExtResource("1_0algd")
+can_sleep = false
+continuous_cd = 2
+script = ExtResource("2_mwuup")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_tli72")
+
+[node name="PinJoint" type="PinJoint2D" parent="."]
+
+[node name="GrooveJoint" type="GrooveJoint2D" parent="."]
+rotation = -1.5707964
+length = 500.0
+initial_offset = 100.0
