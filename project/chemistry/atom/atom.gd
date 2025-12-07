@@ -223,7 +223,13 @@ func get_isolated_max_bond_order(other: Atom) -> int:
 
 func evaluate_field(emit_dirty: bool = true) -> void:
 	for other in atoms_in_field:
-		if id > other.id or (other in bonds and bonds[other].state == Bond.STATE.FINAL): continue
+		if id > other.id: continue
+		if molecule.id == other.molecule.id:
+			if other in atoms_in_molecule_checked: continue
+			atoms_in_molecule_checked.append(other)
+		else:
+			if atoms_outside_molecule_checked.has(other): continue
+			atoms_outside_molecule_checked.add(other.dirty)
 		CascadingBondsModel.new(emit_dirty).from_bonding_pair(self, other)
 
 func atom_list_to_ids(_accum, _atom_list: Array[Atom]) -> Array[int]:
