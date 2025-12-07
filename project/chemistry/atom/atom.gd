@@ -277,10 +277,12 @@ func _physics_process(_dt: float) -> void:
 		if is_zero_approx(distance):
 			force = RNGUtil.new(RandomNumberGenerator.new()).unit_vec() * 1000
 		elif not other in bonds:
+			var repulsion := 0.0
 			var vdw_distance := radius + other.radius
 			if distance < vdw_distance:
-				force = minf(MAX_FORCE, repulsion_force * mass * other.mass / (mass + other.mass)
-						/ ((distance / vdw_distance) ** 2)) * direction
+				repulsion += (repulsion_force * mass * other.mass / (mass + other.mass)
+						/ ((distance / vdw_distance) ** 2))
+			force = minf(MAX_FORCE, repulsion)  * direction
 		force_list.add(other, force)
 		force_list.add(self, -force)
 	if atoms_in_field_changed(new_atoms_in_field):
