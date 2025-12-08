@@ -26,7 +26,6 @@ enum STATE {
 
 const ATOM_BOND_LINE_SCENE = preload("uid://cqiykungxfadm")
 const STIFFNESS = 0.03
-const STRENGTH = 150000.0
 # Physical bond strength nerfed according to hydrogen count
 const H_BOND_PHYSICAL_STRENGTH_MULTI: Array[float] = [0.4, 0.2]
 
@@ -35,10 +34,10 @@ var base_energy: float
 var energy: float
 var _atom: Atom
 var _other: Atom
-var _stick: Stick
+var stiffness: float = 1000
+var damping: float = 50
 var state: STATE = STATE.FIRST_ATTRACTION
 var base_length: float = 175
-var target_length: float = base_length
 var max_length: float = 200
 var length: float
 var physical_strength_multi := 1.0
@@ -72,6 +71,13 @@ func initialize(atom: Atom, other: Atom, order: int):
 	update_order(order)
 
 func _physics_process(_delta: float) -> void:
+	var difference := _other.position - _atom.position
+	var length_error := base_length - difference.length()
+	var direction := difference.normalized()
+	var damp := (_other.linear_velocity - _atom.linear_velocity).dot(direction) * damping
+	var force := (length_error * stiffness - damp) * reduced_mass * direction
+	_other.apply_central_force(force)
+	_atom.apply_central_force(-force)
 	update_energy()
 
 func _process(_delta: float) -> void:
@@ -82,7 +88,6 @@ func update_order(new_order: int) -> void:
 	order = new_order
 	var bond_data := BondDB.get_data(_atom, _other, order)
 	base_length = bond_data[1]
-	_stick.length = base_length
 	# Reset accumulated impulse on bond order change
 	transitional_total_impulse = 0.0
 	if length > base_length:
@@ -120,6 +125,3 @@ func update_transform() -> void:
 	var direction := difference.normalized()
 	rotation = atan2(direction.y, direction.x)
 	scale = Vector2(length / 100, 1)
-
-func _exit_tree() -> void:
-	_stick.queue_free()
