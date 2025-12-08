@@ -33,7 +33,6 @@ const H_BOND_PHYSICAL_STRENGTH_MULTI: Array[float] = [0.4, 0.2]
 var order: int
 var base_energy: float
 var energy: float
-var instability: float
 var _atom: Atom
 var _other: Atom
 var _stick: Stick
@@ -59,23 +58,11 @@ static func get_energy(atom1: Atom, atom2: Atom, order: int) -> float:
 	if order == 0: return 0.0
 	var bond_data := BondDB.get_data(atom1, atom2, order)
 	return bond_data[0]
-	var morse_energy := -bond_data[0] * ((1 - 
-			exp(-STIFFNESS * ((atom2.position - atom1.position).length() - bond_data[1]))
-	) ** 2 - 1)
-	return morse_energy - (
-			(atom2.velocity - atom1.velocity).length_squared()
-			* atom1.mass * atom2.mass / (atom1.mass + atom2.mass) / STRENGTH
-	)
 
 @warning_ignore("shadowed_variable")
 func initialize(atom: Atom, other: Atom, order: int):
 	_atom = atom
 	_other = other
-	_stick = Stick.bond(atom, other, BondDB.get_data(atom, other, order)[1])
-	instability = (
-		(atom.velocity - other.velocity).length_squared()
-		* atom.mass * other.mass / (atom.mass + other.mass) / STRENGTH
-	)
 	var hydrogens := int(atom.protons == 1) + int(other.protons == 1)
 	if hydrogens >= 1:
 		physical_strength_multi = H_BOND_PHYSICAL_STRENGTH_MULTI[hydrogens - 1]

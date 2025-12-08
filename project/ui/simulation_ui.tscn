@@ -1,7 +1,11 @@
-[gd_scene load_steps=3 format=3 uid="uid://bb1y4weslv1pe"]
+[gd_scene load_steps=5 format=3 uid="uid://bb1y4weslv1pe"]
 
 [ext_resource type="Script" uid="uid://c24ohhdpvjt2b" path="res://ui/ui.gd" id="1_whqmj"]
 [ext_resource type="PackedScene" uid="uid://c41ggtkksw0uk" path="res://ui/element_hotbar_element.tscn" id="2_q2170"]
+[ext_resource type="Script" uid="uid://ctpit6jb8k3go" path="res://simulation/kinetic_stats_label.gd" id="3_q2170"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_q2170"]
+font_size = 64
 
 [node name="SimulationUI" type="CanvasLayer"]
 offset = Vector2(-10, 0)
@@ -90,6 +94,20 @@ layout_mode = 2
 size_flags_horizontal = 8
 theme_override_font_sizes/font_size = 50
 text = "Pause"
+
+[node name="KineticStatsLabel" type="Label" parent="SimulationStateTools"]
+process_priority = 1
+process_physics_priority = 1
+layout_mode = 2
+text = "0 K
+0 J_k
+0 J_u
+0 J
+"
+label_settings = SubResource("LabelSettings_q2170")
+horizontal_alignment = 2
+script = ExtResource("3_q2170")
+metadata/_edit_use_anchors_ = true
 
 [connection signal="pressed" from="TitleScreenButton" to="." method="_on_title_screen_button_pressed"]
 [connection signal="pressed" from="Tools/ClearButton" to="." method="_on_clear_button_pressed"]

@@ -121,6 +121,13 @@ func _to_string() -> String:
 func get_kinetic_energy() -> float:
 	return mass * linear_velocity.length() ** 2 / 2000
 
+func get_potential_energy() -> float:
+	var energy := 0.0
+	for other in bonds:
+		var bond := bonds[other]
+		energy += bond.energy
+	return energy / 2
+
 func add_kinetic_energy(energy: float) -> void:
 	var speed := linear_velocity.length()
 	var impulse := sqrt(2000 * (get_kinetic_energy() + energy)) - speed
