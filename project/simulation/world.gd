@@ -31,6 +31,34 @@ var spawning_atom := false
 func _ready() -> void:
 	world_size = world_size
 
+func test_spinning() -> void:
+	var pos := Vector2(500, 0)
+	var offset := Vector2(0, 75)
+	Atom.create(
+			self,
+			Global.selected_element,
+			-(pos + offset), pos,
+	)
+	Atom.create(
+			self,
+			Global.selected_element,
+			pos + offset, -pos,
+	)
+
+func test_wall_collision() -> void:
+	var vel := Vector2(500, 0)
+	var offset := Vector2(200, 0)
+	Atom.create(
+			self,
+			Global.selected_element,
+			-offset, vel + offset,
+	)
+	Atom.create(
+			self,
+			Global.selected_element,
+			Vector2.ZERO, vel,
+	)
+
 func _on_area_input_event(_viewport: Node, event: InputEventWithModifiers, _shape_idx: int) -> void:
 	if not event.is_action_pressed("spawn_atom", true) or Global.selected_element == 0: return
 	clicked_point = get_global_mouse_position()
