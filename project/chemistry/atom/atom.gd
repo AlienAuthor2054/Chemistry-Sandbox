@@ -126,7 +126,7 @@ func get_potential_energy() -> float:
 	for other in bonds:
 		var bond := bonds[other]
 		energy += bond.energy
-	return energy / 2
+	return energy / -2
 
 func add_kinetic_energy(energy: float) -> void:
 	var speed := linear_velocity.length()
