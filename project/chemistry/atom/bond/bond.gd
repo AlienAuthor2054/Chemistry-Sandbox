@@ -34,13 +34,14 @@ var base_energy: float
 var energy: float
 var _atom: Atom
 var _other: Atom
-var stiffness: float = 1000
-var damping: float = 50
+var stiffness: float = 200
+var damping: float
 var state: STATE = STATE.FIRST_ATTRACTION
 var base_length: float = 175
 var max_length: float = 200
 var length: float
 var physical_strength_multi := 1.0
+var mass: float
 var reduced_mass: float
 var vdw_distance: float
 var transitional_total_impulse := 0.0
@@ -65,17 +66,22 @@ func initialize(atom: Atom, other: Atom, order: int):
 	var hydrogens := int(atom.protons == 1) + int(other.protons == 1)
 	if hydrogens >= 1:
 		physical_strength_multi = H_BOND_PHYSICAL_STRENGTH_MULTI[hydrogens - 1]
-	reduced_mass = (_atom.mass * _other.mass) / (_atom.mass + _other.mass)
+	mass = _atom.mass + _other.mass
+	reduced_mass = (_atom.mass * _other.mass) / mass
+	stiffness *= mass
+	damping = 2 * sqrt(stiffness * reduced_mass) # Ensure critical damping
 	vdw_distance = (_atom.radius + _other.radius) / 2.0
 	length = (_other.position - _atom.position).length()
 	update_order(order)
 
 func _physics_process(_delta: float) -> void:
+	if not Simulation.running: return
 	var difference := _other.position - _atom.position
 	var length_error := base_length - difference.length()
 	var direction := difference.normalized()
-	var damp := (_other.linear_velocity - _atom.linear_velocity).dot(direction) * damping
-	var force := (length_error * stiffness - damp) * reduced_mass * direction
+	var velocity := _other.velocity - _atom.velocity
+	var damp := velocity.dot(direction) * damping
+	var force := (length_error * stiffness - damp) * direction
 	_other.apply_central_force(force)
 	_atom.apply_central_force(-force)
 	update_energy()
