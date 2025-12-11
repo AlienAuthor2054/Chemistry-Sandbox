@@ -34,7 +34,7 @@ var base_energy: float
 var energy: float
 var _atom: Atom
 var _other: Atom
-var stiffness: float = 200
+var stiffness: float = 400
 var damping: float
 var state: STATE = STATE.FIRST_ATTRACTION
 var base_length: float = 175
@@ -68,7 +68,7 @@ func initialize(atom: Atom, other: Atom, order: int):
 		physical_strength_multi = H_BOND_PHYSICAL_STRENGTH_MULTI[hydrogens - 1]
 	mass = _atom.mass + _other.mass
 	reduced_mass = (_atom.mass * _other.mass) / mass
-	stiffness *= mass
+	stiffness *= reduced_mass
 	damping = 2 * sqrt(stiffness * reduced_mass) # Ensure critical damping
 	vdw_distance = (_atom.radius + _other.radius) / 2.0
 	length = (_other.position - _atom.position).length()
