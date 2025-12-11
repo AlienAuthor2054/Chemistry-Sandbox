@@ -27,7 +27,6 @@ enum STATE {
 const ATOM_BOND_LINE_SCENE = preload("uid://cqiykungxfadm")
 const STIFFNESS = 0.03
 # Physical bond strength nerfed according to hydrogen count
-const H_BOND_PHYSICAL_STRENGTH_MULTI: Array[float] = [0.4, 0.2]
 
 var order: int
 var base_energy: float
@@ -40,7 +39,6 @@ var state: STATE = STATE.FIRST_ATTRACTION
 var base_length: float = 175
 var max_length: float = 200
 var length: float
-var physical_strength_multi := 1.0
 var mass: float
 var reduced_mass: float
 var vdw_distance: float
@@ -63,9 +61,6 @@ static func get_energy(atom1: Atom, atom2: Atom, order: int) -> float:
 func initialize(atom: Atom, other: Atom, order: int):
 	_atom = atom
 	_other = other
-	var hydrogens := int(atom.protons == 1) + int(other.protons == 1)
-	if hydrogens >= 1:
-		physical_strength_multi = H_BOND_PHYSICAL_STRENGTH_MULTI[hydrogens - 1]
 	mass = _atom.mass + _other.mass
 	reduced_mass = (_atom.mass * _other.mass) / mass
 	stiffness *= reduced_mass
