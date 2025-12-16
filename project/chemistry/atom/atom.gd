@@ -24,7 +24,7 @@ const MAX_FORCE := SPEED_LIMIT * 300
 static var LOCK := Lock.new()
 static var next_id := 1
 static var atom_id_register: Dictionary[int, Atom] = {}
-static var atom_visual_radius_multi := 0.4
+static var atom_visual_radius_multi := 0.333
 
 @warning_ignore("unused_signal")
 signal electronAdded
